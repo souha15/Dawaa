@@ -321,7 +321,7 @@ export class NewChequeListEtabFinComponent implements OnInit {
     
     this.demandeService.PutObservableE(this.per).subscribe(res => {
  this.toastr.success('تم التحديث بنجاح', 'نجاح');
-        this.getUserConnected()
+        //this.getUserConnected()
         this.getDemPayList();
         this.UserService.getAdminFinDir().subscribe(resDir => {
           this.dirId = resDir.id
