@@ -1,0 +1,330 @@
+<app-nav-menu></app-nav-menu>
+<div class="content">
+  <div class="row">
+    <div class="col-md-3 col-sm-4">
+      <app-side-menu></app-side-menu>
+    </div>
+    <style>
+
+      .banner {
+        width: 1068px;
+        background: url(http://s6.favim.com/orig/150112/background-cold-gif-nature-Favim.com-2380226.gif);
+        background-size: cover;
+        font-size: 80px;
+        color: #fff;
+        text-align: center;
+        padding: 40px 15px;
+        margin-right: -31px;
+        height: 10px;
+      }
+
+      .big-text {
+        font-size: 130px;
+        font-weight: 800;
+        animation-delay: 1s;
+      }
+
+      .banner a {
+        display: block;
+        background: #fff;
+        color: #36465d;
+        text-transform: uppercase;
+        padding: 4px;
+        font-size: 40px;
+        transition: .3s;
+        width: 344px;
+        height: 67px;
+        margin-right: 350px;
+      }
+
+        .banner a:hover {
+          background: #333;
+          color: #fff;
+          padding: 15px 20px;
+        }
+      /****/
+      .item {
+        position: relative;
+        padding-top: 20px;
+        display: inline-block;
+      }
+
+      .notify-badge {
+        position: absolute;
+        left: 5px;
+        top: -20px;
+        background: red;
+        text-align: center;
+        border-radius: 30px 30px 30px 30px;
+        color: white;
+        padding: 5px 10px;
+        font-size: 15px;
+      }
+
+      .bgImg {
+        background: rgba(255,255,255,0.2) !important;
+        position: relative;
+      }
+
+        .bgImg::before {
+          content: "";
+          position: absolute;
+          width: 80%;
+          height: 80%;
+          z-index: -1;
+          background-image: url("assets/images/back.png");
+          background-size: contain;
+          background-repeat: no-repeat;
+          background-position: center;
+          background-origin: border-box;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+    </style>
+    <!--showAdmin||showUser||showAll-->
+    <div class="col-md-9 col-sm-8">
+      <div class="banner animated tada" *ngIf="showdec">
+
+        <a [routerLink]="['/decision-list']">قرار أو تعميم وارد</a>
+      </div>
+      <section class="main-content text-center bgImg">
+        <div class="container ">
+          <div class="row">
+
+            <div class="col-sm-6 col-md-3 my-4">
+              <div class="link-box">
+                <a [routerLink]="['/notif-show']">
+                  <span class="notify-badge" *ngIf="testNotif">{{notif}}</span>
+                  <span class="d-block">
+                    <i class="fa fa-bell fa-3x"></i>
+                  </span>
+                  <h4>الإشعارات </h4>
+                </a>
+
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3 my-4">
+              <div class="link-box">
+                <a [routerLink]="['/alerts']">
+                  <span class="d-block">
+                    <i class="fa fa-bell fa-3x"></i>
+                  </span>
+                  <h4>الإعتمادات </h4>
+                </a>
+
+              </div>
+            </div>
+
+
+            <div class="col-sm-6 col-md-3 my-4">
+              <div class="link-box">
+                <a [routerLink]="['/pointage-presence-add']">
+                  <span class="d-block">
+                    <i class="fa fa-user-check fa-3x"></i>
+                  </span>
+                  <h4>الحضور و الإنصراف </h4>
+                </a>
+
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3 my-4">
+              <div class="link-box">
+                <a [routerLink]="['/maenu-accepted']">
+                  <span class="d-block">
+                    <i class="fa fa-users-cog fa-3x"></i>
+                  </span>
+                  <h4>خدماتي </h4>
+                </a>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3 my-4">
+              <div class="link-box">
+                <a [routerLink]="['/list-admin-ordre-pay']">
+                  <span class="d-block">
+                    <i class="fa fa-user-secret fa-3x"></i>
+                  </span>
+                  <h4>استعلاماتي </h4>
+                </a>
+              </div>
+            </div>
+
+
+            <div class="col-sm-6 col-md-3 my-4">
+              <div class="link-box">
+                <a [routerLink]="['/my-liste-tr']">
+                  <span class="d-block">
+                    <i class="fa fa-file-contract fa-3x"></i>
+                  </span>
+                  <h4>معاملاتي </h4>
+                </a>
+              </div>
+            </div>
+
+
+            <div class="col-sm-6 col-md-3 my-4">
+              <div class="link-box">
+
+                <a [routerLink]="['/tasks-list-received']">
+                  <span class="notify-badge" *ngIf="shownb">{{nb}}</span>
+                  <span class="d-block">
+                    <i class="fa fa-tasks fa-3x"></i>
+                  </span>
+
+                  <h4>
+                    مهامي
+
+                  </h4>
+
+                </a>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3 my-4">
+              <div class="link-box">
+                <a [routerLink]="['//film-details']">
+                  <span class="d-block">
+                    <i class="fa fa-comment-dots fa-3x"></i>
+
+                  </span>
+                  <h4>العلاقات العامة و الإعلام</h4>
+                </a>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3 my-4">
+              <div class="link-box">
+
+                <a [routerLink]="['/main-tasks']">
+
+                  <span class="d-block">
+                    <i class="fa fa-tasks fa-3x"></i>
+                  </span>
+
+                  <h4>
+                    إدارة المهام
+                  </h4>
+
+                </a>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3 my-4">
+              <div class="link-box">
+
+                <a [routerLink]="['/news-list-viewer']">
+
+                  <span class="d-block">
+                    <i class="fa fa-bell fa-3x"></i>
+                  </span>
+
+                  <h4>
+                    الاخبار
+
+                  </h4>
+
+                </a>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-3 my-4">
+              <div class="link-box">
+                <a [routerLink]="['/formation-show']">
+                  <span class="d-block">
+                    <i class="fa fa-graduation-cap fa-3x"></i>
+                  </span>
+                  <h4>التدريب</h4>
+                </a>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-3 my-4">
+              <div class="link-box">
+
+                <a [routerLink]="['/decision-list']">
+
+                  <span class="d-block">
+                    <i class="fa fa-mail-bulk fa-3x"></i>
+                  </span>
+
+                  <h4>
+                    التعاميم والقرارات
+                  </h4>
+
+                </a>
+              </div>
+            </div>
+
+
+
+            <div class="col-sm-6 col-md-3 my-4">
+              <div class="link-box">
+                <a [routerLink]="['/transfert-interne-show']">
+                  <span class="d-block">
+                    <i class="fa fa-arrow-alt-circle-down fa-3x"></i>
+                  </span>
+                  <h4> 	التحويلات الداخلية</h4>
+                </a>
+              </div>
+            </div>
+
+
+
+            <div class="col-sm-6 col-md-3 my-4">
+              <div class="link-box">
+                <a [routerLink]="['/ticket2-add']">
+                  <span class="d-block">
+                    <i class="fa fa-cog fa-3x"></i>
+                  </span>
+                  <h4>الدعم الفني</h4>
+                </a>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3 my-4">
+              <div class="link-box">
+                <a [routerLink]="['/enregistrer-tri']">
+                  <span class="d-block">
+                    <i class="fa fa-arrow-right fa-3x"></i>
+                  </span>
+                  <h4>التعاملات الإدارية الداخلية </h4>
+                </a>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3 my-4">
+              <div class="link-box">
+                <a [routerLink]="['/msg-interne-list']">
+                  <span class="notify-badge" *ngIf="testnotifnb">{{notifnb}}</span>
+                  <span class="d-block">
+                    <i class="fa fa-comments fa-3x"></i>
+                  </span>
+                  <h4>الرسائل الداخلية</h4>
+                </a>
+              </div>
+            </div>
+
+
+            <div class="col-sm-6 col-md-3 my-4">
+              <div class="link-box">
+                <a [routerLink]="['/ticket-list-client']">
+                  <span class="d-block">
+                    <i class="fa fa-cogs fa-3x"></i>
+                  </span>
+                  <h4>الصيانة</h4>
+                </a>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </section>
+    </div><!-- End col-9 -->
+  </div>
+  </div>
+<!-- Footer -->
+<footer class="text-center">
+  <p>كل الحقوق محفوظة لمؤسسة مواهب الخليج بالتنسيق و التعاون مع جمعية الدعوة بالطائف  <img src="assets/images/awal.png" style="width:40px;height:40px;"> </p>
+</footer>

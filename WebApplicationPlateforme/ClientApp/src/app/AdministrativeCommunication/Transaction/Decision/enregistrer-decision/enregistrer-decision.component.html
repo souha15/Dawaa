@@ -1,0 +1,114 @@
+<app-nav-menu></app-nav-menu>
+<!-- Page Content -->
+<div class="content">
+  <div class="row">
+    <div class="col-md-3 col-sm-4">
+      <app-side-menu></app-side-menu>
+    </div>
+
+    <div class="col-md-9 col-sm-8">
+      <header>
+        <h3 class="task-head">إضافة قرارات وتعميم</h3>
+      </header>
+      <form class="form-row task-form" #form="ngForm" autocomplete="off" (submit)="onSubmit(form)">
+        <div class="col-md-6">
+          <label for="">قرار/تعميم</label>
+          <select name="type" #type="ngModel" [(ngModel)]="de.type" required>
+            <option [ngValue]="undefined" selected disabled>قرار/تعميم</option>
+            <option value="قرار">قرار</option>
+            <option value="تعميم">تعميم</option>
+            <option value="لائحة">لائحة</option>
+          </select>
+
+          <div *ngIf="type.errors?.required && form.submitted && !isValidFormSubmitted" class="alert alert-danger">
+            مطلوب  قرار/تعميم .
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label for="">داخلي/خارجي</label>
+
+          <input type="radio" name="in-out" id="ch1" (change)="test($event)" value="داخلي" />
+          <label for="ch1" class="radio-lab">داخلي</label>
+
+          <input type="radio" class="choise2" name="in-out" id="ch2" (change)="test($event)" value="خارجي" />
+          <label for="ch2" class="radio-lab">خارجي</label>
+
+          <div class="content2">
+            <label for="">الجهة</label>
+            <input type="text" name="org" #org="ngModel" [(ngModel)]="de.org" />
+          </div>
+
+
+        </div>
+
+
+        <div *ngIf="interne" class="col-md-6">
+          <label for="card-num">إدارة / موظف </label>
+          <select id="keys" class="" (change)="EmployeeAdmin($event)">
+            <option [ngValue]="undefined" selected disabled>- إدارة / موظف-</option>
+            <option value="إدارة">إدارة</option>
+            <option value="موظف">موظف</option>
+          </select>
+        </div>
+
+        <div class="col-md-6" *ngIf="emp">
+          <label for="card-num">الموظف  </label>
+          <select id="keys" class="" name="employeeid" #employeeid="ngModel" [(ngModel)]="de.employeeid" (change)="getEmployeeName($event)">
+            <option [ngValue]="undefined" selected disabled>- الموظف-</option>
+            <option *ngFor="let item of UserList" value="{{item.id}}">{{item.fullName}}</option>
+          </select>
+        </div>
+
+
+        <div class="col-md-6" *ngIf="admin">
+          <label for="card-num">الإدارة </label>
+          <select id="keys" class="" (change)="tousOrOne($event)">
+            <option [ngValue]="undefined" selected disabled>- الإدارة-</option>
+            <option value="الكل">الكل</option>
+            <option value="إختر">إختر</option>
+          </select>
+        </div>
+
+        <div class="col-md-6" *ngIf="one">
+          <label for="card-num">الإدارة </label>
+          <select id="keys" class="" name="adminid" #adminid="ngModel" [(ngModel)]="de.adminid" (change)="getAdminName($event)">
+            <option [ngValue]="undefined" selected disabled>- الإدارة-</option>
+            <option *ngFor="let item of AdministrationList" value="{{item.id}}">{{item.nom}}</option>
+          </select>
+        </div>
+
+
+        <div class="col-md-6">
+          <label for="">العنوان</label>
+          <input type="text" name="titre" #titre="ngModel" [(ngModel)]="de.titre" />
+        </div>
+
+        <div class="col-md-6">
+          <label for="">التفاصيل</label>
+          <textarea class="form-control" name="detail" #detail="ngModel" [(ngModel)]="de.detail"></textarea>
+        </div>
+
+        <div class="col-md-6">
+          <label for="">إضافة  الملفات</label>
+          <ngx-dropzone (change)="upload($event);onSelect($event)" class="dropzone" #inputFile>
+            <ngx-dropzone-label>اسحب الملفات هنا او اضغط للتحميل</ngx-dropzone-label>
+            <ngx-dropzone-preview *ngFor="let f of files1" [removable]="true" (removed)="onRemove(f)">
+              <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+              </ngx-dropzone-preview>
+</ngx-dropzone>
+        </div>
+        <div class="col-12 text-center text-md-left mt-3">
+          <input class="btn btn-info"
+                 style="width: 130px;"
+                 type="submit"
+                 value="إضافة" />
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+<!-- Footer -->
+<footer class="text-center">
+ <p>كل الحقوق محفوظة لمؤسسة مواهب الخليج بالتنسيق و التعاون مع جمعية الدعوة بالطائف  <img src="assets/images/awal.png" style="width:40px;height:40px;"> </p>
+</footer>

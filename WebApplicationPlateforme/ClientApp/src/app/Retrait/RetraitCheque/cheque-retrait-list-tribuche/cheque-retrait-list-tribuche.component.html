@@ -1,0 +1,186 @@
+<app-nav-menu></app-nav-menu>
+<!-- Page Content -->
+<div class="content">
+  <div class="row">
+    <div class="col-md-3 col-sm-4">
+      <app-side-menu></app-side-menu>
+    </div>
+
+    <div class="col-md-9 col-sm-8">
+      <app-menu-retrait-cheque></app-menu-retrait-cheque>
+      <h2 class="task-head">متابعة مستقطع متعثر </h2>
+
+      <input class="form-control" type="text" name="search" [(ngModel)]="filter" placeholder="بحث">
+      <div class="tabel-cont">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="col" (click)="sort('id')">
+                <span class="glyphicon sort-icon" *ngIf="key =='id'" [ngClass]="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+              </th>
+              <th scope="col">الاسم</th>
+              <th scope="col">الجوال</th>
+              <th scope="col">نوع التبرع</th>
+              <th scope="col">المبلغ</th>
+              <th scope="col">المندوب</th>
+              <th scope="col">الحالة</th>
+              <th scope="col">عرض التفاصيل</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cg of retList | orderBy: key : reverse | filter:filter| paginate: { itemsPerPage: count, currentPage: c }; let i = index">
+
+              <th (click)="populateForm(cg)">{{(c-1) * count + i + 1}}</th>
+              <td (click)="populateForm(cg)">{{cg.nom}}</td>
+              <td (click)="populateForm(cg)">{{cg.tel}}</td>
+              <td (click)="populateForm(cg)">{{cg.typedons}}</td>
+              <td (click)="populateForm(cg)">{{cg.prix}}</td>
+              <td (click)="populateForm(cg)">{{cg.delegues}}</td>
+              <td (click)="populateForm(cg)"
+                  [ngClass]="{
+
+ 'success': cg.etat === 'مفعل',
+  'denied': cg.etat === 'متعثر',
+  'wait': cg.etat === 'في الإنتظار'
+}">
+                {{cg.etat}}
+              </td>
+              <td>
+                <a class="btn show-details-btn text-info" (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal">
+                  <i class="fa fa-eye fa-lg"></i>
+                </a>
+              </td>
+
+            </tr>
+
+          </tbody>
+
+
+        </table>
+      </div>
+
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+
+          <pagination-controls (pageChange)="c = $event" previousLabel="السابق"
+                               nextLabel="التالي"></pagination-controls>
+        </ul>
+      </nav>
+
+
+
+
+
+    </div><!-- End col-9 -->
+  </div>
+
+</div>
+<!-- Footer -->
+<footer class="text-center">
+  <p>كل الحقوق محفوظة لمؤسسة مواهب الخليج بالتنسيق و التعاون مع جمعية الدعوة بالطائف  <img src="assets/images/awal.png" style="width:40px;height:40px;"> </p>
+</footer>
+
+<div id="myModal" class="popup-page" role="dialog" style="direction:ltr;">
+  <div class="">
+
+    <div class="popup-content">
+
+
+      <button type="button" class="close-popup" data-dismiss="modal">&times;</button>
+
+
+      <div class="page-wrapper">
+
+        <div class="modal-body" style="direction:rtl; text-align:right;">
+          <h2 class="text-center my-2">تفاصيل استقطاع</h2>
+          <div class="form-row task-form service-form text-center">
+            <div class="col-md-6">
+              <div>
+                <label> الاستقطاع</label>
+                <p>{{retrait.typeRetrait}}</p>
+              </div>
+
+              <div>
+                <label> 	نوع التبرع </label>
+                <p>{{retrait.typedons}}</p>
+              </div>
+
+              <div>
+                <label>   اسم المستقطع</label>
+                <p>{{retrait.nom}}</p>
+              </div>
+              <div>
+                <label>الجوال</label>
+                <p>{{retrait.tel}}</p>
+              </div>
+              <div>
+                <label>الجهة</label>
+                <p>{{retrait.organisme}}</p>
+              </div>
+              <div>
+                <label>حساب المستقطع</label>
+                <p>{{retrait.rib}}</p>
+              </div>
+              <div>
+                <label>بنك المستقطع</label>
+                <p>{{retrait.banque}}</p>
+              </div>
+              <div *ngIf="retrait.datedebuthij != null">
+                <label>بداية الاستقطاع الهجري </label>
+                <p>{{retrait.datedebuthij}}</p>
+              </div>
+              <div *ngIf="retrait.datedebutmiledi != null">
+                <label>بداية الاستقطاع الميلادي </label>
+                <p>{{retrait.datedebutmiledi}}</p>
+              </div>
+
+
+            </div>
+            <div class="col-md-6">
+              <div>
+                <label> المستفيد</label>
+                <p>{{retrait.nomben}}</p>
+              </div>
+              <div>
+                <label>حساب المستفيد</label>
+                <p>{{retrait.ribben}}</p>
+              </div>
+
+              <div>
+                <label>بنك المستفيد</label>
+                <p>{{retrait.nombanque}}</p>
+              </div>
+              <div>
+                <label>نوع التبرع</label>
+                <p>{{retrait.typedons}}</p>
+              </div>
+              <div>
+                <label>المبلغ</label>
+                <p>{{retrait.prix}}</p>
+              </div>
+              <div>
+                <label>المندوب</label>
+                <p>{{retrait.delegues}}</p>
+              </div>
+
+
+              <div *ngIf="retrait.datefinhij != null">
+                <label>نهاية الاستقطاع الهجري </label>
+                <p>{{retrait.datefinhij}}</p>
+              </div>
+
+              <div *ngIf="retrait.datefinmiledi != null">
+                <label>نهاية الاستقطاع الميلادي </label>
+                <p>{{retrait.datefinmiledi}}</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+

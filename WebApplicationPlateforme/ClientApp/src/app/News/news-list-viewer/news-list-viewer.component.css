@@ -1,0 +1,26 @@
+
+
+/*New Style for News Page --> Put it in main css file*/
+.news-page {
+  direction: rtl;
+}
+
+  .news-page .new {
+    margin: 15px 0;
+  }
+
+    .news-page .new .header {
+      display: flex;
+      color: #fff;
+      justify-content: space-between;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+      background: rgb(64,183,86);
+      background: linear-gradient(45deg, rgba(64,183,86,1) 15%, rgba(39,105,133,1) 85%);
+    }
+
+
+.new-table th {
+  color: #276985;
+}
+

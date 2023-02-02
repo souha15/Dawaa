@@ -1,0 +1,181 @@
+<app-nav-menu></app-nav-menu>
+<!-- Page Content -->
+<div class="content">
+  <div class="row">
+    <div class="col-md-3 col-sm-4">
+      <app-side-menu></app-side-menu>
+    </div>
+    <div class="col-md-9 col-sm-8">
+      <!-- Second Navbar -->
+
+      <section class="page-content">
+        <h4 class="my-2 task-head">رصيد الاجازات</h4>
+        <br />
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="leave-request">
+              <form class="form-row task-form service-form" #form="ngForm" autocomplete="off" (submit)="onSubmit(form)">
+                <input type="hidden" name="id" [value]="tblService.formData.id" />
+                <input type="hidden" name="userNameCreator" #userNameCreator="ngModel" [(ngModel)]="tblService.formData.userNameCreator" />
+                <div class="col-sm-6">
+                  <label for="replace-emp">الموظف </label>
+                  <select id="stop-status" name="idUserCreator" #idUserCreator="ngModel" [(ngModel)]="tblService.formData.idUserCreator" (change)="getUser($event)">
+                    <option [ngValue]="undefined" selected disabled>-الموظف -</option>
+                    <option *ngFor="let item of user" value="{{item.id}}">{{item.fullName}}</option>
+                  </select>
+                </div>
+
+                <div *ngIf="idUserCreator.errors?.required && form.submitted && !isValidFormSubmitted" class="alert alert-danger">
+
+
+                  مطلوب الموظف.
+
+                </div>
+                <div class="col-md-6">
+                  <p></p>
+                </div>
+
+
+                <div class="col-md-6">
+                  <label for="replace-emp" style="width:160px;">رصيد الإجازة السنوية  </label>
+                  <input type="number" name="numbernormal" #numbernormal="ngModel" [(ngModel)]="tblService.formData.numbernormal" />
+                </div>
+
+                <div *ngIf="numbernormal.errors?.required && form.submitted && !isValidFormSubmitted" class="alert alert-danger">
+
+
+                  مطلوب رصيد الإجازة السنوية.
+
+                </div>
+
+                <div class="col-md-6" style="width:160px;">
+                  <label for="replace-emp">رصيد الموظف </label>
+                  <input type="number" name="soldenormal" #soldenormal="ngModel" [(ngModel)]="tblService.formData.soldenormal" />
+                </div>
+
+                <div class="col-md-6">
+                  <label for="replace-emp">رصيد الإجازة الإضطرارية </label>
+                  <input type="number" name="numberurgent" #numberurgent="ngModel" [(ngModel)]="tblService.formData.numberurgent" />
+                </div>
+
+                <div *ngIf="numberurgent.errors?.required && form.submitted && !isValidFormSubmitted" class="alert alert-danger">
+
+
+                  مطلوب رصيد الإجازة الإضطرارية.
+
+                </div>
+
+                <div class="col-md-6">
+                  <label for="replace-emp">رصيد الموظف </label>
+                  <input type="number" name="soldeurgent" #soldeurgent="ngModel" [(ngModel)]="tblService.formData.soldeurgent" />
+                </div>
+
+
+                <div class="col-md-6">
+                  <label for="replace-emp" style="width:160px;">رصيد الإجازة الإستثنائية  </label>
+                  <input type="number" name="numbermaladie" #numbermaladie="ngModel" [(ngModel)]="tblService.formData.numbermaladie" />
+                </div>
+
+                <div *ngIf="numbermaladie.errors?.required && form.submitted && !isValidFormSubmitted" class="alert alert-danger">
+
+
+                  مطلوب رصيد الإجازة الإستثنائية.
+
+                </div>
+
+                <div class="col-md-6" style="width:160px;">
+                  <label for="replace-emp">رصيد الموظف </label>
+                  <input type="number" name="soldemaladie" #soldemaladie="ngModel" [(ngModel)]="tblService.formData.soldemaladie" />
+                </div>
+
+                <div class="col-12 text-left">
+                  <input class="btn btn-primary px-4" type="submit" value="حفظ">
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+        <br />
+        <input class="form-control" type="text" name="search" [(ngModel)]="filter" placeholder="بحث">
+        <div class="tabel-cont">
+          <table class="table table-striped table-hover">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">
+
+                  #
+                </th>
+
+                <th scope="col">
+                  الموظف
+
+                </th>
+                <th>رصيد الإجازة السنوية </th>
+                <th>
+                  <label for="replace-emp">رصيد الموظف </label>
+                </th>
+
+                <th>رصيد الإجازة الإضطرارية </th>
+
+                <th>
+
+                  <label for="replace-emp">رصيد الموظف </label>
+
+                </th>
+
+                <th>رصيد الإجازة الإستثنائية </th>
+
+                <th>
+
+                  <label for="replace-emp">رصيد الموظف </label>
+
+                </th>
+
+
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let dotation of allDotation | filter:filter| paginate: { itemsPerPage: 5, currentPage: p }; let i = index">
+
+                <td>{{(c-1) * count + i + 1}}</td>
+                <td>{{dotation.userNameCreator}}</td>
+                <td>{{dotation.numbernormal}}</td>
+                <td>{{dotation.soldenormal}}</td>
+                <td>{{dotation.numberurgent}}</td>
+                <td>{{dotation.soldeurgent}}</td>
+                <td>{{dotation.numbermaladie}}</td>
+                <td>{{dotation.soldemaladie}}</td>
+                <td><a class="btn btn-success" (click)="populateForm(dotation)"><i class="fa fa-edit"></i>تعديل</a></td>
+                <td><a (click)="onDelete(dotation.id)" class="btn btn-danger"><i class="fa fa-trash"></i>حذف</a></td>
+
+
+              </tr>
+
+            </tbody>
+
+
+          </table>
+
+
+
+          <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+              <pagination-controls (pageChange)="p = $event" previousLabel="السابق"
+                                   nextLabel="التالي"></pagination-controls>
+            </ul>
+          </nav>
+        </div>
+      </section>
+    </div><!-- End col-9 -->
+  </div>
+
+</div>
+<!-- Footer -->
+<!-- Footer -->
+<footer class="text-center">
+  <p>كل الحقوق محفوظة لمؤسسة مواهب الخليج بالتنسيق و التعاون مع جمعية الدعوة بالطائف  <img src="assets/images/awal.png" style="width:40px;height:40px;"> </p>
+</footer>
