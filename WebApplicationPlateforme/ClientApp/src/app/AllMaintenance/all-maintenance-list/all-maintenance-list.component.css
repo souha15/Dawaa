@@ -1,25 +1,34 @@
 
-.input-zone {
-  align-items: center;
+
+/* Queries And Services*/
+.que-serv {
   display: flex;
-  flex-direction: row;
-  margin: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.input-zone-input {
-  flex: 1;
-  margin-right: 10px;
-}
+  .que-serv a {
+    text-decoration: none;
+    display: block;
+    padding: 8px 10px;
+    min-width: 200px;
+    text-align: center;
+    margin: 10px;
+    border: 2px solid;
+    border-radius: 10px;
+    color: #fff;
+    background: #276985;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s;
+    box-shadow: 5px 5px 15px 0px #5c5c5d;
+  }
 
-.message-author {
-  font-weight: bold;
-}
+    .que-serv a .icon {
+      font-size: 30px;
+    }
 
-.messages {
-  border: 1px solid #000;
-  margin: 10px;
-  max-height: 300px;
-  min-height: 300px;
-  overflow-y: auto;
-  padding: 5px;
-}
+    .que-serv a:hover {
+      background: #fff;
+      color: #276985;
+    }
