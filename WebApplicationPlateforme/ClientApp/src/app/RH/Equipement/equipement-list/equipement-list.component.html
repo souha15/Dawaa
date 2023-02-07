@@ -107,7 +107,7 @@
 
               </div>
 
-              <input type="text"  name="etatdir" #etatdir="ngModel" [(ngModel)]="congeService.formData.etatdir" hidden />
+              <input type="text" name="etatdir" #etatdir="ngModel" [(ngModel)]="congeService.formData.etatdir" hidden />
               <div class="col-md-6">
                 <label for="care-emp-mobile">جوال</label>
                 <input type="text" id="care-emp-mobile" name="tel" #tel="ngModel" [(ngModel)]="congeService.formData.tel">
@@ -124,7 +124,16 @@
                 <label for="care-notes">ملاحظات</label>
                 <textarea id="care-notes" class="form-control" name="remarque" #remarque="ngModel" [(ngModel)]="congeService.formData.remarque"></textarea>
               </div>
+              <div class="">
+                <label>المرفقات</label>
+                <span class="data">
+                  <span *ngFor="let pr of filesList">
+                    <i class="ml-2 fa fa-arrow-down" style="color:dodgerblue"></i>
+                    <a (click)="download(pr.path)" class="ml-3" style="color:dodgerblue">{{pr.path}}</a>
 
+                  </span>
+                </span>
+              </div>
               <div class="col-12 text-left mt-3">
                 <input class="btn btn-primary px-4" type="submit" value="تقديم">
                 <input class="btn btn-danger px-4" type="reset" value="إلغاء">

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CongeService } from '../../../shared/Services/Rh/conge.service';
 import { ToastrService } from 'ngx-toastr';
 import { UserServiceService } from '../../../shared/Services/User/user-service.service';
@@ -9,7 +9,12 @@ import { PermissionU } from '../../../shared/Models/User Services/permission-u.m
 import { NotifService } from '../../../shared/Services/NotifSystem/notif.service';
 import { Notif } from '../../../shared/Models/NotifSystem/notif.model';
 import { SignalRService, connection, AutomaticNotification } from '../../../shared/Services/signalR/signal-r.service';
-
+import { ProgressStatus } from '../../../shared/Interfaces/progress-status';
+import { UploadDownloadService } from '../../../shared/Services/Taches/upload-download.service';
+import { FileService } from '../../../shared/Models/ServiceRh/file-service.model';
+import { FileServiceService } from '../../../shared/Services/ServiceRh/file-service.service';
+import { ProgressStatusEnum } from '../../../shared/Enum/progress-status-enum.enum';
+import { HttpEventType } from '@angular/common/http';
 @Component({
   selector: 'app-permission-list-dir',
   templateUrl: './permission-list-dir.component.html',
@@ -18,15 +23,19 @@ import { SignalRService, connection, AutomaticNotification } from '../../../shar
 export class PermissionUListDirComponent implements OnInit {
 
   filter;
+  @Output() public downloadStatus: EventEmitter<ProgressStatus>;
   constructor(private congeService: PermissionUService,
     private toastr: ToastrService,
     private UserService: UserServiceService,
     private notifService: NotifService,
-    private signalService: SignalRService) { }
+    private signalService: SignalRService,
+    public filesService: FileServiceService,
+    public serviceupload: UploadDownloadService, ) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
 
   ngOnInit(): void {
     this.getUserConnected();
     this.CongeList();
+    this.getFiles();
     this.resetForm();
     this.userOnLis();
     this.userOffLis();
@@ -174,18 +183,16 @@ export class PermissionUListDirComponent implements OnInit {
 
   congeList: PermissionU[] = [];
   filtredCongeList: PermissionU[] = [];
+  
   CongeList() {
     this.congeService.Get().subscribe(res => {
       this.congeList = res
       this.filtredCongeList = this.congeList.filter(item => item.etatdir == "في الانتظار" && item.iddir == this.UserIdConnected)
+    
     })
   }
   per: PermissionU = new PermissionU();
 
-  populateForm(conge: PermissionU) {
-    this.per = Object.assign({}, conge)
-    this.congeService.formData = Object.assign({}, conge)
-  }
 
 
   etat: string;
@@ -193,6 +200,15 @@ export class PermissionUListDirComponent implements OnInit {
     this.etat = event.target.value;
   }
 
+
+
+  populateForm(conge: PermissionU) {
+    this.per = Object.assign({}, conge)
+    this.congeService.formData = Object.assign({}, conge)
+    this.filesService.GetPermissionFiles(this.per.id).subscribe(res => {
+      this.filesList = res;
+    })
+  }
   date = new Date().toLocaleDateString();
   conge: PermissionU = new PermissionU();
 
@@ -280,5 +296,46 @@ export class PermissionUListDirComponent implements OnInit {
       idUserCreator: '',
 
     }
+  }
+
+  //Download
+  filesList: FileService[] = [];
+  public files: string[];
+  private getFiles() {
+    this.serviceupload.getFiles().subscribe(
+      data => {
+        this.files = data
+
+      }
+    );
+
+  }
+
+  public download(filepath) {
+    this.downloadStatus.emit({ status: ProgressStatusEnum.START });
+    this.serviceupload.downloadFile(filepath).subscribe(
+      data => {
+        switch (data.type) {
+          case HttpEventType.DownloadProgress:
+            this.downloadStatus.emit({ status: ProgressStatusEnum.IN_PROGRESS, percentage: Math.round((data.loaded / data.total) * 100) });
+            break;
+          case HttpEventType.Response:
+            this.downloadStatus.emit({ status: ProgressStatusEnum.COMPLETE });
+            const downloadedFile = new Blob([data.body], { type: data.body.type });
+            const a = document.createElement('a');
+            a.setAttribute('style', 'display:none;');
+            document.body.appendChild(a);
+            a.download = filepath;
+            a.href = URL.createObjectURL(downloadedFile);
+            a.target = '_blank';
+            a.click();
+            document.body.removeChild(a);
+            break;
+        }
+      },
+      error => {
+        this.downloadStatus.emit({ status: ProgressStatusEnum.ERROR });
+      }
+    );
   }
 }

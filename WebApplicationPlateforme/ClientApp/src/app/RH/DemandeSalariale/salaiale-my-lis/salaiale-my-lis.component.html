@@ -90,7 +90,7 @@
 </footer>
 
 
-<div id="myModal" class="popup-page" role="dialog" style="direction:ltr;">
+<div id="myModal1" class="popup-page" role="dialog" style="direction:ltr;">
   <div class="">
 
     <div class="popup-content">
@@ -128,6 +128,18 @@
                 <p>{{fact.etat}}</p>
               </div>
 
+
+            </div>
+
+            <div>
+              <label>المرفقات</label>
+              <span class="data">
+                <span *ngFor="let pr of filesList">
+                  <i class="ml-2 fa fa-arrow-down" style="color:dodgerblue"></i>
+                  <a (click)="download(pr.path)" class="ml-3" style="color:dodgerblue">{{pr.path}}</a>
+
+                </span>
+              </span>
             </div>
 
           </div>

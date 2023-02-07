@@ -129,6 +129,7 @@ namespace WebApplicationPlateforme.Data
         public DbSet<TypeDetailsActivite> TypeDetailsActivites { get; set; }
         public DbSet<ActiviteDetails> ActiviteDetails { get; set; }
         public DbSet<demandePayChequesReceive> demandePayChequesReceive { get; set; }
+        public DbSet<FileService> FilesServices { get; set; }
 
     }
 }

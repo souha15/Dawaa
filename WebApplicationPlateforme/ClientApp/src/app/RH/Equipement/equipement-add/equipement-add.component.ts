@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Input, Output, ViewChild, ElementRef } from '@angular/core';
 import { TbListeningService } from '../../../shared/Services/Evenements/tb-listening.service';
 import { ToastrService } from 'ngx-toastr';
 import { UserServiceService } from '../../../shared/Services/User/user-service.service';
@@ -11,6 +11,12 @@ import { AdministrationService } from '../../../shared/Services/Administration/a
 import { Notif } from '../../../shared/Models/NotifSystem/notif.model';
 import { NotifService } from '../../../shared/Services/NotifSystem/notif.service';
 import { SignalRService, AutomaticNotification, connection} from '../../../shared/Services/signalR/signal-r.service';
+import { FileService } from '../../../shared/Models/ServiceRh/file-service.model';
+import { ProgressStatus } from '../../../shared/Interfaces/progress-status';
+import { FileServiceService } from '../../../shared/Services/ServiceRh/file-service.service';
+import { UploadDownloadService } from '../../../shared/Services/Taches/upload-download.service';
+import { ProgressStatusEnum } from '../../../shared/Enum/progress-status-enum.enum';
+import { HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-equipement-add',
@@ -18,20 +24,24 @@ import { SignalRService, AutomaticNotification, connection} from '../../../share
   styleUrls: ['./equipement-add.component.css']
 })
 export class EquipementAddComponent implements OnInit {
-
+  @Input() public disabled: boolean;
+  @Output() public uploadStatuss: EventEmitter<ProgressStatus>;
+  @ViewChild('inputFile') inputFile: ElementRef;
   constructor(private tblService: TbListeningService,
     private toastr: ToastrService,
     private UserService: UserServiceService,
     private equipementService: EquipementService,
     private adminService: AdministrationService,
     private notifService: NotifService,
-    private signalService: SignalRService,) { }
+    private signalService: SignalRService,
+    private filesService: FileServiceService,
+    public serviceupload: UploadDownloadService, ) { this.uploadStatuss = new EventEmitter<ProgressStatus>(); }
 
   ngOnInit(): void {
     this.getNomEquipementList();
     this.getTypeEquipementList();
     this.getUserConnected();
-
+    this.getFiles();
     this.userOnLis();
     this.userOffLis();
     this.logOutLis();
@@ -224,6 +234,15 @@ export class EquipementAddComponent implements OnInit {
 
       this.equipementService.Add(this.equ).subscribe(
         res => {
+          this.pj.serviceId = res.id;
+          this.pj.serviceName = "Equipement";
+          this.fileslist.forEach(item => {
+            this.pj.path = item;
+            this.filesService.Add(this.pj).subscribe(resfiles => {
+              this.files1 = [];
+            })
+          });
+
           this.notif.serviceId = res.id;
           this.notifService.Add(this.notif).subscribe(res => {
 
@@ -259,6 +278,100 @@ export class EquipementAddComponent implements OnInit {
         err => {
           this.toastr.error("لم يتم التسجيل", "فشل في التسجيل")
         })
+    }
+  }
+
+
+  //Files
+  files1: File[] = [];
+  onSelect(event) {
+    //console.log(event);
+    this.files1.push(...event.addedFiles);
+  }
+
+  onRemove(event) {
+    this.files1.splice(this.files1.indexOf(event), 1);
+    this.fileslist.splice(this.fileslist.indexOf(event), 1);
+  }
+
+
+  public response: { 'dbpathsasstring': '' };
+  public isCreate: boolean;
+  public pj: FileService = new FileService();
+  public files: string[];
+
+  //get List of Files
+
+  private getFiles() {
+    this.serviceupload.getFiles().subscribe(
+      data => {
+        this.files = data
+
+      }
+    );
+
+  }
+
+  //Get file name for Database
+
+  GetFileName() {
+    let sa: string;
+    let s: any;
+    let finalres: any;
+    let i: number = 0;
+    let tlistnew: any[] = [];
+    for (var k = 0; k < this.files.length; k++) {
+      sa = <string>this.files[k]
+      s = sa.toString().split('uploads\\,', sa.length - 1);
+      finalres = s.toString().split('uploads\\', sa.length - 1);
+
+      tlistnew[i] = finalres[1]
+      i++;
+
+    }
+
+
+  }
+
+  //Upload
+
+  //Save it ToDatabase
+  Idtransaction: number;
+  url: any;
+  file: any;
+  fileslist: string[] = [];
+  public upload(event) {
+    if (event.addedFiles && event.addedFiles.length > 0) {
+      this.file = event.addedFiles[0];
+      this.uploadStatuss.emit({ status: ProgressStatusEnum.START });
+      this.serviceupload.uploadFile(this.file).subscribe(
+        data => {
+          if (data) {
+            switch (data.type) {
+              case HttpEventType.UploadProgress:
+                this.uploadStatuss.emit({ status: ProgressStatusEnum.IN_PROGRESS, percentage: Math.round((data.loaded / data.total) * 100) });
+                break;
+              case HttpEventType.Response:
+                // this.inputFile.nativeElement.value = '';
+                this.uploadStatuss.emit({ status: ProgressStatusEnum.COMPLETE });
+                break;
+            }
+            this.getFiles();
+            this.GetFileName();
+
+
+
+          }
+
+        },
+
+        error => {
+          /// this.inputFile.nativeElement.value = '';
+          this.uploadStatuss.emit({ status: ProgressStatusEnum.ERROR });
+        }
+      );
+      this.fileslist.push(this.file.name);
+
     }
   }
 }

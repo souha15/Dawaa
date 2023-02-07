@@ -807,3 +807,9 @@ label.radio-lab {
     min-width: 50px !important;
     max-width: 120px !important;
   }
+.dropzone {
+  font-size: 18px;
+  color: #2196f3;
+  border: 2px dashed #2196f3;
+  width: 500px;
+}
