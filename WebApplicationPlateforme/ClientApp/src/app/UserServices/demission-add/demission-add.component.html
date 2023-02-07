@@ -12,12 +12,24 @@
       <form class="task-form" #form="ngForm" autocomplete="off" (submit)="onSubmit(form)">
         <div class="col-md-6 mb-3">
           <label for="reason">سبب الاستقالة</label>
-          <textarea  class="form-control" id="reason" name="raison" #raison="ngModel" [(ngModel)]="dem.raison"></textarea>
+          <textarea class="form-control" id="reason" name="raison" #raison="ngModel" [(ngModel)]="dem.raison"></textarea>
         </div>
         <div class="col-md-6">
           <label for="end">تاريخ طي القيد</label>
-          <input type="date" id="end" name="date" #date="ngModel" [(ngModel)]="dem.date" 
-  [min]="today"/>
+          <input type="date" id="end" name="date" #date="ngModel" [(ngModel)]="dem.date"
+                 [min]="today" />
+        </div>
+
+        <div class="col-sm-12">
+          <label for="reason">المرفقات</label>
+
+          <ngx-dropzone (change)="upload($event);onSelect($event)" class="dropzone" #inputFile>
+            <ngx-dropzone-label>اسحب الملفات هنا او اضغط للتحميل</ngx-dropzone-label>
+            <ngx-dropzone-preview *ngFor="let f of files1" [removable]="true" (removed)="onRemove(f)">
+              <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+            </ngx-dropzone-preview>
+          </ngx-dropzone>
+
         </div>
 
         <div class="col-12 text-center text-md-left mt-3">

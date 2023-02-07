@@ -66,6 +66,17 @@
           <label for="keys"> السبب </label>
           <input type="text" id="keys" name="raison" #raison="ngModel" [(ngModel)]="rs.raison" />
         </div>
+        <div class="col-sm-12">
+          <label for="reason">المرفقات</label>
+
+          <ngx-dropzone (change)="upload($event);onSelect($event)" class="dropzone" #inputFile>
+            <ngx-dropzone-label>اسحب الملفات هنا او اضغط للتحميل</ngx-dropzone-label>
+            <ngx-dropzone-preview *ngFor="let f of files1" [removable]="true" (removed)="onRemove(f)">
+              <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+            </ngx-dropzone-preview>
+          </ngx-dropzone>
+
+        </div>
         <div class="col-md-12 text-left">
           <input type="submit"
                  style="width: 130px;"

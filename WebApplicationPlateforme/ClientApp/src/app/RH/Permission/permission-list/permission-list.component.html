@@ -80,7 +80,7 @@
           <div class="task-form form-row stop-form">
     
             <form class="task-form form-row service-form" #form="ngForm" autocomplete="off" (submit)="onSubmit(form)">
-              <input type="date" id="date" name="etat" #etat="ngModel" [(ngModel)]="congeService.formData.etat" hidden/>
+              <input type="date" id="date" name="etat" #etat="ngModel" [(ngModel)]="congeService.formData.etat" hidden />
               <div class="col-md-6">
                 <label for="date">التاريخ</label>
                 <input type="date" id="date" name="date" #date="ngModel" [(ngModel)]="congeService.formData.date" />
@@ -112,6 +112,16 @@
               <div class="col-md-6">
                 <label for="reason">سبب الاستئذان</label>
                 <textarea class="form-control" id="reason" name="raison" #raison="ngModel" [(ngModel)]="congeService.formData.raison"></textarea>
+              </div>
+              <div class="">
+                <label>المرفقات</label>
+                <span class="data">
+                  <span *ngFor="let pr of filesList">
+                    <i class="ml-2 fa fa-arrow-down" style="color:dodgerblue"></i>
+                    <a (click)="download(pr.path)" class="ml-3" style="color:dodgerblue">{{pr.path}}</a>
+
+                  </span>
+                </span>
               </div>
 
               <div class="col-12 text-center text-md-left mt-3">

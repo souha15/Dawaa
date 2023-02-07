@@ -111,6 +111,16 @@
                 {{per.raison}}
 
               </div>
+              <div class="">
+                <label>المرفقات</label>
+                <span class="data">
+                  <span *ngFor="let pr of filesList">
+                    <i class="ml-2 fa fa-arrow-down" style="color:dodgerblue"></i>
+                    <a (click)="download(pr.path)" class="ml-3" style="color:dodgerblue">{{pr.path}}</a>
+
+                  </span>
+                </span>
+              </div>
 
             </form>
 

@@ -4,3 +4,9 @@
   border: 1px solid #ccc;
   width: 50%;
 }
+.dropzone {
+  font-size: 18px;
+  color: #2196f3;
+  border: 2px dashed #2196f3;
+  width: 500px;
+}

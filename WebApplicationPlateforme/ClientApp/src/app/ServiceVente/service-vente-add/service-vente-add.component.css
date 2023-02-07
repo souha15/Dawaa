@@ -15,7 +15,7 @@
     width: 50%;
   }
 
-.dropzone {
+/*.dropzone {
   font-size: 18px;
   color: #2196f3;
   border: 2px thin #2196f3;
@@ -23,4 +23,10 @@
   height: 170px !important;
   min-height: 170px !important;
   overflow: hidden;
+}*/
+.dropzone {
+  font-size: 18px;
+  color: #2196f3;
+  border: 2px dashed #2196f3;
+  width: 500px;
 }

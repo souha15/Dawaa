@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, ElementRef, ViewChild, Output, Input } from '@angular/core';
 import { OrdrePayStockageService } from '../../shared/Services/Gsetion Stock/ordre-pay-stockage.service';
 import { ToastrService } from 'ngx-toastr';
 import { OrdrePayStockage } from '../../shared/Models/Gestion Stock/ordre-pay-stockage.model';
@@ -14,13 +14,21 @@ import { BenPayStockOrdreService } from '../../shared/Services/Gsetion Stock/ben
 import { BenPayStockOrdre } from '../../shared/Models/Gestion Stock/ben-pay-stock-ordre.model';
 import { SettingsBenService } from '../../shared/Services/GestBen/settings-ben.service';
 import { TbListening } from '../../shared/Models/Evenements/tb-listening.model';
+import { ProgressStatus } from '../../shared/Interfaces/progress-status';
+import { FileServiceService } from '../../shared/Services/ServiceRh/file-service.service';
+import { UploadDownloadService } from '../../shared/Services/Taches/upload-download.service';
+import { HttpEventType } from '@angular/common/http';
+import { ProgressStatusEnum } from '../../shared/Enum/progress-status-enum.enum';
+import { FileService } from '../../shared/Models/ServiceRh/file-service.model';
 @Component({
   selector: 'app-add-ordre-pay',
   templateUrl: './add-ordre-pay.component.html',
   styleUrls: ['./add-ordre-pay.component.css']
 })
 export class AddOrdrePayComponent implements OnInit {
-
+  @Input() public disabled: boolean;
+  @Output() public uploadStatuss: EventEmitter<ProgressStatus>;
+  @ViewChild('inputFile') inputFile: ElementRef;
   constructor(private OrdrePayService: OrdrePayStockageService,
     private UserService: UserServiceService,
     private toastr: ToastrService,
@@ -28,7 +36,10 @@ export class AddOrdrePayComponent implements OnInit {
     private benService: GestBenService,
     private TypeStockageService: TypeStockageService,
     private settingsService: SettingsBenService,
-    private BenOrdreService: BenPayStockOrdreService) { }
+    private BenOrdreService: BenPayStockOrdreService,
+    private filesService: FileServiceService,
+    public serviceupload: UploadDownloadService, ) { this.uploadStatuss = new EventEmitter<ProgressStatus>(); }
+
 
 
   BenList: GestBen[] = [];
@@ -37,6 +48,7 @@ export class AddOrdrePayComponent implements OnInit {
   ngOnInit(): void {
     this.getSettings();
     this.getUserConnected();
+    this.getFiles();
     this.benService.ListGestBen().subscribe(res => {
       this.BenList = res
       this.nball = this.BenList.length;
@@ -333,6 +345,15 @@ export class AddOrdrePayComponent implements OnInit {
       this.pay.etatOrdre ="في الإنتظار"
       this.OrdrePayService.CreateOrdrePayStockage(this.pay).subscribe(res => {
         this.IdO = res.id
+        this.pj.serviceId = res.id;
+        this.pj.serviceName = "OrdrePay";
+        this.fileslist.forEach(item => {
+          this.pj.path = item;
+          this.filesService.Add(this.pj).subscribe(resfiles => {
+            this.files1 = [];
+          })
+        });
+
         if (this.part && this.benPartTest) {
           this.benPart.idOrdrePayStockage = this.IdO
           this.BenOrdreService.CreateBenPayStockOrdre(this.benPart).subscribe(res => {
@@ -490,5 +511,96 @@ export class AddOrdrePayComponent implements OnInit {
       }
     }
   }
+  //Files
+  files1: File[] = [];
+  onSelect(event) {
+    //console.log(event);
+    this.files1.push(...event.addedFiles);
+  }
 
+  onRemove(event) {
+    this.files1.splice(this.files1.indexOf(event), 1);
+    this.fileslist.splice(this.fileslist.indexOf(event), 1);
+  }
+
+
+  public response: { 'dbpathsasstring': '' };
+  public isCreate: boolean;
+  public pj: FileService = new FileService();
+  public files: string[];
+
+  //get List of Files
+
+  private getFiles() {
+    this.serviceupload.getFiles().subscribe(
+      data => {
+        this.files = data
+
+      }
+    );
+
+  }
+
+  //Get file name for Database
+
+  GetFileName() {
+    let sa: string;
+    let s: any;
+    let finalres: any;
+    let i: number = 0;
+    let tlistnew: any[] = [];
+    for (var k = 0; k < this.files.length; k++) {
+      sa = <string>this.files[k]
+      s = sa.toString().split('uploads\\,', sa.length - 1);
+      finalres = s.toString().split('uploads\\', sa.length - 1);
+
+      tlistnew[i] = finalres[1]
+      i++;
+
+    }
+
+
+  }
+
+  //Upload
+
+  //Save it ToDatabase
+  Idtransaction: number;
+  url: any;
+  file: any;
+  fileslist: string[] = [];
+  public upload(event) {
+    if (event.addedFiles && event.addedFiles.length > 0) {
+      this.file = event.addedFiles[0];
+      this.uploadStatuss.emit({ status: ProgressStatusEnum.START });
+      this.serviceupload.uploadFile(this.file).subscribe(
+        data => {
+          if (data) {
+            switch (data.type) {
+              case HttpEventType.UploadProgress:
+                this.uploadStatuss.emit({ status: ProgressStatusEnum.IN_PROGRESS, percentage: Math.round((data.loaded / data.total) * 100) });
+                break;
+              case HttpEventType.Response:
+                // this.inputFile.nativeElement.value = '';
+                this.uploadStatuss.emit({ status: ProgressStatusEnum.COMPLETE });
+                break;
+            }
+            this.getFiles();
+            this.GetFileName();
+
+
+
+          }
+
+        },
+
+        error => {
+          /// this.inputFile.nativeElement.value = '';
+          this.uploadStatuss.emit({ status: ProgressStatusEnum.ERROR });
+        }
+      );
+      this.fileslist.push(this.file.name);
+
+    }
+  }
 }
