@@ -16,6 +16,7 @@ import { FileServiceService } from '../../../shared/Services/ServiceRh/file-serv
 import { ProgressStatus } from '../../../shared/Interfaces/progress-status';
 import { HttpEventType } from '@angular/common/http';
 import { ProgressStatusEnum } from '../../../shared/Enum/progress-status-enum.enum';
+
 @Component({
   selector: 'app-avance-add',
   templateUrl: './avance-add.component.html',
