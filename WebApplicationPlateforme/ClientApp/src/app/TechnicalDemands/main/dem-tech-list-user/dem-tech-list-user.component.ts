@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { TechDemService } from '../../../shared/Services/TechnicalDemands/tech-dem.service';
 import { TypeTechDemService } from '../../../shared/Services/TechnicalDemands/type-tech-dem.service';
 import { UserServiceService } from '../../../shared/Services/User/user-service.service';
@@ -8,6 +8,12 @@ import { TechDem } from '../../../shared/Models/TechnicalDemands/tech-dem.model'
 import { NgForm } from '@angular/forms';
 import { Administration } from '../../../shared/Models/Administration/administration.model';
 import { TbListening } from '../../../shared/Models/Evenements/tb-listening.model';
+import { ProgressStatus } from '../../../shared/Interfaces/progress-status';
+import { UploadDownloadService } from '../../../shared/Services/Taches/upload-download.service';
+import { FileServiceService } from '../../../shared/Services/ServiceRh/file-service.service';
+import { ProgressStatusEnum } from '../../../shared/Enum/progress-status-enum.enum';
+import { HttpEventType } from '@angular/common/http';
+import { FileService } from '../../../shared/Models/ServiceRh/file-service.model';
 
 @Component({
   selector: 'app-dem-tech-list-user',
@@ -17,15 +23,20 @@ import { TbListening } from '../../../shared/Models/Evenements/tb-listening.mode
 export class DemTechListUserComponent implements OnInit {
 
 
+  @Output() public downloadStatus: EventEmitter<ProgressStatus>;
+
   constructor(private demTechService: TechDemService,
     private demTypeService: TypeTechDemService,
     private UserService: UserServiceService,
     private adminService: AdministrationService,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService,
+    public filesService: FileServiceService,
+    public serviceupload: UploadDownloadService, ) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
 
   ngOnInit(): void {
     this.getUserConnected();
     this.getDemList();
+    this.getFiles();
     this.getAdminList();
     this.getServices()
   }
@@ -62,7 +73,9 @@ export class DemTechListUserComponent implements OnInit {
   populateForm(dem: TechDem) {
     this.demTechService.formData = Object.assign({}, dem)
     this.dem = Object.assign({}, dem);
-
+    this.filesService.GetDemTechFiles(this.dem.id).subscribe(res => {
+      this.filesList = res;
+    })
     if (this.dem.typedem == "أخرى") {
       this.autre = true;
       this.video = false;
@@ -192,5 +205,45 @@ export class DemTechListUserComponent implements OnInit {
     else {
       this.toastr.error(' لم يتم التحديث الطلب تحت الإجرء   ', ' فشل');
     }
+  }
+  //Download
+  filesList: FileService[] = [];
+  public files: string[];
+  private getFiles() {
+    this.serviceupload.getFiles().subscribe(
+      data => {
+        this.files = data
+
+      }
+    );
+
+  }
+
+  public download(filepath) {
+    this.downloadStatus.emit({ status: ProgressStatusEnum.START });
+    this.serviceupload.downloadFile(filepath).subscribe(
+      data => {
+        switch (data.type) {
+          case HttpEventType.DownloadProgress:
+            this.downloadStatus.emit({ status: ProgressStatusEnum.IN_PROGRESS, percentage: Math.round((data.loaded / data.total) * 100) });
+            break;
+          case HttpEventType.Response:
+            this.downloadStatus.emit({ status: ProgressStatusEnum.COMPLETE });
+            const downloadedFile = new Blob([data.body], { type: data.body.type });
+            const a = document.createElement('a');
+            a.setAttribute('style', 'display:none;');
+            document.body.appendChild(a);
+            a.download = filepath;
+            a.href = URL.createObjectURL(downloadedFile);
+            a.target = '_blank';
+            a.click();
+            document.body.removeChild(a);
+            break;
+        }
+      },
+      error => {
+        this.downloadStatus.emit({ status: ProgressStatusEnum.ERROR });
+      }
+    );
   }
 }

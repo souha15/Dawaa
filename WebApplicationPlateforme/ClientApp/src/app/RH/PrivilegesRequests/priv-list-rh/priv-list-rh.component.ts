@@ -1,28 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { UserServiceService } from '../../../shared/Services/User/user-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { CreationTravailDemandeService } from '../../../shared/Services/ServiceRh/creation-travail-demande.service';
 import { CrationTravailDemande } from '../../../shared/Models/ServiceRh/cration-travail-demande.model';
 import { NotifService } from '../../../shared/Services/NotifSystem/notif.service';
 import { Notif } from '../../../shared/Models/NotifSystem/notif.model';
-
+import { ProgressStatus } from '../../../shared/Interfaces/progress-status';
+import { FileServiceService } from '../../../shared/Services/ServiceRh/file-service.service';
+import { UploadDownloadService } from '../../../shared/Services/Taches/upload-download.service';
+import { FileService } from '../../../shared/Models/ServiceRh/file-service.model';
+import { HttpEventType } from '@angular/common/http';
+import { ProgressStatusEnum } from '../../../shared/Enum/progress-status-enum.enum';
 @Component({
   selector: 'app-priv-list-rh',
   templateUrl: './priv-list-rh.component.html',
   styleUrls: ['./priv-list-rh.component.css']
 })
 export class PrivListRhComponent implements OnInit {
+  @Output() public downloadStatus: EventEmitter<ProgressStatus>;
 
   constructor(private UserService: UserServiceService,
     private toastr: ToastrService,
     private ctService: CreationTravailDemandeService,
-    private notifService: NotifService
-  ) { }
+    private notifService: NotifService,
+    public filesService: FileServiceService,
+    public serviceupload: UploadDownloadService, ) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
+
 
   ngOnInit(): void {
     this.getUserConnected();
     this.getCreance();
-
+    this.getFiles();
   }
 
   UserIdConnected: string;
@@ -95,6 +103,9 @@ export class PrivListRhComponent implements OnInit {
     this.ctService.formData = Object.assign({}, facture)
     this.factId = facture.id;
     this.fact = Object.assign({}, facture);
+    this.filesService.GetCreationFiles(this.fact.id).subscribe(res => {
+      this.filesList = res;
+    })
   }
 
 
@@ -112,6 +123,46 @@ export class PrivListRhComponent implements OnInit {
         this.toastr.warning('لم يتم رفض الطلب ', ' فشل');
       })
 
+  }
+  //Download
+  filesList: FileService[] = [];
+  public files: string[];
+  private getFiles() {
+    this.serviceupload.getFiles().subscribe(
+      data => {
+        this.files = data
+
+      }
+    );
+
+  }
+
+  public download(filepath) {
+    this.downloadStatus.emit({ status: ProgressStatusEnum.START });
+    this.serviceupload.downloadFile(filepath).subscribe(
+      data => {
+        switch (data.type) {
+          case HttpEventType.DownloadProgress:
+            this.downloadStatus.emit({ status: ProgressStatusEnum.IN_PROGRESS, percentage: Math.round((data.loaded / data.total) * 100) });
+            break;
+          case HttpEventType.Response:
+            this.downloadStatus.emit({ status: ProgressStatusEnum.COMPLETE });
+            const downloadedFile = new Blob([data.body], { type: data.body.type });
+            const a = document.createElement('a');
+            a.setAttribute('style', 'display:none;');
+            document.body.appendChild(a);
+            a.download = filepath;
+            a.href = URL.createObjectURL(downloadedFile);
+            a.target = '_blank';
+            a.click();
+            document.body.removeChild(a);
+            break;
+        }
+      },
+      error => {
+        this.downloadStatus.emit({ status: ProgressStatusEnum.ERROR });
+      }
+    );
   }
 
 }

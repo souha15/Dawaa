@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { DemandeSuppHeure } from '../../../shared/Models/ServiceRh/demande-supp-heure.model';
 import { ToastrService } from 'ngx-toastr';
 import { UserServiceService } from '../../../shared/Services/User/user-service.service';
@@ -7,23 +7,34 @@ import { NgForm } from '@angular/forms';
 import { NotifService } from '../../../shared/Services/NotifSystem/notif.service';
 import { Notif } from '../../../shared/Models/NotifSystem/notif.model';
 import { SignalRService, connection, AutomaticNotification } from '../../../shared/Services/signalR/signal-r.service';
+import { FileServiceService } from '../../../shared/Services/ServiceRh/file-service.service';
+import { UploadDownloadService } from '../../../shared/Services/Taches/upload-download.service';
+import { ProgressStatus } from '../../../shared/Interfaces/progress-status';
+import { HttpEventType } from '@angular/common/http';
+import { ProgressStatusEnum } from '../../../shared/Enum/progress-status-enum.enum';
+import { FileService } from '../../../shared/Models/ServiceRh/file-service.model';
+
 @Component({
   selector: 'app-demande-supp-heure-list-director',
   templateUrl: './demande-supp-heure-list-director.component.html',
   styleUrls: ['./demande-supp-heure-list-director.component.css']
 })
 export class DemandeSuppHeureListDirectorComponent implements OnInit {
+  @Output() public downloadStatus: EventEmitter<ProgressStatus>;
 
   constructor(private suppheureService: DemandeSuppHeureService,
     private toastr: ToastrService,
     private UserService: UserServiceService,
     private signalService: SignalRService,
-    private notifService: NotifService,) { }
+    private notifService: NotifService,
+    public filesService: FileServiceService,
+    public serviceupload: UploadDownloadService, ) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
+
 
   ngOnInit(): void {
     this.getUserConnected();
     this.getCreance();
-
+    this.getFiles();
     this.userOnLis();
     this.userOffLis();
     this.logOutLis();
@@ -162,6 +173,10 @@ export class DemandeSuppHeureListDirectorComponent implements OnInit {
     this.suppheureService.formData = Object.assign({}, facture)
     this.factId = facture.id;
     this.fact = Object.assign({}, facture);
+
+    this.filesService.GetSuppHeureFiles(this.fact.id).subscribe(res => {
+      this.filesList = res;
+    })
   }
 
 
@@ -239,5 +254,46 @@ export class DemandeSuppHeureListDirectorComponent implements OnInit {
       err => {
         this.toastr.warning('لم يتم رفض الطلب ', ' فشل');
       })
+  }
+
+  //Download
+  filesList: FileService[] = [];
+  public files: string[];
+  private getFiles() {
+    this.serviceupload.getFiles().subscribe(
+      data => {
+        this.files = data
+
+      }
+    );
+
+  }
+
+  public download(filepath) {
+    this.downloadStatus.emit({ status: ProgressStatusEnum.START });
+    this.serviceupload.downloadFile(filepath).subscribe(
+      data => {
+        switch (data.type) {
+          case HttpEventType.DownloadProgress:
+            this.downloadStatus.emit({ status: ProgressStatusEnum.IN_PROGRESS, percentage: Math.round((data.loaded / data.total) * 100) });
+            break;
+          case HttpEventType.Response:
+            this.downloadStatus.emit({ status: ProgressStatusEnum.COMPLETE });
+            const downloadedFile = new Blob([data.body], { type: data.body.type });
+            const a = document.createElement('a');
+            a.setAttribute('style', 'display:none;');
+            document.body.appendChild(a);
+            a.download = filepath;
+            a.href = URL.createObjectURL(downloadedFile);
+            a.target = '_blank';
+            a.click();
+            document.body.removeChild(a);
+            break;
+        }
+      },
+      error => {
+        this.downloadStatus.emit({ status: ProgressStatusEnum.ERROR });
+      }
+    );
   }
 }

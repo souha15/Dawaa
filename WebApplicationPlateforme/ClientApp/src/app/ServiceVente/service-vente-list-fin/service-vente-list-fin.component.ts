@@ -24,6 +24,10 @@ import { EtatListCompte } from '../../shared/Models/Comptes/etat-list-compte.mod
 import { ArticlePayChequeService } from '../../shared/Services/Cheques/article-pay-cheque.service';
 import { ArticlePayCheque } from '../../shared/Models/Cheques/article-pay-cheque.model';
 import { Notif } from '../../shared/Models/NotifSystem/notif.model';
+import { FileServiceService } from '../../shared/Services/ServiceRh/file-service.service';
+import { FileService } from '../../shared/Models/ServiceRh/file-service.model';
+
+
 @Component({
   selector: 'app-service-vente-list-fin',
   templateUrl: './service-vente-list-fin.component.html',

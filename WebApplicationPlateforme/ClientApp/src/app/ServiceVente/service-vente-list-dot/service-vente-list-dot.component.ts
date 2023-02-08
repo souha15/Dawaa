@@ -13,6 +13,9 @@ import { HttpEventType } from '@angular/common/http';
 import { ProgressStatusEnum } from '../../shared/Enum/progress-status-enum.enum';
 import { OffreVente } from '../../shared/Models/ServiceVente/offre-vente.model';
 import { TbListening } from '../../shared/Models/Evenements/tb-listening.model';
+import { FileServiceService } from '../../shared/Services/ServiceRh/file-service.service';
+import { FileService } from '../../shared/Models/ServiceRh/file-service.model';
+
 @Component({
   selector: 'app-service-vente-list-dot',
   templateUrl: './service-vente-list-dot.component.html',
@@ -31,6 +34,7 @@ export class ServiceVenteListDotComponent implements OnInit {
     private rootUrl: PathSharedService,
     private UserService: UserServiceService,
     public serviceupload: UploadDownloadService,
+    public filesService: FileServiceService,
   ) {
   this.uploadStatuss = new EventEmitter<ProgressStatus>();
   this.downloadStatus = new EventEmitter<ProgressStatus>();}
@@ -53,9 +57,13 @@ export class ServiceVenteListDotComponent implements OnInit {
     })
 }
 
+  filesList: FileService[] = [];
   populateForm(dem: ServiceVente) {
     this.demService.formData = Object.assign({}, dem)
     this.dem = Object.assign({}, dem);
+    this.filesService.GetVenteFiles(this.dem.id).subscribe(res => {
+      this.filesList = res;
+    })
     this.offreService.Get().subscribe(res => {
       this.lf = res
       this.lf1 = this.lf.filter(item => item.type == "التسعيرة الأولى" && item.idVente == this.dem.id)

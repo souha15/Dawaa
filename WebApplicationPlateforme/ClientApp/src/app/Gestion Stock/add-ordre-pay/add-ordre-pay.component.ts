@@ -20,6 +20,7 @@ import { UploadDownloadService } from '../../shared/Services/Taches/upload-downl
 import { HttpEventType } from '@angular/common/http';
 import { ProgressStatusEnum } from '../../shared/Enum/progress-status-enum.enum';
 import { FileService } from '../../shared/Models/ServiceRh/file-service.model';
+
 @Component({
   selector: 'app-add-ordre-pay',
   templateUrl: './add-ordre-pay.component.html',

@@ -1,7 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CreationTravailDemandeService } from '../../../shared/Services/ServiceRh/creation-travail-demande.service';
 import { CrationTravailDemande } from '../../../shared/Models/ServiceRh/cration-travail-demande.model';
 import { ToastrService } from 'ngx-toastr';
+import { ProgressStatus } from '../../../shared/Interfaces/progress-status';
+import { FileServiceService } from '../../../shared/Services/ServiceRh/file-service.service';
+import { UploadDownloadService } from '../../../shared/Services/Taches/upload-download.service';
+import { FileService } from '../../../shared/Models/ServiceRh/file-service.model';
+import { ProgressStatusEnum } from '../../../shared/Enum/progress-status-enum.enum';
+import { HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-histo-emploi',
@@ -10,11 +16,17 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class HistoEmploiComponent implements OnInit {
 
+  @Output() public downloadStatus: EventEmitter<ProgressStatus>;
+
   constructor(private ctService: CreationTravailDemandeService,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService,
+    public filesService: FileServiceService,
+    public serviceupload: UploadDownloadService, ) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
+
 
   ngOnInit(): void {
     this.getCreance();
+    this.getFiles();
   }
   factList: CrationTravailDemande[] = [];
   GfactList: CrationTravailDemande[] = [];
@@ -38,6 +50,9 @@ export class HistoEmploiComponent implements OnInit {
     this.ctService.formData = Object.assign({}, facture)
     this.factId = facture.id;
     this.fact = Object.assign({}, facture);
+    this.filesService.GetCreationFiles(this.fact.id).subscribe(res => {
+      this.filesList = res;
+    })
     if (this.fact.etatdg == "في الإنتظار" && this.fact.etatrh == "في الإنتظار" && this.fact.etatdir == "في الإنتظار") {
       this.test0 = true;
       this.test50 = false;
@@ -114,5 +129,46 @@ export class HistoEmploiComponent implements OnInit {
 
     }
 
+  }
+
+  //Download
+  filesList: FileService[] = [];
+  public files: string[];
+  private getFiles() {
+    this.serviceupload.getFiles().subscribe(
+      data => {
+        this.files = data
+
+      }
+    );
+
+  }
+
+  public download(filepath) {
+    this.downloadStatus.emit({ status: ProgressStatusEnum.START });
+    this.serviceupload.downloadFile(filepath).subscribe(
+      data => {
+        switch (data.type) {
+          case HttpEventType.DownloadProgress:
+            this.downloadStatus.emit({ status: ProgressStatusEnum.IN_PROGRESS, percentage: Math.round((data.loaded / data.total) * 100) });
+            break;
+          case HttpEventType.Response:
+            this.downloadStatus.emit({ status: ProgressStatusEnum.COMPLETE });
+            const downloadedFile = new Blob([data.body], { type: data.body.type });
+            const a = document.createElement('a');
+            a.setAttribute('style', 'display:none;');
+            document.body.appendChild(a);
+            a.download = filepath;
+            a.href = URL.createObjectURL(downloadedFile);
+            a.target = '_blank';
+            a.click();
+            document.body.removeChild(a);
+            break;
+        }
+      },
+      error => {
+        this.downloadStatus.emit({ status: ProgressStatusEnum.ERROR });
+      }
+    );
   }
 }

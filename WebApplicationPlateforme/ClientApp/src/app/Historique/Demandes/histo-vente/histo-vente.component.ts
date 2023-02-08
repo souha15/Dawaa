@@ -11,6 +11,8 @@ import { TypeTypeServiceVenteservice } from '../../../shared/Services/ServiceVen
 import { OffreVenteService } from '../../../shared/Services/ServiceVente/offre-vente.service';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { FileServiceService } from '../../../shared/Services/ServiceRh/file-service.service';
+import { FileService } from '../../../shared/Models/ServiceRh/file-service.model';
 
 @Component({
   selector: 'app-histo-vente',
@@ -24,12 +26,14 @@ export class HistoVenteComponent implements OnInit {
     private typeService: TypeTypeServiceVenteservice,
     private offreService: OffreVenteService,
     public serviceupload: UploadDownloadService,
-    private toastr: ToastrService) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
+    private toastr: ToastrService,
+    public filesService: FileServiceService,) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
 
 
   ngOnInit(): void {
     this.getList();
     this.getTypeService();
+   
   }
   p: Number = 1;
   count: Number = 5;
@@ -45,6 +49,9 @@ export class HistoVenteComponent implements OnInit {
   populateForm(dem: ServiceVente) {
     this.demService.formData = Object.assign({}, dem)
     this.dem = Object.assign({}, dem);
+    this.filesService.GetVenteFiles(this.dem.id).subscribe(res => {
+      this.filesList = res;
+    })
     this.offreService.Get().subscribe(res => {
       this.lf = res
       this.lf1 = this.lf.filter(item => item.type == "التسعيرة الأولى" && item.idVente == this.dem.id)
@@ -103,7 +110,7 @@ export class HistoVenteComponent implements OnInit {
 
 
   }
-
+  filesList: FileService[] = [];
   isValidFormSubmitted = false;
   path: string;
   date = new Date().toLocaleDateString();
