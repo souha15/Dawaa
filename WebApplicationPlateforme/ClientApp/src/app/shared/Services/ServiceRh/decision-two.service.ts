@@ -75,6 +75,17 @@ export class DecisionTwoService {
     return this.http.get<DecisionTwo>(this.rootURL + '/DecisionTwoes/' + Id);
   }
 
+  GetDecisionAllAdmin() {
+    return this.http.get<DecisionTwo>(this.rootURL + '/DecisionTwoes/GetDecisionAllAdmin');
+  }
+
+  GetDecisionToAdmin(adminId?) {
+    return this.http.get<DecisionTwo>(this.rootURL + '/DecisionTwoes/GetDecisionToAdmin/' + adminId);
+  }
+
+  GetDecisionToUser(UserId) {
+    return this.http.get<DecisionTwo>(this.rootURL + '/DecisionTwoes/GetDecisionToUser/' + UserId);
+  }
   //Edit DecisionTwo
 
   Edit() {

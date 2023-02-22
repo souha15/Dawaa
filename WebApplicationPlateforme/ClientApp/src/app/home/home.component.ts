@@ -20,6 +20,7 @@ import { UserDetail } from '../shared/Models/User/user-detail.model';
 import { DecisionTwoService } from '../shared/Services/ServiceRh/decision-two.service';
 import { DecisionTwo } from '../shared/Models/ServiceRh/decision-two.model';
 import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -72,22 +73,72 @@ export class HomeComponent implements OnInit {
   testNotif: boolean = false;
   user: UserDetail = new UserDetail();
   showdec: boolean = false;
+  today;
   async getUserConnected(): Promise<any> {
     this.user = await this.UserService.getUserConnected();
     this.UserIdConnected = this.user.id;
+    if (this.UserIdConnected != null) {
+      this.trinService.GetDecisionToUser(this.UserIdConnected).subscribe(resultat => {
+        if (resultat != null) { 
+        this.today = new Date()
+        let str1 = resultat.attribut6;
+        let d1 = new Date(str1);
+        var diff = Math.abs(this.today.getTime() - d1.getTime());
+        var diffDays = Math.ceil(diff / (1000 * 3600 * 24));
+
+        if ((diffDays <= 4) && (diffDays >= 1)) {
+          this.showdec = true;
+        } else {
+          this.showdec = false;
+        }
+      }
+      })
+    }
     this.UserNameConnected = this.user.fullName;
     if (this.user.idAdministration != null) {
       this.idadmin = this.user.idAdministration;
       this.idetab = this.user.idDepartement;
+
+      this.trinService.GetDecisionToAdmin(this.idadmin).subscribe(resultat => {
+        if (resultat != null) {
+          this.today = new Date()
+          let str1 = resultat.attribut6;
+          let d1 = new Date(str1);
+          var diff = Math.abs(this.today.getTime() - d1.getTime());
+          var diffDays = Math.ceil(diff / (1000 * 3600 * 24));
+
+          if ((diffDays <= 4) && (diffDays >= 1)) {
+            this.showdec = true;
+          } else {
+            this.showdec = false;
+          }
+        }
+      })
     }
    
-    this.trinService.TestDecision(this.UserIdConnected, this.idadmin).subscribe(resultat => {
-      if (resultat.length!=0) {
-        this.showdec = true;
-      } else {
-        this.showdec = false;
-      } 
+    this.trinService.GetDecisionAllAdmin().subscribe(resultat => {
+      if (resultat != null) {
+        this.today = new Date()
+        let str1 = resultat.attribut6;
+        let d1 = new Date(str1);
+        var diff = Math.abs(this.today.getTime() - d1.getTime());
+        var diffDays = Math.ceil(diff / (1000 * 3600 * 24));
+
+        if ((diffDays <= 4) && (diffDays >= 1)) {
+          this.showdec = true;
+        } else {
+          this.showdec = false;
+        }
+      }
     })
+    //   
+    //this.trinService.TestDecision(this.UserIdConnected, this.idadmin).subscribe(resultat => {
+    //  if (resultat.length!=0) {
+    //    this.showdec = true;
+    //  } else {
+    //    this.showdec = false;
+    //  } 
+    //})
 
 
 
