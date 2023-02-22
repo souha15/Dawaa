@@ -132,9 +132,19 @@ export class EnregistrerDecisionComponent implements OnInit {
     else {
       this.isValidFormSubmitted = true;
       this.de.decision = this.decision
+      
       this.trinService.Add(this.de).subscribe(res => {
-        form.resetForm();
-        this.toastr.success("تم التسجيل  بنجاح", " تسجيل ");
+        
+
+        //let  date = new Date(res.attribut6);
+        //res.attribut6 = date.setDate(date.getDate() + 3).toString();
+
+        this.trinService.PutObservableE(res).subscribe(res => {
+          console.log(res)
+          form.resetForm();
+          this.toastr.success("تم التسجيل  بنجاح", " تسجيل ");
+        })
+   
         this.files1 = [];   
         this.fileslist.forEach(item => {
           this.pj.path = item;
@@ -150,7 +160,8 @@ export class EnregistrerDecisionComponent implements OnInit {
         err => {
           this.toastr.error("فشل التسجيل  الطلب", " تسجيل ")
         }
-      )
+        )
+     
     }
   }
 

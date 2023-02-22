@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Objects;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -89,8 +90,7 @@ namespace WebApplicationPlateforme.Controllers.ServiceRh
             decisionTwo.attribut3 = date.Month.ToString();
             decisionTwo.attribut4 = date.Year.ToString();
             decisionTwo.dateenreg = value.Date.ToString(fmt);
-            // Add 3 days to the dateEnreg 
-            decisionTwo.attribut6 = Convert.ToDateTime(decisionTwo.dateenreg).AddDays(3).ToString(fmt);
+            decisionTwo.attribut6 = decisionTwo.attribut4 + "-" + decisionTwo.attribut3 + "-" + decisionTwo.attribut2;
             _context.decisionTwos.Add(decisionTwo);
             await _context.SaveChangesAsync();
 
@@ -98,64 +98,97 @@ namespace WebApplicationPlateforme.Controllers.ServiceRh
         }
 
         [HttpGet]
-        [Route("TestDecision/{UserId}/{adminId}")]
+        [Route("GetDecisionAllAdmin")]
 
-        public List<DecisionTwo> TestDecision(string UserId, int? adminId)
-        {
-            List<DecisionTwo> ListDecision = new List<DecisionTwo>();
-            List<DecisionTwo> ListDecisionRslt = new List<DecisionTwo>();
-
-            DateTimeOffset value = DateTimeOffset.Now;
-            string fmt = "dd/MM/yyyy";
-            string date = value.Date.ToString(fmt);
-            ListDecision =  _context.decisionTwos.Where(item => item.attribut5 == "1" || item.alladmin == "1" || item.employeeid == UserId).ToList();
-            int i = 0;
-            Boolean rslt = false;
-            if (ListDecision.Count > 0)
-            {
-                while (i < ListDecision.Count() && rslt == false )
-                {
-                    if(adminId != null) { 
-                    if(ListDecision[i].alladmin == "1" && Convert.ToDateTime(date) <= Convert.ToDateTime(ListDecision[i].attribut6))
-                    {
-                        rslt = true;
-                        ListDecisionRslt.Add(ListDecision[i]);
-                    }
-                    else if(ListDecision[i].attribut5 =="1" && ListDecision[i].adminid == adminId && Convert.ToDateTime(date) <= Convert.ToDateTime(ListDecision[i].attribut6))
-                    {
-                        rslt = true;
-                        ListDecisionRslt.Add(ListDecision[i]);
-                    }
-                    else if(ListDecision[i].employeeid == UserId && Convert.ToDateTime(date) <= Convert.ToDateTime(ListDecision[i].attribut6))
-                    {
-
-                        rslt = true;
-                        ListDecisionRslt.Add(ListDecision[i]);
-                    }
-
-                    }
-                    else
-                    {
-                        if (ListDecision[i].alladmin == "1" && Convert.ToDateTime(date) <= Convert.ToDateTime(ListDecision[i].attribut6))
-                        {
-                            rslt = true;
-                            ListDecisionRslt.Add(ListDecision[i]);
-                        }
-                        
-                        else if (ListDecision[i].employeeid == UserId && Convert.ToDateTime(date) <= Convert.ToDateTime(ListDecision[i].attribut6))
-                        {
-
-                            rslt = true;
-                            ListDecisionRslt.Add(ListDecision[i]);
-                        }
-                    }
-                    i++;
-                }
-            }
-     
-
-            return ListDecisionRslt;
+        public DecisionTwo GetDecisionAllAdmin(){
+            DecisionTwo Decision = new DecisionTwo();
+           Decision = _context.decisionTwos.Where(item => item.alladmin == "1").OrderByDescending(item=> item.Id).FirstOrDefault();
+            return Decision;
         }
+
+        [HttpGet]
+        [Route("GetDecisionToUser/{UserId}")]
+
+        public DecisionTwo GetDecisionToUser(string UserId)
+        {
+            DecisionTwo Decision = new DecisionTwo();
+            Decision = _context.decisionTwos.Where(item => item.employeeid == UserId).OrderByDescending(item => item.Id).FirstOrDefault();
+            return Decision;
+        }
+
+
+        [HttpGet]
+        [Route("GetDecisionToAdmin/{adminId}")]
+
+        public DecisionTwo GetDecisionToAdmin(int?  adminId)
+        {
+            DecisionTwo Decision = new DecisionTwo();
+            if (adminId != null)
+            {
+                Decision = _context.decisionTwos.Where(item => item.attribut5 == "1" && item.adminid == adminId).OrderByDescending(item => item.Id).FirstOrDefault();
+            }
+            return Decision;
+        }
+
+        //[HttpGet]
+        //[Route("TestDecision/{UserId}/{adminId}")]
+
+        //public List<DecisionTwo> TestDecision(string UserId, int? adminId)
+        //{
+        //    List<DecisionTwo> ListDecision = new List<DecisionTwo>();
+        //    List<DecisionTwo> ListDecisionRslt = new List<DecisionTwo>();
+
+        //    DateTimeOffset value = DateTimeOffset.Now;
+        //    string fmt = "dd/MM/yyyy";
+        //    string date = value.Date.ToString();
+        //    ListDecision =  _context.decisionTwos.Where(item => item.attribut5 == "1" || item.alladmin == "1" || item.employeeid == UserId).ToList();
+        //    int i = 0;
+        //    Boolean rslt = false;
+        //    if (ListDecision.Count > 0)
+        //    {
+        //        while (i < ListDecision.Count() && rslt == false )
+        //        {
+        //            if(adminId != null) { 
+        //            if(ListDecision[i].alladmin == "1" && Convert.ToDateTime(date, CultureInfo.InvariantCulture) <= Convert.ToDateTime(ListDecision[i].attribut6, CultureInfo.InvariantCulture))
+        //            {
+        //                rslt = true;
+        //                ListDecisionRslt.Add(ListDecision[i]);
+        //            }
+        //            else if(ListDecision[i].attribut5 =="1" && ListDecision[i].adminid == adminId && Convert.ToDateTime(date, CultureInfo.InvariantCulture) <= Convert.ToDateTime(ListDecision[i].attribut6, CultureInfo.InvariantCulture))
+        //            {
+        //                rslt = true;
+        //                ListDecisionRslt.Add(ListDecision[i]);
+        //            }
+        //            else if(ListDecision[i].employeeid == UserId && Convert.ToDateTime(date, CultureInfo.InvariantCulture) <= Convert.ToDateTime(ListDecision[i].attribut6, CultureInfo.InvariantCulture))
+        //            {
+
+        //                rslt = true;
+        //                ListDecisionRslt.Add(ListDecision[i]);
+        //            }
+
+        //            }
+        //            else
+        //            {
+        //                if (ListDecision[i].alladmin == "1" && Convert.ToDateTime(date, CultureInfo.InvariantCulture) <= Convert.ToDateTime(ListDecision[i].attribut6, CultureInfo.InvariantCulture))
+        //                {
+        //                    rslt = true;
+        //                    ListDecisionRslt.Add(ListDecision[i]);
+        //                }
+
+        //                else if (ListDecision[i].employeeid == UserId && Convert.ToDateTime(date, CultureInfo.InvariantCulture) <= Convert.ToDateTime(ListDecision[i].attribut6, CultureInfo.InvariantCulture))
+        //                {
+
+        //                    rslt = true;
+        //                    ListDecisionRslt.Add(ListDecision[i]);
+        //                }
+        //            }
+        //            i++;
+        //        }
+        //    }
+
+
+        //    return ListDecisionRslt;
+        //}
 
         // DELETE: api/DecisionTwoes/5
         [HttpDelete("{id}")]
@@ -318,7 +351,7 @@ namespace WebApplicationPlateforme.Controllers.ServiceRh
             DateTimeOffset value = DateTimeOffset.Now;
             string fmt = "d";
             string date = value.Date.ToString(fmt);
-            int diff = (Convert.ToDateTime(date) - Convert.ToDateTime(dateEnreg)).Days;
+            int diff = (Convert.ToDateTime(date, CultureInfo.InvariantCulture) - Convert.ToDateTime(dateEnreg, CultureInfo.InvariantCulture)).Days;
             return diff;
         }
 
