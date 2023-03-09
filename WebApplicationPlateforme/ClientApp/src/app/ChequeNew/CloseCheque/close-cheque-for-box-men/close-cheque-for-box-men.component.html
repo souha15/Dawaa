@@ -11,13 +11,34 @@
       <header>
         <h3 class="task-head">  الشيكات المدفوعه</h3>
       </header>
-      <input class="form-control" type="text" name="search" [(ngModel)]="filter" placeholder="بحث">
+      <form class="task-form form-row stop-form">
+        <div class="form-box w-100">
+
+          &nbsp;&nbsp;
+          <label for="rent-cost2"><span><i class="fa fa-bolt"></i></span>رقم الطلب</label>
+          <input type="number" id="rent-cost2" class="" style="width: 130px" [(ngModel)]="numDem" name="numDem" (change)="getnumDem($event)">
+
+
+          &nbsp;&nbsp;
+          <label for="counter-num2"><span><i class="fa fa-coins"></i></span>المبلغ </label>
+          <input name="prix" type="text" id="counter-num2" class="" style="width: 130px" [(ngModel)]="prix" (change)="getprix($event)">
+
+          <div class="text-left">
+            <button class="btn btn-success" (click)="search()" type="button">بحث</button>
+            &nbsp;&nbsp; &nbsp;
+            <button class="btn btn-primary" (click)="getDemPayList()" type="button">تحديث </button>
+          </div>
+
+
+        </div>
+      </form>
       <div class="leave-request-list">
         <div class="table-responsive">
           <table class="table table-bordered text-center table-striped">
             <thead class="thead-primary">
               <tr>
                 <th scope="col">#</th>
+                <th scope="col">رقم الطلب</th>
                 <th scope="col">القسم</th>
                 <th scope="col">مقدم الطلب</th>
                 <th scope="col">موضوع الطلب</th>
@@ -30,14 +51,15 @@
             <tbody>
               <tr *ngFor="let cg of dem6 |  orderBy: key : reverse | filter:filter| paginate: { itemsPerPage: count, currentPage: p };let i = index">
                 <th (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{(p-1) * count + i + 1}}</th>
+                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.numdem}}</td>
                 <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.calsse}}</td>
                 <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.creatorName}}</td>
                 <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.sujet}}</td>
                 <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.prixnb}}</td>
                 <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.demandeur}}</td>
-                <td (click)="populateForm(cg)"><a  class="btn btn-primary" data-toggle="modal" data-target="#myModal3"><i class="fa fa-paper-plane"></i></a></td>
+                <td (click)="populateForm(cg)"><a class="btn btn-primary" data-toggle="modal" data-target="#myModal3"><i class="fa fa-paper-plane"></i></a></td>
 
-                <td  (click)="populateForm(cg)"
+                <td (click)="populateForm(cg)"
                     [ngClass]="{
 
   'success': cg.etatpart === 'معتمدة',

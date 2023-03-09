@@ -191,7 +191,9 @@ export class ValidateCongeComponent implements OnInit {
   per: Conge = new Conge();
   soldecongel: SoldeConge[] = [];
   soldecongel1: SoldeConge[] = [];
+  soldecongel2: SoldeConge[] = [];
   soldeconge: SoldeConge = new SoldeConge();
+
   solde2: SoldeConge = new SoldeConge();
   soldeconge1: SoldeConge[] = [];
   soldexist: boolean = false;
@@ -212,9 +214,9 @@ export class ValidateCongeComponent implements OnInit {
 
       this.soldeCongeService.Get().subscribe(res => {
         this.soldecongel = res
-        this.soldecongel.filter(item => item.idUserCreator == this.per.idUserCreator);
-        this.soldeconge = this.soldecongel[this.soldecongel.length - 1];
-        this.sc = this.soldecongel[this.soldecongel.length - 1]
+        this.soldecongel2 = this.soldecongel.filter(item => item.idUserCreator == this.per.idUserCreator);
+        this.soldeconge = this.soldecongel2[0];
+        this.sc = this.soldeconge
         console.log(this.sc)
       })
     })

@@ -90,6 +90,9 @@ namespace WebApplicationPlateforme
             services.AddEntityFrameworkNpgsql()
        .AddDbContext<NotificationContext>(
        options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            
+            services.AddDbContext<DawaaDataContext>(options =>
+           options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
 
             services.AddEntityFrameworkNpgsql()

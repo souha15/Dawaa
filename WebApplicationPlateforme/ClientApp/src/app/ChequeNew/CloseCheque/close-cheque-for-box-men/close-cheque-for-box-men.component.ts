@@ -100,11 +100,35 @@ export class CloseChequeForBoxMenComponent implements OnInit {
     this.demandeService.Get().subscribe(res => {
       this.dem5 = res
       this.dem6 = this.dem5.filter(item =>item.retour != null && item.etatgeneral == "معتمدة" && item.transfert!='1')
-
+      this.prix = null;
+      this.numDem = null;
     })
   }
 
+  numDem: number = null;
+  getnumDem(event) {
+    this.numDem = event.target.value;
+  }
+  prix: string = null;
+  getprix(event) {
+    this.prix = event.target.value;
+  }
 
+  search() {
+    if (this.prix != null && this.numDem == null) {
+      this.demandeService.SearchByPrix(this.prix).subscribe(res => {
+        this.dem6 = res;
+      })
+    } else if (this.prix == null && this.numDem != null) {
+      this.demandeService.SearchByNumDem(this.numDem).subscribe(res => {
+        this.dem6 = res;
+      })
+    } else if (this.prix != null && this.numDem != null) {
+      this.demandeService.SearchByPrixNumDem(this.numDem, this.prix).subscribe(res => {
+        this.dem6 = res;
+      })
+    }
+  }
   //PopulateForm
   per: DemPayCheque = new DemPayCheque();
 
