@@ -10,6 +10,7 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
     "allowJs": true,
     "target": "es2015",
     "typeRoots": [
@@ -19,5 +20,7 @@
       "es2017",
       "dom"
     ]
+
+
   }
 }

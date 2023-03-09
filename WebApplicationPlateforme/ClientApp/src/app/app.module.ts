@@ -819,6 +819,14 @@ import { CloseChequeForBoxMenComponent } from './ChequeNew/CloseCheque/close-che
 import { CloseChequeForComptableComponent } from './ChequeNew/CloseCheque/close-cheque-for-comptable/close-cheque-for-comptable.component';
 import { MenuChequeForBoxMenComponent } from './ChequeNew/CloseCheque/menu-cheque-for-box-men/menu-cheque-for-box-men.component';
 import { TransactionsAffectedToMyAdminOrToMeComponent } from './AdministrativeCommunication/transactions-affected-to-my-admin-or-to-me/transactions-affected-to-my-admin-or-to-me.component';
+import { AddDemandeBesoinsComponent } from './Demande Besoins/add-demande-besoins/add-demande-besoins.component';
+import { MylistDemandeBesoinsComponent } from './Demande Besoins/mylist-demande-besoins/mylist-demande-besoins.component';
+import { DirListDemandeBesoinsComponent } from './Demande Besoins/dir-list-demande-besoins/dir-list-demande-besoins.component';
+import { DirDetailsDemandeBesoinsComponent } from './Demande Besoins/dir-details-demande-besoins/dir-details-demande-besoins.component';
+import { BesoinsCrudComponent } from './Demande Besoins/besoins-crud/besoins-crud.component';
+import { HistoBesoinComponent } from './Historique/Demandes/histo-besoin/histo-besoin.component';
+import { DepartAddComponent } from './RH/Depart/depart-add/depart-add.component';
+import { DepartListComponent } from './RH/Depart/depart-list/depart-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -1602,6 +1610,14 @@ import { TransactionsAffectedToMyAdminOrToMeComponent } from './AdministrativeCo
     CloseChequeForComptableComponent,
     MenuChequeForBoxMenComponent,
     TransactionsAffectedToMyAdminOrToMeComponent,
+    AddDemandeBesoinsComponent,
+    MylistDemandeBesoinsComponent,
+    DirListDemandeBesoinsComponent,
+    DirDetailsDemandeBesoinsComponent,
+    BesoinsCrudComponent,
+    HistoBesoinComponent,
+    DepartAddComponent,
+    DepartListComponent,
   ],
   imports: [
 
@@ -3347,6 +3363,28 @@ import { TransactionsAffectedToMyAdminOrToMeComponent } from './AdministrativeCo
       {path: 'menu-cheque-for-box-men', component: MenuChequeForBoxMenComponent, canActivate: [AuthGuard], data: {permittedRoles: ['ADMINISTRATEUR', 'DIRECTORETAB', 'RESPFINANCE', 'FINPRIV', 'BOXPRIV']}},
 
       {path: 'close-cheque-for-comptable', component: CloseChequeForComptableComponent, canActivate: [AuthGuard], data: {permittedRoles: ['ADMINISTRATEUR', 'DIRECTORETAB', 'RESPFINANCE', 'FINPRIV', 'BOXPRIV']}},
+
+    /*** Demande Besoins ***/
+
+      { path: 'add-demande-besoins', component: AddDemandeBesoinsComponent, canActivate: [AuthGuard] },
+
+      { path: 'mylist-demande-besoins', component: MylistDemandeBesoinsComponent, canActivate: [AuthGuard] },
+
+      { path: 'dir-list-demande-besoins', component: DirListDemandeBesoinsComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'RESSOURCEHUMAINE', 'RESPFINANCE','RHPRIV'] } },
+
+      { path: 'dir-details-demande-besoins', component: DirDetailsDemandeBesoinsComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'RESSOURCEHUMAINE', 'RESPFINANCE', 'RHPRIV'] } },
+      { path: 'dir-details-demande-besoins/:id', component: DirDetailsDemandeBesoinsComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'RESSOURCEHUMAINE', 'RESPFINANCE', 'RHPRIV'] } },
+
+      { path: 'besoins-crud', component: BesoinsCrudComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'RESSOURCEHUMAINE', 'RESPFINANCE', 'RHPRIV'] } },
+
+      { path: 'histo-besoin', component: HistoBesoinComponent, canActivate: [AuthGuard] },
+
+
+    /*** Depart Employee **/
+
+      { path: 'depart-add', component: DepartAddComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'RESSOURCEHUMAINE', 'RHPRIV'] } },
+
+      { path: 'depart-list', component: DepartListComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'RESSOURCEHUMAINE', 'RHPRIV'] } },
 
     ])
   ],/*,  {

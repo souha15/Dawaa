@@ -255,7 +255,7 @@ export class DemCongeUrgentComponent implements OnInit {
     var diff = Math.abs(newDated.getTime() - newDatef.getTime());
     this.diffDays = Math.ceil(diff / (1000 * 3600 * 24)) + 1;
     this.conge.duree = this.diffDays.toString();
-    if (this.diffDays <= 5 && this.soldeconge > 0) {
+    if (this.diffDays <= 5 && this.soldeconge >= this.diffDays) {
       this.testdays = true;
     } else {
       this.testdays = false;
@@ -298,7 +298,7 @@ export class DemCongeUrgentComponent implements OnInit {
       this.isValidFormSubmitted = true
 
       this.diff();
-      console.log(this.testdays)
+
       if (this.testdays) {
 
         this.congeService.Add(this.conge).subscribe(
@@ -344,7 +344,7 @@ export class DemCongeUrgentComponent implements OnInit {
       } 
       else {
         this.diffDays = 0
-        this.toastr.error(" لا يمكنك تجاوز 5 أيام أو رصيدك 0", "فشل ")
+        this.toastr.error(" لا يمكنك تجاوز 5 أيام أو رصيدك أقل", "فشل ")
       }
 
 

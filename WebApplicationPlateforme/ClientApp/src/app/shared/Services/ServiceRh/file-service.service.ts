@@ -126,6 +126,8 @@ export class FileServiceService {
 
   GetMaintenanceFiles(Id) {
     return this.http.get<FileService[]>(this.rootURL + '/FileServices/GetMaintenanceFiles/' + Id);
+  } GetBesoinsFiles(Id) {
+    return this.http.get<FileService[]>(this.rootURL + '/FileServices/GetBesoinsFiles/' + Id);
   }
 
 

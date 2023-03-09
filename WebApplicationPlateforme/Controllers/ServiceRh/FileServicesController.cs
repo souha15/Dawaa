@@ -267,5 +267,15 @@ namespace WebApplicationPlateforme.Controllers.ServiceRh
             FilesList = _context.FilesServices.Where(item => item.serviceId == Id && item.serviceName == "Maintenance").ToList();
             return FilesList;
         }
+
+        [HttpGet]
+        [Route("GetBesoinsFiles/{Id}")]
+
+        public List<FileService> GetBesoinsFiles(int Id)
+        {
+            List<FileService> FilesList = new List<FileService>();
+            FilesList = _context.FilesServices.Where(item => item.serviceId == Id && item.serviceName == "Besoin").ToList();
+            return FilesList;
+        }
     }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, ViewChild, ElementRef, Output } from '@angular/core';
 import { DemPayChequeService } from '../../shared/Services/Cheques/dem-pay-cheque.service';
 import { ArticlePayChequeService } from '../../shared/Services/Cheques/article-pay-cheque.service';
 import { TbListeningService } from '../../shared/Services/Evenements/tb-listening.service';
@@ -8,7 +8,12 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { DemPayCheque } from '../../shared/Models/Cheques/dem-pay-cheque.model';
 import { ArticlePayCheque } from '../../shared/Models/Cheques/article-pay-cheque.model';
-
+import { ProgressStatusEnum } from '../../shared/Enum/progress-status-enum.enum';
+import { ProgressStatus } from '../../shared/Interfaces/progress-status';
+import { UploadDownloadService } from '../../shared/Services/Taches/upload-download.service';
+import { FilesPayChequeService } from '../../shared/Services/Cheques/files-pay-cheque.service';
+import { FilesPayChequesC } from '../../shared/Models/Cheques/files-pay-cheques-c.model';
+import { HttpEventType } from '@angular/common/http';
 @Component({
   selector: 'app-new-cheque-menu-dir-fin',
   templateUrl: './new-cheque-menu-dir-fin.component.html',
@@ -17,70 +22,37 @@ import { ArticlePayCheque } from '../../shared/Models/Cheques/article-pay-cheque
 export class NewChequeMenuDirFinComponent implements OnInit {
 
   userDetails;
-
+    @Input() public disabled: boolean;
+  @Output() public uploadStatuss: EventEmitter<ProgressStatus>;
+  @ViewChild('inputFile') inputFile: ElementRef;
+  @Output() public downloadStatus: EventEmitter<ProgressStatus>;
   constructor(private demandeService: DemPayChequeService,
     private articleService: ArticlePayChequeService,
-    private tbLService: TbListeningService,
-    private tbLProjetService: ListeningProjetService,
     private UserService: UserServiceService,
     private router: Router,
-    private toastr: ToastrService, ) { }
+    private toastr: ToastrService,
+    private filesService:FilesPayChequeService,
+    private serviceupload: UploadDownloadService) { this.downloadStatus = new EventEmitter<ProgressStatus>();}
 
   ngOnInit(): void {
-    //this.getVoiture();
-    this.getUserConnected();
-    this.UserService.getUserProfile().subscribe(
-      res => {
-        this.userDetails = res;
 
-
-      },
-      err => {
-        console.log(err);
-      },
-    );
     this.getUserConnected();
     this.getDemPayList();
   }
 
-  isExpanded = false;
-
-  collapse() {
-    this.isExpanded = false;
-  }
-
-  toggle() {
-    this.isExpanded = !this.isExpanded;
-  }
-
-  onLogout() {
-    localStorage.removeItem("token");
-    this.router.navigateByUrl('/login-page');
-  }
-
-
-  // Get User Connected
   p: Number = 1;
   count: Number = 5;
   UserIdConnected: string;
   UserNameConnected: string;
-
-
-
-  // Get User Connected
-  sexe: string;
 
   getUserConnected() {
 
     this.UserService.getUserProfileObservable().subscribe(res => {
       this.UserIdConnected = res.id;
       this.UserNameConnected = res.fullName;
-      this.sexe = res.sexe;
 
     })
   }
-
-
 
   //Get Dem pay ListProject
   dem5: DemPayCheque[] = [];
@@ -90,18 +62,47 @@ export class NewChequeMenuDirFinComponent implements OnInit {
   getDemPayList() {
     this.demandeService.Get().subscribe(res => {
       this.dem5 = res
-      this.dem6 = this.dem5.filter(item => item.etatparfinancier == "في الإنتظار" && item.etatfinacier == "معتمدة")
-
+      this.dem6 = this.dem5.filter(item => item.idUserCreator == this.UserIdConnected && item.etatgeneral == "مرفوضة" )
+      this.prix = null;
+      this.numDem = null;
     })
   }
+  numDem: number = null;
+  getnumDem(event) {
+    this.numDem = event.target.value;
+  }
+  prix: string = null;
+  getprix(event) {
+    this.prix = event.target.value;
+  }
 
-
+  search() {
+    if (this.prix != null && this.numDem == null) {
+      this.demandeService.SearchByPrix(this.prix).subscribe(res => {
+        this.dem6 = res;
+      })
+    } else if (this.prix == null && this.numDem != null) {
+      this.demandeService.SearchByNumDem(this.numDem).subscribe(res => {
+        this.dem6 = res;
+      })
+    } else if (this.prix != null && this.numDem != null) {
+      this.demandeService.SearchByPrixNumDem(this.numDem, this.prix).subscribe(res => {
+        this.dem6 = res;
+      })
+    }
+  }
   //PopulateForm
   per: DemPayCheque = new DemPayCheque();
 
+  filesListFiltred: FilesPayChequesC[] = [];
+  filesList: FilesPayChequesC[] = [];
 
   populateForm(conge: DemPayCheque) {
     this.per = Object.assign({}, conge)
+    this.filesService.Get().subscribe(res => {
+      this.filesList = res
+      this.filesListFiltred = this.filesList.filter(item => item.idDemCheque == this.per.id);
+    })
     this.articleService.Get().subscribe(res => {
       this.arlis2 = res;
       this.arlis = this.arlis2.filter(item => item.idDem == this.per.id)
@@ -109,25 +110,32 @@ export class NewChequeMenuDirFinComponent implements OnInit {
     })
   }
 
-  etat: string;
-  etattest(event) {
-    this.etat = event.target.value;
-  }
-
-  date = new Date().toLocaleDateString();
-  accept() {
-    if (this.etat == "مرفوضة") { this.per.etatgeneral == "مرفوضة" }
-    this.per.dateparfinancier = this.date;
-    this.per.etatparfinancier = this.etat
-    this.per.nomparfinancier = this.UserNameConnected;
-    this.per.idparfinancier = this.UserIdConnected;
-    this.demandeService.PutObservableE(this.per).subscribe(res => {
-      this.toastr.success('تم التحديث بنجاح', 'نجاح');
-      this.getUserConnected()
-      this.getDemPayList();
-    })
-
-
+  public download(filepath) {
+    this.downloadStatus.emit({ status: ProgressStatusEnum.START });
+    this.serviceupload.downloadFile(filepath).subscribe(
+      data => {
+        switch (data.type) {
+          case HttpEventType.DownloadProgress:
+            this.downloadStatus.emit({ status: ProgressStatusEnum.IN_PROGRESS, percentage: Math.round((data.loaded / data.total) * 100) });
+            break;
+          case HttpEventType.Response:
+            this.downloadStatus.emit({ status: ProgressStatusEnum.COMPLETE });
+            const downloadedFile = new Blob([data.body], { type: data.body.type });
+            const a = document.createElement('a');
+            a.setAttribute('style', 'display:none;');
+            document.body.appendChild(a);
+            a.download = filepath;
+            a.href = URL.createObjectURL(downloadedFile);
+            a.target = '_blank';
+            a.click();
+            document.body.removeChild(a);
+            break;
+        }
+      },
+      error => {
+        this.downloadStatus.emit({ status: ProgressStatusEnum.ERROR });
+      }
+    );
   }
 
 }

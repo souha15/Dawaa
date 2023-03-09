@@ -21,18 +21,18 @@ export class DemandeTicketService {
     })
   }
 
-  //Create Type Dotation
+  //Create
 
   Add(dotation: DemandeTicket) {
     return this.http.post<DemandeTicket>(this.rootURL + '/DemandeTickets', dotation, this.headers);
   }
 
-  //Save Type Dotation
+  //Save 
   Post() {
     return this.http.post(this.rootURL + '/DemandeTickets', this.formData, this.headers);
   }
 
-  //Get Type dotation List
+  //Get 
 
   GetDotation(): Observable<DemandeTicket[]> {
     return this.http.get<DemandeTicket[]>(this.rootURL + '/DemandeTickets');
@@ -41,20 +41,20 @@ export class DemandeTicketService {
   Get() {
     return this.http.get<DemandeTicket[]>(this.rootURL + '/DemandeTickets');
   }
-  //Get Type Dotation By Id
+  //Get 
 
   GetById(Id) {
     return this.http.get<DemandeTicket>(this.rootURL + '/DemandeTickets/' + Id);
   }
 
-  //Edit Type Dotation
+  //Edit 
 
   Edit() {
     return this.http.put(this.rootURL + '/DemandeTickets/' + this.formData.id, this.formData, this.headers);
   }
 
 
-  //Delete Type Dotation
+  //Delete 
 
   Delete(id) {
     return this.http.delete(this.rootURL + '/DemandeTicket/' + id);

@@ -24,6 +24,7 @@ using WebApplicationPlateforme.Model.TechnicalDemands;
 using WebApplicationPlateforme.Model.VenteServices;
 using WebApplicationPlateforme.Model.ServiceRh;
 using WebApplicationPlateforme.Model.FinancePartTwo.Cheques;
+using WebApplicationPlateforme.Model.Demande_Besoins;
 
 namespace WebApplicationPlateforme.Data
 {
@@ -130,6 +131,8 @@ namespace WebApplicationPlateforme.Data
         public DbSet<ActiviteDetails> ActiviteDetails { get; set; }
         public DbSet<demandePayChequesReceive> demandePayChequesReceive { get; set; }
         public DbSet<FileService> FilesServices { get; set; }
+        public DbSet<WebApplicationPlateforme.Model.Demande_Besoins.DemandeBesoin> DemandeBesoin { get; set; }
+        public DbSet<WebApplicationPlateforme.Model.Demande_Besoins.besoin> besoin { get; set; }
 
     }
 }
