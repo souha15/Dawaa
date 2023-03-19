@@ -80,6 +80,13 @@ namespace WebApplicationPlateforme.Controllers.MediaCenter.InterviewPart
         [HttpPost]
         public async Task<ActionResult<Interview>> PostInterview(Interview interview)
         {
+            DateTimeOffset value = DateTimeOffset.Now;
+            string fmt = "d";
+            string date = value.Date.ToString(fmt);
+            int day = value.Day;
+            int month = value.Month;
+            int year = value.Year;
+            interview.dateenreg = year.ToString() + '-' + month.ToString() +'-'+day.ToString();
             _context.Interviews.Add(interview);
             await _context.SaveChangesAsync();
 
@@ -101,6 +108,14 @@ namespace WebApplicationPlateforme.Controllers.MediaCenter.InterviewPart
 
             return interview;
         }
+
+        [HttpGet]
+        [Route("SearchByEmployee/{Id}")]
+        public List<Interview> SearchByAllEmployee(string Id)
+        {
+            return _context.Interviews.Where(item => item.idUserCreator == Id).OrderByDescending(item => item.Id).ToList();
+        }
+
 
         private bool InterviewExists(int id)
         {

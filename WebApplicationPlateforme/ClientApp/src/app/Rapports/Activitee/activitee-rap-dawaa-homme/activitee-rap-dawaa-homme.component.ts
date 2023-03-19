@@ -50,7 +50,7 @@ export class ActiviteeRapDawaaHommeComponent implements OnInit {
         this.toastr.warning("رجاءا اكمل جميع الحقول")
       }
       else {
-        this.list = this.list2.filter(item => item.attribut1 == this.UserEtabId.toString() && item.dateDeb == this.DateDeb && item.datefin == this.DateFin)
+        this.list = this.list2.filter(item => item.dateDeb == this.DateDeb && item.datefin == this.DateFin)
         this.activiteService.list = this.list
       }
 

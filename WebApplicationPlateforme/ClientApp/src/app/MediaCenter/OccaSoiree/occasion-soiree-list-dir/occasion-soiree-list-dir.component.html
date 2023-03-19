@@ -24,6 +24,8 @@
           <thead>
             <tr>
               <th scope="col">#</th>
+              <th scope="col">مقدم الطلب</th>
+              <th scope="col">القسم</th>
               <th scope="col">نوع المناسبة  </th>
               <th scope="col">المكان</th>
               <th scope="col">الوقت</th>
@@ -41,6 +43,8 @@
 
             <tr *ngFor="let cg of DemandList |  orderBy: key : reverse | filter:filter| paginate: { itemsPerPage: 5, currentPage: p };let i = index">
               <th data-toggle="modal" data-target="#myModal" scope="row">{{(p-1) * count + i + 1}}</th>
+              <td [routerLink]="['/occasion-soiree-details', cg.id]">{{cg.userNameCreator}}</td>
+              <td [routerLink]="['/occasion-soiree-details', cg.id]">{{cg.etabnom}}</td>
               <td [routerLink]="['/occasion-soiree-details', cg.id]">{{cg.type}}</td>
               <td [routerLink]="['/occasion-soiree-details', cg.id]">{{cg.localisation}}</td>
               <td [routerLink]="['/occasion-soiree-details', cg.id]">{{cg.dateTime}}</td>

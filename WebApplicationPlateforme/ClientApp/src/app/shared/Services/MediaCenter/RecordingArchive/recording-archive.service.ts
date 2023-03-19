@@ -27,6 +27,10 @@ export class RecordingArchiveService {
     return this.http.put<RecordingArchive>(this.rootURL + '/RecordingArchives/' + Transaction.id, Transaction, this.headers);
 
   }
+
+  SearchByEmployee(Id) {
+    return this.http.get<RecordingArchive[]>(this.rootURL + '/RecordingArchives/SearchByEmployee/' + Id);
+  }
   //Create RecordingArchive
 
   CreateRecordingArchive(tache: RecordingArchive) {

@@ -26,6 +26,11 @@ export class PartageMediaService {
     return this.http.put<PartageMedia>(this.rootURL + '/PartageMedias/' + Transaction.id, Transaction, this.headers);
 
   }
+
+
+  SearchByEmployee(Id) {
+    return this.http.get<PartageMedia[]>(this.rootURL + '/PartageMedias/SearchByEmployee/' + Id);
+  }
   //Create Film
 
   Create(tache: PartageMedia) {

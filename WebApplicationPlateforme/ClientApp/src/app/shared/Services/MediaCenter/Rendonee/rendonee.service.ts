@@ -26,6 +26,10 @@ export class RendoneeService {
     return this.http.put<Rendonne>(this.rootURL + '/Rendonees/' + Transaction.id, Transaction, this.headers);
 
   }
+  SearchByEmployee(Id) {
+    return this.http.get<Rendonne[]>(this.rootURL + '/Rendonees/SearchByEmployee/' + Id);
+  }
+
   //Create Rendonne
 
   Create(tache: Rendonne) {

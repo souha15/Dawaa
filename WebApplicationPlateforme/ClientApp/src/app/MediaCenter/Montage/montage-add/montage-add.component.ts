@@ -162,7 +162,6 @@ export class MontageAddComponent implements OnInit {
     else {
 
       this.isValidFormSubmitted = true;
-      this.dem.dateenreg = this.date;
       this.dem.etat = "في الانتظار";
       this.dem.idUserCreator = this.UserId;
       this.dem.userNameCreator = this.UserName;

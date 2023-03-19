@@ -29,6 +29,9 @@ export class FilmService {
     return this.http.post<Film>(this.rootURL + '/Films', tache, this.headers);
   }
 
+  SearchByEmployee(Id) {
+    return this.http.get<Film[]>(this.rootURL + '/Films/SearchByEmployee/' + Id);
+  }
   //Edit Film
   Edit() {
     return this.http.put(this.rootURL + '/Films/' + this.formData.id, this.formData, this.headers);

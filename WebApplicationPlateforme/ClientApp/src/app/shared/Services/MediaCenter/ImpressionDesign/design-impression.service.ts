@@ -27,6 +27,10 @@ export class DesignImpressionService {
     return this.http.put<DesignImpression>(this.rootURL + '/DesignImpressions/' + Transaction.id, Transaction, this.headers);
 
   }
+
+  SearchByEmployee(Id) {
+    return this.http.get<DesignImpression[]>(this.rootURL + '/DesignImpressions/SearchByEmployee/' + Id);
+  }
   //Create Cadeaux
 
   Create(tache: DesignImpression) {

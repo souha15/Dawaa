@@ -62,4 +62,8 @@ export class CadeauxService {
   GetById(Id) {
     return this.http.get<Cadeaux>(this.rootURL + '/Cadeaux/' + Id);
   }
+
+  SearchByEmployee(Id) {
+    return this.http.get<Cadeaux[]>(this.rootURL + '/Cadeaux/SearchByEmployee/' + Id);
+  }
 }

@@ -1,0 +1,86 @@
+<app-nav-menu></app-nav-menu>
+<!-- Page Content -->
+<div class="content">
+  <div class="row">
+    <div class="col-md-3 col-sm-4">
+      <app-side-menu></app-side-menu>
+    </div>
+    <div class="col-md-9 col-sm-8">
+      <header>
+        <h3 class="task-head">التقارير </h3>
+      </header>
+      <div class="row que-serv">
+
+        <div class="que-serv">
+
+          <a *ngIf="AllRoles" href="" [routerLink]="['/rapport-dir-general-menu']">
+            <span class="icon"><i class="fa fa-desktop"></i></span>
+            تقارير  مكتب المدير العام
+          </a>
+          <a *ngIf="AllRoles ||FinanceRole" href="" [routerLink]="['/rapport-fin-menu']">
+            <span class="icon"><i class="fa fa-hand-holding-usd"></i></span>
+            تقارير الشؤون المالية والإدارية
+          </a>
+          <a *ngIf="AllRoles ||DotationRole" href="" [routerLink]="['/rapport-dot-menu']">
+            <span class="icon"><i class="fa fa-building "></i></span>
+            تقارير الأوقاف و تنمية الموارد
+          </a>
+          <a *ngIf="AllRoles || DawaaRole" href="" [routerLink]="['/rapport-dawaa-menu']">
+            <span class="icon"><i class="fa fa-mosque"></i></span>
+            تقارير الشؤون الدعوية
+          </a>
+          <a *ngIf="AllRoles || DawaaRole" href="" [routerLink]="['/rapport-dawaa-women-menu']">
+            <span class="icon"><i class="fa fa-female"></i></span>
+            تقارير الدعوة النسائية
+          </a>
+          <a *ngIf="AllRoles || MediaCenterRole " href="" [routerLink]="['/rapport-media-center-menu']">
+            <span class="icon"><i class="fa fa-comment-dots"></i></span>
+            تقارير العلاقات العامة
+          </a>
+          <!--<a href="" [routerLink]="['/rapport-media-center-menu']">
+    <span class="icon"><i class="fa fa-comment-dots"></i></span>
+    تقارير العلاقات العامة و الإعلام
+  </a>
+
+  <a href="" [routerLink]="['/dons-reports']">
+    <span class="icon"><i class="fa fa-hand-holding-usd"></i></span>
+    تقارير التبرعات
+  </a>
+
+  <a href="" [routerLink]="['/activite-menu-rapport']">
+    <span class="icon"><i class="fa fa-running"></i></span>
+    تقارير الأنشطة
+  </a>
+
+  <a href="" [routerLink]="['/musulman-menu-rapport']">
+    <span class="icon"><i class="fa fa-female"></i></span>
+    تقارير المسلمين
+  </a>
+
+  <a href="" [routerLink]="['/events-report']">
+    <span class="icon"><i class="fa fa-file-pdf"></i></span>
+    تقارير الفعاليات
+  </a>
+
+  <a href="" [routerLink]="['/transaction-menu-rapport']">
+    <span class="icon"><i class="fa fa-file-archive"></i></span>
+    تقارير المعاملات
+  </a>
+  <a [routerLink]="['/home-stockage']">
+    <span class="icon"><i class="fa fa-archive"></i></span>
+    تقارير المستودع
+  </a>-->
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- Footer -->
+<footer class="text-center">
+  <p>كل الحقوق محفوظة لمؤسسة مواهب الخليج بالتنسيق و التعاون مع جمعية الدعوة بالطائف  <img src="assets/images/awal.png" style="width:40px;height:40px;"> </p>
+</footer>
+
+

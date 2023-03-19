@@ -66,4 +66,10 @@ export class InterviewService {
   GetById(Id) {
     return this.http.get<Interview>(this.rootURL + '/Interviews/' + Id);
   }
+
+
+  public list: Interview[] = [];
+  SearchByEmployee(Id) {
+    return this.http.get<Interview[]>(this.rootURL + '/Interviews/SearchByEmployee/' + Id);
+  }
 }

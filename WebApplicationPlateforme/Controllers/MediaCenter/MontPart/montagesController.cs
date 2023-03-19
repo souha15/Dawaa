@@ -80,12 +80,24 @@ namespace WebApplicationPlateforme.Controllers.MediaCenter.MontPart
         [HttpPost]
         public async Task<ActionResult<montage>> Postmontage(montage montage)
         {
+            DateTimeOffset value = DateTimeOffset.Now;
+            string fmt = "d";
+            string date = value.Date.ToString(fmt);
+            int day = value.Day;
+            int month = value.Month;
+            int year = value.Year;
+            montage.dateenreg = year.ToString() + '-' + month.ToString() + '-' + day.ToString();
             _context.Montages.Add(montage);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("Getmontage", new { id = montage.Id }, montage);
         }
-
+        [HttpGet]
+        [Route("SearchByEmployee/{Id}")]
+        public List<montage> SearchByAllEmployee(string Id)
+        {
+            return _context.Montages.Where(item => item.idUserCreator == Id).OrderByDescending(item => item.Id).ToList();
+        }
         // DELETE: api/montages/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<montage>> Deletemontage(int id)

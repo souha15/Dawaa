@@ -190,7 +190,6 @@ export class InterviewAddComponent implements OnInit {
     } else {
 
       this.isValidFormSubmitted = true;
-      this.inter.dateenreg = this.date;
       this.inter.diretat = "في الإنتظار";
       this.interviewService.Create(this.inter).subscribe(res => {
         this.UserService.GetMediaDir().subscribe(resDir => {

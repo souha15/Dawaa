@@ -83,6 +83,10 @@ namespace WebApplicationPlateforme.Controllers.MediaCenter
             DateTimeOffset value = DateTimeOffset.Now;
             string fmt = "d";
             string date = value.Date.ToString(fmt);
+            int day = value.Day;
+            int month = value.Month;
+            int year = value.Year;
+            rendonee.dateenreg = year.ToString() + '-' + month.ToString() + '-' + day.ToString();
             int diff = (Convert.ToDateTime(date) - Convert.ToDateTime(rendonee.dateTime)).Days;
             if (diff <= 0)
             {
@@ -113,6 +117,12 @@ namespace WebApplicationPlateforme.Controllers.MediaCenter
             return rendonee;
         }
 
+        [HttpGet]
+        [Route("SearchByEmployee/{Id}")]
+        public List<Rendonee> SearchByAllEmployee(string Id)
+        {
+            return _context.Rendonee.Where(item => item.idUserCreator == Id).OrderByDescending(item => item.Id).ToList();
+        }
         private bool RendoneeExists(int id)
         {
             return _context.Rendonee.Any(e => e.Id == id);

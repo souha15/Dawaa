@@ -26,6 +26,10 @@ export class SoireeOccasionService {
     return this.http.put<OccasionSoiree>(this.rootURL + '/OccasionSoirees/' + Transaction.id, Transaction, this.headers);
 
   }
+
+  SearchByEmployee(Id) {
+    return this.http.get<OccasionSoiree[]>(this.rootURL + '/OccasionSoirees/SearchByEmployee/' + Id);
+  }
   //Create OccasionSoiree
 
   Create(tache: OccasionSoiree) {
