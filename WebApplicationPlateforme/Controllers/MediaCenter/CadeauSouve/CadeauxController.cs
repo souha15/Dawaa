@@ -84,6 +84,10 @@ namespace WebApplicationPlateforme.Controllers.MediaCenter.CadeauSouve
             DateTimeOffset value = DateTimeOffset.Now;
             string fmt = "d";
             string date = value.Date.ToString(fmt);
+            int day = value.Day;
+            int month = value.Month;
+            int year = value.Year;
+            cadeaux.dateenreg = year.ToString() + '-' + month.ToString() + '-' + day.ToString();
             int diff = (Convert.ToDateTime(date) - Convert.ToDateTime(cadeaux.dateTime)).Days;
             if (diff <= 0)
             {
@@ -96,6 +100,13 @@ namespace WebApplicationPlateforme.Controllers.MediaCenter.CadeauSouve
             {
                 return NotFound();
             }
+        }
+
+        [HttpGet]
+        [Route("SearchByEmployee/{Id}")]
+        public List<Cadeaux> SearchByAllEmployee(string Id)
+        {
+            return _context.Cadeaux.Where(item => item.idUserCreator == Id).OrderByDescending(item => item.Id).ToList();
         }
 
         // DELETE: api/Cadeaux/5

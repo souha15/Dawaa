@@ -22,18 +22,22 @@
           <thead>
             <tr>
               <th scope="col">#</th>
+              <th scope="col">مقدم الطلب</th>
+              <th scope="col">القسم</th>
               <th scope="col">	نوع المادة  </th>
               <th scope="col">الهدف </th>
               <th scope="col">الميزانية</th>
               <th scope="col">السيناريو</th>
               <th scope="col">الحالة</th>
-              <th scope="col">ارسال</th>          
+              <th scope="col">ارسال</th>
             </tr>
           </thead>
           <tbody>
 
             <tr *ngFor="let cg of DemandList |  orderBy: key : reverse | filter:filter| paginate: { itemsPerPage: 5, currentPage: p };let i = index">
               <th scope="row" [routerLink]="['/montage-details', cg.id]">{{(p-1) * count + i + 1}}</th>
+              <td [routerLink]="['/montage-details', cg.id]">{{cg.userNameCreator}}</td>
+              <td [routerLink]="['/montage-details', cg.id]">{{cg.etabnom}}</td>
               <td [routerLink]="['/montage-details', cg.id]">{{cg.type}}</td>
               <td [routerLink]="['/montage-details', cg.id]">{{cg.but}}</td>
               <td [routerLink]="['/montage-details', cg.id]">{{cg.budget}}</td>

@@ -28,7 +28,9 @@ export class MontageService {
   Create(Montage: Montage) {
     return this.http.post<Montage>(this.rootURL + '/montages', Montage, this.headers);
   }
-
+  SearchByEmployee(Id) {
+    return this.http.get<Montage[]>(this.rootURL + '/montages/SearchByEmployee/' + Id);
+  }
   //Edit Montage
   Edit() {
     return this.http.put(this.rootURL + '/montages/' + this.formData.id, this.formData, this.headers);

@@ -83,6 +83,10 @@ namespace WebApplicationPlateforme.Controllers.MediaCenter.FilController
             DateTimeOffset value = DateTimeOffset.Now;
             string fmt = "d";
             string date = value.Date.ToString(fmt);
+            int day = value.Day;
+            int month = value.Month;
+            int year = value.Year;
+            film.dateenreg = year.ToString() + '-' + month.ToString() + '-' + day.ToString();
             int diff = (Convert.ToDateTime(date) - Convert.ToDateTime(film.attribut1)).Days;
             if (diff <= 0)
             {
@@ -96,7 +100,12 @@ namespace WebApplicationPlateforme.Controllers.MediaCenter.FilController
                 return NotFound();
     }
 }
-
+        [HttpGet]
+        [Route("SearchByEmployee/{Id}")]
+        public List<Film> SearchByAllEmployee(string Id)
+        {
+            return _context.Film.Where(item => item.idUserCreator == Id).OrderByDescending(item => item.Id).ToList();
+        }
         // DELETE: api/Films/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Film>> DeleteFilm(int id)

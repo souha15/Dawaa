@@ -80,12 +80,25 @@ namespace WebApplicationPlateforme.Controllers.MediaCenter.ParMedia
         [HttpPost]
         public async Task<ActionResult<PartageMedia>> PostPartageMedia(PartageMedia partageMedia)
         {
+            DateTimeOffset value = DateTimeOffset.Now;
+            string fmt = "d";
+            string date = value.Date.ToString(fmt);
+            int day = value.Day;
+            int month = value.Month;
+            int year = value.Year;
+            partageMedia.dateenreg = year.ToString() + '-' + month.ToString() + '-' + day.ToString();
             _context.PartageMedia.Add(partageMedia);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetPartageMedia", new { id = partageMedia.Id }, partageMedia);
         }
 
+        [HttpGet]
+        [Route("SearchByEmployee/{Id}")]
+        public List<PartageMedia> SearchByAllEmployee(string Id)
+        {
+            return _context.PartageMedia.Where(item => item.idUserCreator == Id).OrderByDescending(item => item.Id).ToList();
+        }
         // DELETE: api/PartageMedias/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<PartageMedia>> DeletePartageMedia(int id)

@@ -83,6 +83,10 @@ namespace WebApplicationPlateforme.Controllers.MediaCenter.OccSoiree
             DateTimeOffset value = DateTimeOffset.Now;
             string fmt = "d";
             string date = value.Date.ToString(fmt);
+            int day = value.Day;
+            int month = value.Month;
+            int year = value.Year;
+            occasionSoiree.dateenreg = year.ToString() + '-' + month.ToString() + '-' + day.ToString();
             int diff = (Convert.ToDateTime(date) - Convert.ToDateTime(occasionSoiree.dateTime)).Days;
             if (diff <= 0)
             {
@@ -96,6 +100,12 @@ namespace WebApplicationPlateforme.Controllers.MediaCenter.OccSoiree
                 return NotFound();
     }
 }
+        [HttpGet]
+        [Route("SearchByEmployee/{Id}")]
+        public List<OccasionSoiree> SearchByAllEmployee(string Id)
+        {
+            return _context.OccasionSoiree.Where(item => item.idUserCreator == Id).OrderByDescending(item => item.Id).ToList();
+        }
 
         // DELETE: api/OccasionSoirees/5
         [HttpDelete("{id}")]

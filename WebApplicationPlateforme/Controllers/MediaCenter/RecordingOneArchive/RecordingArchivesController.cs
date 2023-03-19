@@ -83,6 +83,10 @@ namespace WebApplicationPlateforme.Controllers.MediaCenter.RecordingOneArchive
             DateTimeOffset value = DateTimeOffset.Now;
             string fmt = "d";
             string date = value.Date.ToString(fmt);
+            int day = value.Day;
+            int month = value.Month;
+            int year = value.Year;
+            recordingArchive.dateenreg = year.ToString() + '-' + month.ToString() + '-' + day.ToString();
             int diff = (Convert.ToDateTime(date) - Convert.ToDateTime(recordingArchive.dateTime)).Days;
             if (diff <= 0)
             {
@@ -111,7 +115,12 @@ namespace WebApplicationPlateforme.Controllers.MediaCenter.RecordingOneArchive
 
             return recordingArchive;
         }
-
+        [HttpGet]
+        [Route("SearchByEmployee/{Id}")]
+        public List<RecordingArchive> SearchByAllEmployee(string Id)
+        {
+            return _context.RecordingArchive.Where(item => item.idUserCreator == Id).OrderByDescending(item => item.Id).ToList();
+        }
         private bool RecordingArchiveExists(int id)
         {
             return _context.RecordingArchive.Any(e => e.Id == id);

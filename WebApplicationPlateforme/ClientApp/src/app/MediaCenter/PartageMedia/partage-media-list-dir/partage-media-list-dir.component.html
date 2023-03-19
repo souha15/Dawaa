@@ -25,6 +25,7 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">	مقدم الطلب  </th>
+              <th scope="col">القسم</th>
               <th scope="col">	نوع المادة   </th>
               <th scope="col">منصة النشر </th>
               <th scope="col">الهدف</th>
@@ -39,6 +40,7 @@
             <tr *ngFor="let cg of DemandList |  orderBy: key : reverse | filter:filter| paginate: { itemsPerPage: 5, currentPage: p };let i = index">
               <th data-toggle="modal" data-target="#myModal" scope="row">{{(p-1) * count + i + 1}}</th>
               <td data-toggle="modal" data-target="#myModal" (click)="populateForm(cg)">{{cg.userNameCreator}}</td>
+              <td data-toggle="modal" data-target="#myModal" (click)="populateForm(cg)">{{cg.etabnom}}</td>
               <td data-toggle="modal" data-target="#myModal" (click)="populateForm(cg)">{{cg.type}}</td>
               <td data-toggle="modal" data-target="#myModal" (click)="populateForm(cg)">{{cg.socialMedia}}</td>
               <td data-toggle="modal" data-target="#myModal" (click)="populateForm(cg)">{{cg.but}}</td>

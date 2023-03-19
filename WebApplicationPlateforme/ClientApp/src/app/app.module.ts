@@ -827,6 +827,38 @@ import { BesoinsCrudComponent } from './Demande Besoins/besoins-crud/besoins-cru
 import { HistoBesoinComponent } from './Historique/Demandes/histo-besoin/histo-besoin.component';
 import { DepartAddComponent } from './RH/Depart/depart-add/depart-add.component';
 import { DepartListComponent } from './RH/Depart/depart-list/depart-list.component';
+import { RapportInterviewComponent } from './Rapports/MediaCenter/rapport-interview/rapport-interview.component';
+import { RapportGeneralMenuComponent } from './Rapports/rapport-general-menu/rapport-general-menu.component';
+import { RapportExthechniqueComponent } from './Rapports/MediaCenter/rapport-exthechnique/rapport-exthechnique.component';
+import { RapportRecordingArchiveComponent } from './Rapports/MediaCenter/rapport-recording-archive/rapport-recording-archive.component';
+import { RapportCadeauxComponent } from './Rapports/MediaCenter/rapport-cadeaux/rapport-cadeaux.component';
+import { RapportRendonneComponent } from './Rapports/MediaCenter/rapport-rendonne/rapport-rendonne.component';
+import { RapportOccasionSoireeComponent } from './Rapports/MediaCenter/rapport-occasion-soiree/rapport-occasion-soiree.component';
+import { RapportPartageMediaComponent } from './Rapports/MediaCenter/rapport-partage-media/rapport-partage-media.component';
+import { RapportFilmComponent } from './Rapports/MediaCenter/rapport-film/rapport-film.component';
+import { RapportVisteComponent } from './Rapports/MediaCenter/rapport-viste/rapport-viste.component';
+import { RapportMontageComponent } from './Rapports/MediaCenter/rapport-montage/rapport-montage.component';
+import { RapportDesignComponent } from './Rapports/MediaCenter/rapport-design/rapport-design.component';
+import { RapportMediaCenterMenuComponent } from './Rapports/MediaCenter/rapport-media-center-menu/rapport-media-center-menu.component';
+import { ActiviteMenuRapportComponent } from './Rapports/Activitee/activite-menu-rapport/activite-menu-rapport.component';
+import { MusulmanMenuRapportComponent } from './Rapports/musulman-menu-rapport/musulman-menu-rapport.component';
+import { TransactionMenuRapportComponent } from './Rapports/transaction-menu-rapport/transaction-menu-rapport.component';
+import { PrintInterviewComponent } from './Rapports/Print/MediaCenter/print-interview/print-interview.component';
+import { PrintExthechniqueComponent } from './Rapports/Print/MediaCenter/print-exthechnique/print-exthechnique.component';
+import { PrintRecordingArchiveComponent } from './Rapports/Print/MediaCenter/print-recording-archive/print-recording-archive.component';
+import { PrintCadeauxComponent } from './Rapports/Print/MediaCenter/print-cadeaux/print-cadeaux.component';
+import { PrintOccasionComponent } from './Rapports/Print/MediaCenter/print-occasion/print-occasion.component';
+import { PrintPartageMediaComponent } from './Rapports/Print/MediaCenter/print-partage-media/print-partage-media.component';
+import { PrintFilmComponent } from './Rapports/Print/MediaCenter/print-film/print-film.component';
+import { PrintVisiteComponent } from './Rapports/Print/MediaCenter/print-visite/print-visite.component';
+import { PrintMontageComponent } from './Rapports/Print/MediaCenter/print-montage/print-montage.component';
+import { PrintDesignComponent } from './Rapports/Print/MediaCenter/print-design/print-design.component';
+import { PrintRendonneeComponent } from './Rapports/Print/MediaCenter/print-rendonnee/print-rendonnee.component';
+import { RapportDawaaMenuComponent } from './Rapports/RolesByAdmin/rapport-dawaa-menu/rapport-dawaa-menu.component';
+import { RapportDawaaWomenMenuComponent } from './Rapports/RolesByAdmin/rapport-dawaa-women-menu/rapport-dawaa-women-menu.component';
+import { RapportDirGeneralMenuComponent } from './Rapports/RolesByAdmin/rapport-dir-general-menu/rapport-dir-general-menu.component';
+import { RapportFinMenuComponent } from './Rapports/RolesByAdmin/rapport-fin-menu/rapport-fin-menu.component';
+import { RapportDotMenuComponent } from './Rapports/RolesByAdmin/rapport-dot-menu/rapport-dot-menu.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -1618,6 +1650,38 @@ import { DepartListComponent } from './RH/Depart/depart-list/depart-list.compone
     HistoBesoinComponent,
     DepartAddComponent,
     DepartListComponent,
+    RapportInterviewComponent,
+    RapportGeneralMenuComponent,
+    RapportExthechniqueComponent,
+    RapportRecordingArchiveComponent,
+    RapportCadeauxComponent,
+    RapportRendonneComponent,
+    RapportOccasionSoireeComponent,
+    RapportPartageMediaComponent,
+    RapportFilmComponent,
+    RapportVisteComponent,
+    RapportMontageComponent,
+    RapportDesignComponent,
+    RapportMediaCenterMenuComponent,
+    ActiviteMenuRapportComponent,
+    MusulmanMenuRapportComponent,
+    TransactionMenuRapportComponent,
+    PrintInterviewComponent,
+    PrintExthechniqueComponent,
+    PrintRecordingArchiveComponent,
+    PrintCadeauxComponent,
+    PrintOccasionComponent,
+    PrintPartageMediaComponent,
+    PrintFilmComponent,
+    PrintVisiteComponent,
+    PrintMontageComponent,
+    PrintDesignComponent,
+    PrintRendonneeComponent,
+    RapportDawaaMenuComponent,
+    RapportDawaaWomenMenuComponent,
+    RapportDirGeneralMenuComponent,
+    RapportFinMenuComponent,
+    RapportDotMenuComponent,
   ],
   imports: [
 
@@ -3385,6 +3449,77 @@ import { DepartListComponent } from './RH/Depart/depart-list/depart-list.compone
       { path: 'depart-add', component: DepartAddComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'RESSOURCEHUMAINE', 'RHPRIV'] } },
 
       { path: 'depart-list', component: DepartListComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'RESSOURCEHUMAINE', 'RHPRIV'] } },
+
+    /****Rapport **/
+ 
+      { path: 'rapport-interview', component: RapportInterviewComponent, canActivate: [AuthGuard] },
+      { path: 'rapport-general-menu', component: RapportGeneralMenuComponent, canActivate: [AuthGuard] },
+      { path: 'rapport-exthechnique', component: RapportExthechniqueComponent, canActivate: [AuthGuard] },
+      { path: 'rapport-recording-archive', component: RapportRecordingArchiveComponent, canActivate: [AuthGuard] },
+      { path: 'rapport-cadeaux', component: RapportCadeauxComponent, canActivate: [AuthGuard] },
+      { path: 'rapport-rendonne', component: RapportRendonneComponent, canActivate: [AuthGuard] },
+      { path: 'rapport-occasion-soiree', component: RapportOccasionSoireeComponent, canActivate: [AuthGuard] },
+      { path: 'rapport-partage-media', component: RapportPartageMediaComponent, canActivate: [AuthGuard] },
+      { path: 'rapport-film', component: RapportFilmComponent, canActivate: [AuthGuard] },
+      { path: 'rapport-viste', component: RapportVisteComponent, canActivate: [AuthGuard] },
+      { path: 'rapport-montage', component: RapportMontageComponent, canActivate: [AuthGuard] },
+      { path: 'rapport-design', component: RapportDesignComponent, canActivate: [AuthGuard] },
+      { path: 'rapport-media-center-menu', component: RapportMediaCenterMenuComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORGENERAL', 'MEDIAPRIV', 'MEDIACENTERPRIV'] } },
+      { path: 'activite-menu-rapport', component: ActiviteMenuRapportComponent, canActivate: [AuthGuard] },
+      { path: 'musulman-menu-rapport', component: MusulmanMenuRapportComponent, canActivate: [AuthGuard] },
+      { path: 'transaction-menu-rapport', component: TransactionMenuRapportComponent , canActivate: [AuthGuard] },
+
+      { path: 'print-design', component: PrintDesignComponent , canActivate: [AuthGuard] },
+      { path: 'print-design/:id', component: PrintDesignComponent, canActivate: [AuthGuard] },
+      { path: 'print-design/:datedeb/:datefin', component: PrintDesignComponent, canActivate: [AuthGuard] },
+
+      { path: 'print-montage', component: PrintMontageComponent , canActivate: [AuthGuard] },
+      { path: 'print-montage/:id', component: PrintMontageComponent, canActivate: [AuthGuard] },
+      { path: 'print-montage/:datedeb/:datefin', component: PrintMontageComponent, canActivate: [AuthGuard] },
+
+      { path: 'print-visite', component: PrintVisiteComponent , canActivate: [AuthGuard] },
+      { path: 'print-visite/:id', component: PrintVisiteComponent, canActivate: [AuthGuard] },
+      { path: 'print-visite/:datedeb/:datefin', component: PrintVisiteComponent, canActivate: [AuthGuard] },
+
+      { path: 'print-film', component: PrintFilmComponent , canActivate: [AuthGuard] },
+      { path: 'print-film/:id', component: PrintFilmComponent, canActivate: [AuthGuard] },
+      { path: 'print-film/:datedeb/:datefin', component: PrintFilmComponent, canActivate: [AuthGuard] },
+
+      { path: 'print-partage-media', component: PrintPartageMediaComponent , canActivate: [AuthGuard] },
+      { path: 'print-partage-media/:id', component: PrintPartageMediaComponent, canActivate: [AuthGuard] },
+      { path: 'print-partage-media/:datedeb/:datefin', component: PrintPartageMediaComponent, canActivate: [AuthGuard] },
+
+      { path: 'print-occasion', component: PrintOccasionComponent , canActivate: [AuthGuard] },
+      { path: 'print-occasion/:id', component: PrintOccasionComponent, canActivate: [AuthGuard] },
+      { path: 'print-occasion/:datedeb/:datefin', component: PrintOccasionComponent, canActivate: [AuthGuard] },
+
+      { path: 'print-cadeaux', component: PrintCadeauxComponent , canActivate: [AuthGuard] },
+      { path: 'print-cadeaux/:id', component: PrintCadeauxComponent, canActivate: [AuthGuard] },
+      { path: 'print-cadeaux/:datedeb/:datefin', component: PrintCadeauxComponent, canActivate: [AuthGuard] },
+
+      { path: 'print-recording-archive', component: PrintRecordingArchiveComponent , canActivate: [AuthGuard] },
+      { path: 'print-recording-archive/:id', component: PrintRecordingArchiveComponent, canActivate: [AuthGuard] },
+      { path: 'print-recording-archive/:datedeb/:datefin', component: PrintRecordingArchiveComponent, canActivate: [AuthGuard] },
+
+      { path: 'print-exthechnique', component: PrintExthechniqueComponent , canActivate: [AuthGuard] },
+      { path: 'print-exthechnique/:id', component: PrintExthechniqueComponent, canActivate: [AuthGuard] },
+      { path: 'print-exthechnique/:datedeb/:datefin', component: PrintExthechniqueComponent, canActivate: [AuthGuard] },
+
+      { path: 'print-interview', component: PrintInterviewComponent, canActivate: [AuthGuard] },
+      { path: 'print-interview/:id', component: PrintInterviewComponent, canActivate: [AuthGuard] },
+      { path: 'print-interview/:datedeb/:datefin', component: PrintInterviewComponent, canActivate: [AuthGuard] },
+      
+      { path: 'print-rendonnee', component: PrintRendonneeComponent, canActivate: [AuthGuard] },
+      { path: 'print-rendonnee/:id', component: PrintRendonneeComponent, canActivate: [AuthGuard] },
+      { path: 'print-rendonnee/:datedeb/:datefin', component: PrintRendonneeComponent, canActivate: [AuthGuard] },
+
+
+    /*** Rapport Menu By Admin **/
+      { path: 'rapport-dawaa-menu', component: RapportDawaaMenuComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORGENERAL', 'DAWAAPRIV', 'MUSPRIV'] } },
+      { path: 'rapport-dawaa-women-menu', component: RapportDawaaWomenMenuComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORGENERAL', 'DAWAAPRIV', 'MUSPRIV'] } },
+      { path: 'rapport-dir-general-menu', component: RapportDirGeneralMenuComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORGENERAL'] } },
+      { path: 'rapport-fin-menu', component: RapportFinMenuComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORGENERAL', 'FINPRIV', 'COMPTAPRIV', 'BOXPRIV', 'EVFINPRIV', 'RHPRIV'] } },
+      { path: 'rapport-dot-menu', component: RapportDotMenuComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORGENERAL', 'DOTPRIV', 'SERPRIV', 'LOCPRIV', 'TECHPRIV'] } },
 
     ])
   ],/*,  {

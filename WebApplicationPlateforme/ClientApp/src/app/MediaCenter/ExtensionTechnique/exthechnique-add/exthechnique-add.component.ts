@@ -178,7 +178,6 @@ export class ExthechniqueAddComponent implements OnInit {
     else {
 
       this.isValidFormSubmitted = true;
-      this.exth.dateenreg = this.date;
       this.exth.diretat = "في الانتظار";
       this.exth.idUserCreator = this.UserId;
       this.exth.userNameCreator = this.UserName;

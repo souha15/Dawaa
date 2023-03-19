@@ -40,6 +40,8 @@
           <thead>
             <tr>
               <th scope="col">#</th>
+              <th scope="col">مقدم الطلب</th>
+              <th scope="col">القسم</th>
               <th scope="col">نوع التصميم  </th>
               <th scope="col">الحالة</th>
               <th scope="col">إستلام/تسليم</th>
@@ -49,6 +51,8 @@
 
             <tr *ngFor="let cg of DemandList |  orderBy: key : reverse | filter:filter| paginate: { itemsPerPage: 5, currentPage: p };let i = index">
               <th scope="row" [routerLink]="['/design-details', cg.id]">{{(p-1) * count + i + 1}}</th>
+              <td [routerLink]="['/design-details', cg.id]">{{cg.userNameCreator}}</td>
+              <td [routerLink]="['/design-details', cg.id]">{{cg.etabnom}}</td>
               <td [routerLink]="['/design-details', cg.id]">{{cg.nomdesign}}</td>
               <td [routerLink]="['/design-details', cg.id]"
                   [ngClass]="{

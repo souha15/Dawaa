@@ -84,6 +84,10 @@ namespace WebApplicationPlateforme.Controllers.MediaCenter.ExthensionTechniqueOn
             DateTimeOffset value = DateTimeOffset.Now;
             string fmt = "d";
             string date = value.Date.ToString(fmt);
+            int day = value.Day;
+            int month = value.Month;
+            int year = value.Year;
+            exthechnique.dateenreg = year.ToString() + '-' + month.ToString() + '-' + day.ToString();
             int diff = (Convert.ToDateTime(date) - Convert.ToDateTime(exthechnique.dateTime)).Days;
             if (diff <= 0)
             {
@@ -112,6 +116,12 @@ namespace WebApplicationPlateforme.Controllers.MediaCenter.ExthensionTechniqueOn
             await _context.SaveChangesAsync();
 
             return exthechnique;
+        }
+        [HttpGet]
+        [Route("SearchByEmployee/{Id}")]
+        public List<Exthechnique> SearchByAllEmployee(string Id)
+        {
+            return _context.Exthechnique.Where(item => item.idUserCreator == Id).OrderByDescending(item => item.Id).ToList();
         }
 
         private bool ExthechniqueExists(int id)

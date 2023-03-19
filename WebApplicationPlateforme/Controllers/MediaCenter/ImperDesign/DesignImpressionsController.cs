@@ -81,10 +81,25 @@ namespace WebApplicationPlateforme.Controllers.MediaCenter.ImperDesign
         [HttpPost]
         public async Task<ActionResult<DesignImpression>> PostDesignImpression(DesignImpression designImpression)
         {
+
+            DateTimeOffset value = DateTimeOffset.Now;
+            string fmt = "d";
+            string date = value.Date.ToString(fmt);
+            int day = value.Day;
+            int month = value.Month;
+            int year = value.Year;
+            designImpression.dateenreg = year.ToString() + '-' + month.ToString() + '-' + day.ToString();
             _context.DesignImpression.Add(designImpression);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetDesignImpression", new { id = designImpression.Id }, designImpression);
+        }
+
+        [HttpGet]
+        [Route("SearchByEmployee/{Id}")]
+        public List<DesignImpression> SearchByAllEmployee(string Id)
+        {
+            return _context.DesignImpression.Where(item => item.idUserCreator == Id).OrderByDescending(item => item.Id).ToList();
         }
 
         // DELETE: api/DesignImpressions/5

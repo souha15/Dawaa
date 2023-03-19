@@ -57,6 +57,10 @@ export class ExthechniqueService {
     return this.http.put(this.rootURL + '/Exthechniques/' + this.formData.id, this.formData, this.headers);
   }
 
+  //Search By EMployee
+  SearchByEmployee(Id) {
+    return this.http.get<Exthechnique[]>(this.rootURL + '/Exthechniques/SearchByEmployee/' + Id);
+  }
   //Get Exthechnique By Id
 
   GetById(Id) {

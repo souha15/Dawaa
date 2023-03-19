@@ -177,7 +177,6 @@ export class RecordingArchiveAddComponent implements OnInit {
     else {
 
       this.isValidFormSubmitted = true;
-      this.dem.dateenreg = this.date;
       this.dem.diretat = "في الانتظار";
       this.dem.idUserCreator = this.UserId;
       this.dem.userNameCreator = this.UserName;

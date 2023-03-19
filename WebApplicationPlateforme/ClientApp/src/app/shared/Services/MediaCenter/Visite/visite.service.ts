@@ -27,6 +27,10 @@ export class VisiteService {
     return this.http.put<Visite>(this.rootURL + '/visites/' + Transaction.id, Transaction, this.headers);
 
   }
+
+  SearchByEmployee(Id) {
+    return this.http.get<Visite[]>(this.rootURL + '/visites/SearchByEmployee/' + Id);
+  }
   //Create Visite
 
   Create(tache: Visite) {
