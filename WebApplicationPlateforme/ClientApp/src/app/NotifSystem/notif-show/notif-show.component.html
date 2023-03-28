@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="notification-list_feature-img">
-          <a [routerLink]="['/'+item.pageUrl]" (click)="updateNotif(item)"><i class="fas fa-check-circle"></i></a>
+          <a [routerLink]="['/'+item.pageUrl,item.serviceId]" (click)="updateNotif(item)"><i class="fas fa-check-circle"></i></a>
         </div>
       </div>   
     </div>

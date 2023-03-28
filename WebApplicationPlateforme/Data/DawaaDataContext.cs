@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApplicationPlateforme.Model.Demande_Besoins;
 using WebApplicationPlateforme.Model.DepartEmployee;
+using WebApplicationPlateforme.Model.MediaCenter;
 
 namespace WebApplicationPlateforme.Data
 {
@@ -20,5 +21,9 @@ namespace WebApplicationPlateforme.Data
         // Depart Employee Data 
 
         public DbSet<Depart> Departs { get; set; }
+
+        /*** Media Center Visite **/
+
+        public DbSet<Visitegeneral> Visitegenerals { get; set; }
     }
 }

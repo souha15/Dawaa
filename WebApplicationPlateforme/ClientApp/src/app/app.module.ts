@@ -859,6 +859,10 @@ import { RapportDawaaWomenMenuComponent } from './Rapports/RolesByAdmin/rapport-
 import { RapportDirGeneralMenuComponent } from './Rapports/RolesByAdmin/rapport-dir-general-menu/rapport-dir-general-menu.component';
 import { RapportFinMenuComponent } from './Rapports/RolesByAdmin/rapport-fin-menu/rapport-fin-menu.component';
 import { RapportDotMenuComponent } from './Rapports/RolesByAdmin/rapport-dot-menu/rapport-dot-menu.component';
+import { VisiteGeneralAddComponent } from './MediaCenter/VisiteGeneral/visite-general-add/visite-general-add.component';
+import { VisiteGeneralListComponent } from './MediaCenter/VisiteGeneral/visite-general-list/visite-general-list.component';
+import { RapportVisiteGeneralComponent } from './Rapports/MediaCenter/rapport-visite-general/rapport-visite-general.component';
+import { PrintVisiteGeneralComponent } from './Rapports/Print/MediaCenter/print-visite-general/print-visite-general.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -1682,6 +1686,10 @@ import { RapportDotMenuComponent } from './Rapports/RolesByAdmin/rapport-dot-men
     RapportDirGeneralMenuComponent,
     RapportFinMenuComponent,
     RapportDotMenuComponent,
+    VisiteGeneralAddComponent,
+    VisiteGeneralListComponent,
+    RapportVisiteGeneralComponent,
+    PrintVisiteGeneralComponent,
   ],
   imports: [
 
@@ -1916,6 +1924,7 @@ import { RapportDotMenuComponent } from './Rapports/RolesByAdmin/rapport-dot-men
       { path: 'equipement-list-dir', component: EquipementListDirComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORADMN', 'DIRECTORETAB', 'DIRECTORGENERAL'] } },
 
       { path: 'permission-list-dir', component: PermissionUListDirComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORADMN', 'DIRECTORETAB', 'DIRECTORGENERAL']  } },
+      { path: 'permission-list-dir/:id', component: PermissionUListDirComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORADMN', 'DIRECTORETAB', 'DIRECTORGENERAL']  } },
 
       {
         path: 'menurequests', component: MenurequestsComponent,
@@ -3513,6 +3522,9 @@ import { RapportDotMenuComponent } from './Rapports/RolesByAdmin/rapport-dot-men
       { path: 'print-rendonnee/:id', component: PrintRendonneeComponent, canActivate: [AuthGuard] },
       { path: 'print-rendonnee/:datedeb/:datefin', component: PrintRendonneeComponent, canActivate: [AuthGuard] },
 
+      { path: 'print-visite-general', component: PrintVisiteGeneralComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DOTPRIV', 'SERPRIV', 'LOCPRIV', 'TECHPRIV'] } },
+      { path: 'print-visite-general/:id', component: PrintVisiteGeneralComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DOTPRIV', 'SERPRIV', 'LOCPRIV', 'TECHPRIV'] } },
+      { path: 'print-visite-general/:datedeb/:datefin', component: PrintVisiteGeneralComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DOTPRIV', 'SERPRIV', 'LOCPRIV', 'TECHPRIV'] } },
 
     /*** Rapport Menu By Admin **/
       { path: 'rapport-dawaa-menu', component: RapportDawaaMenuComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORGENERAL', 'DAWAAPRIV', 'MUSPRIV'] } },
@@ -3520,6 +3532,12 @@ import { RapportDotMenuComponent } from './Rapports/RolesByAdmin/rapport-dot-men
       { path: 'rapport-dir-general-menu', component: RapportDirGeneralMenuComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORGENERAL'] } },
       { path: 'rapport-fin-menu', component: RapportFinMenuComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORGENERAL', 'FINPRIV', 'COMPTAPRIV', 'BOXPRIV', 'EVFINPRIV', 'RHPRIV'] } },
       { path: 'rapport-dot-menu', component: RapportDotMenuComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORGENERAL', 'DOTPRIV', 'SERPRIV', 'LOCPRIV', 'TECHPRIV'] } },
+
+    /**** Visite General **/
+
+      { path: 'visite-general-add', component: VisiteGeneralAddComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DOTPRIV', 'SERPRIV', 'LOCPRIV', 'TECHPRIV'] } },
+      { path: 'rapport-visite-general', component: RapportVisiteGeneralComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DOTPRIV', 'SERPRIV', 'LOCPRIV', 'TECHPRIV'] } },
+      { path: 'visite-general-list', component: VisiteGeneralListComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DOTPRIV', 'SERPRIV', 'LOCPRIV', 'TECHPRIV'] } },
 
     ])
   ],/*,  {

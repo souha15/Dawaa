@@ -232,9 +232,9 @@ export class PermissionAddComponent implements OnInit {
 
       this.isValidFormSubmitted = true
       this.permissionService.Add(this.per).subscribe(
-        res => {
+        res1 => {
 
-          this.pj.serviceId = res.id;
+          this.pj.serviceId = res1.id;
           this.pj.serviceName = "Permission";
           this.fileslist.forEach(item => {
             this.pj.path = item;
@@ -243,7 +243,7 @@ export class PermissionAddComponent implements OnInit {
             })
           });
 
-          this.notif.serviceId = res.id;
+          this.notif.serviceId = res1.id;
           this.notif.serviceName = "طلب 10-1-2022"
 
 
@@ -252,10 +252,8 @@ export class PermissionAddComponent implements OnInit {
           this.toastr.success("تمت الإضافة بنجاح", "نجاح");
             form.resetForm();
 
-
-
             this.text = "طلب إذن";
-            this.autoNotif.serviceId = res.id;
+            this.autoNotif.serviceId = res1.id;
             this.autoNotif.pageUrl = "permission-list-dir"
             this.autoNotif.userType = "1";
             this.autoNotif.reponse = "2";

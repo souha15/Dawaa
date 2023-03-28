@@ -44,14 +44,22 @@
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Compile Remove="ClientApp\src\app\shared\Models\MediaCenter\DesignImpression\**" />
+    <Compile Remove="ClientApp\src\app\shared\Services\MediaCenter\DesignImpression\**" />
     <Compile Remove="Controllers\CommunicationAdministrative\Decision\**" />
     <Compile Remove="Model\Finance\NewFolder\**" />
     <Content Remove="$(SpaRoot)**" />
+    <Content Remove="ClientApp\src\app\shared\Models\MediaCenter\DesignImpression\**" />
+    <Content Remove="ClientApp\src\app\shared\Services\MediaCenter\DesignImpression\**" />
     <Content Remove="Controllers\CommunicationAdministrative\Decision\**" />
     <Content Remove="Model\Finance\NewFolder\**" />
+    <EmbeddedResource Remove="ClientApp\src\app\shared\Models\MediaCenter\DesignImpression\**" />
+    <EmbeddedResource Remove="ClientApp\src\app\shared\Services\MediaCenter\DesignImpression\**" />
     <EmbeddedResource Remove="Controllers\CommunicationAdministrative\Decision\**" />
     <EmbeddedResource Remove="Model\Finance\NewFolder\**" />
     <None Remove="$(SpaRoot)**" />
+    <None Remove="ClientApp\src\app\shared\Models\MediaCenter\DesignImpression\**" />
+    <None Remove="ClientApp\src\app\shared\Services\MediaCenter\DesignImpression\**" />
     <None Remove="Controllers\CommunicationAdministrative\Decision\**" />
     <None Remove="Model\Finance\NewFolder\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
@@ -80,7 +88,6 @@
     <Folder Include="ClientApp\src\app\shared\Models\Dotations\" />
     <Folder Include="ClientApp\src\app\shared\Models\AdministrativeCommunication\" />
     <Folder Include="ClientApp\src\app\shared\Models\Evenements\" />
-    <Folder Include="ClientApp\src\app\shared\Models\MediaCenter\DesignImpression\" />
     <Folder Include="ClientApp\src\app\shared\Models\ProjetOrg\" />
     <Folder Include="ClientApp\src\app\shared\Models\Supplies\" />
     <Folder Include="ClientApp\src\app\shared\Models\User\" />
@@ -90,7 +97,6 @@
     <Folder Include="ClientApp\src\app\shared\Services\Decisions\" />
     <Folder Include="ClientApp\src\app\shared\Services\Dotations\" />
     <Folder Include="ClientApp\src\app\shared\Services\AdministrativeCommunication\" />
-    <Folder Include="ClientApp\src\app\shared\Services\MediaCenter\DesignImpression\" />
     <Folder Include="ClientApp\src\app\shared\Services\NotificationSettings\" />
     <Folder Include="ClientApp\src\app\shared\Services\ProjetOrg\" />
     <Folder Include="ClientApp\src\app\shared\Services\Rh\" />

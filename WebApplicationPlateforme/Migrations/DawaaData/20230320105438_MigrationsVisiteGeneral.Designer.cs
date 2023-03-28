@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebApplicationPlateforme.Data;
@@ -9,9 +10,10 @@ using WebApplicationPlateforme.Data;
 namespace WebApplicationPlateforme.Migrations.DawaaData
 {
     [DbContext(typeof(DawaaDataContext))]
-    partial class DawaaDataContextModelSnapshot : ModelSnapshot
+    [Migration("20230320105438_MigrationsVisiteGeneral")]
+    partial class MigrationsVisiteGeneral
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -387,44 +389,6 @@ namespace WebApplicationPlateforme.Migrations.DawaaData
                     b.ToTable("Departement");
                 });
 
-            modelBuilder.Entity("WebApplicationPlateforme.Model.MediaCenter.Visitegeneral", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("date")
-                        .HasColumnType("text");
-
-                    b.Property<string>("dateenreg")
-                        .HasColumnType("text");
-
-                    b.Property<string>("details")
-                        .HasColumnType("text");
-
-                    b.Property<string>("idUserCreator")
-                        .HasColumnType("text");
-
-                    b.Property<int>("organismeId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("organismeNom")
-                        .HasColumnType("text");
-
-                    b.Property<string>("titre")
-                        .HasColumnType("text");
-
-                    b.Property<string>("userNameCreator")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("idUserCreator");
-
-                    b.ToTable("Visitegenerals");
-                });
-
             modelBuilder.Entity("WebApplicationPlateforme.Model.User.ApplicationUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
@@ -661,13 +625,6 @@ namespace WebApplicationPlateforme.Migrations.DawaaData
                         .HasForeignKey("IdAdministration")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("WebApplicationPlateforme.Model.MediaCenter.Visitegeneral", b =>
-                {
-                    b.HasOne("WebApplicationPlateforme.Model.User.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("idUserCreator");
                 });
 
             modelBuilder.Entity("WebApplicationPlateforme.Model.User.ApplicationUser", b =>

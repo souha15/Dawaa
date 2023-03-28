@@ -29,22 +29,10 @@
                   قيم المتغيرات
                 </label>
                 &nbsp; &nbsp; <input type="radio" name="date" value="all" (click)="setradio('all')" [checked]="true" [attr.checked]="true" ngModel>&nbsp; &nbsp;الموظفين
-                &nbsp; &nbsp; <input type="radio" name="date" value="employee" (click)="setradio('employee')" ngModel>&nbsp; &nbsp; الموظف
                 &nbsp; &nbsp; <input type="radio" name="date" value="date" (click)="setradio('date')" ngModel>&nbsp; &nbsp;التاريخ
 
               </div>
 
-              <div class="d-flex w-100 justify-content-start flex-wrap" *ngIf="isSelected('employee')">
-                <div class="ml-3">
-                  <label for="month"><span><i class="fa fa-calendar-alt fa-lg"></i></span> &nbsp; &nbsp;الموظف </label>
-
-                  <select id="month" (change)="getEmployee($event)">
-                    <option [ngValue]="undefined" selected disabled>-اختر-</option>
-                    <option *ngFor="let item of UsersList" value="{{item.id}}">{{item.fullName}}</option>
-                  </select>
-
-                </div>
-              </div>
               <div class="d-flex w-100 justify-content-start flex-wrap" *ngIf="isSelected('date')">
                 <div class="ml-3">
                   <label for="target">تاريخ البداية   </label>
@@ -56,9 +44,6 @@
 
 
               </div>
-
-
-
 
               <div class="text-left">
                 <button class="btn add-inputs0" id="" (click)="GetMediaList()" type="button">بحث</button>
@@ -83,29 +68,20 @@
                   <thead class="thead-gestimary">
                     <tr>
                       <th scope="col">#</th>
-                      <th scope="col">مقدم الطلب</th>
-                      <th scope="col"> التاريخ</th>
-                      <th scope="col">	نوع الزيارة   </th>
-                      <th scope="col">الهدف</th>
-                      <th scope="col">العدد</th>
-                      <th scope="col">الميزانية</th>
-                      <th scope="col">الوصف</th>
-                      <th scope="col">التوصيات</th>
+                      <th scope="col">العنوان  </th>
+                      <th scope="col">الجهة </th>
+                      <th scope="col">تاريخ الزيارة</th>
+                      <th scope="col">التفاصيل</th>
                     </tr>
                   </thead>
 
                   <tbody>
                     <tr *ngFor="let cg of mediaList |  orderBy: key : reverse | filter:filter; let i = index">
                       <th>{{i + 1}}</th>
-                      <td>{{cg.userNameCreator}}</td>
-                      <td>{{cg.dateenreg}}</td>
-                      <td>{{cg.type}}</td>
-                      <td>{{cg.but}}</td>
-                      <td>{{cg.nb}}</td>
-                      <td>{{cg.budget}}</td>
-                      <td>{{cg.attribut5}}</td>
-                      <td>{{cg.detail}}</td>
-
+                      <td>{{cg.titre}}</td>
+                      <td>{{cg.organismeNom}}</td>
+                      <td>{{cg.date}}</td>
+                      <td>{{cg.details}}</td>
                     </tr>
                   </tbody>
 
@@ -120,14 +96,11 @@
         </div>
 
         <div class="ml-3" *ngIf="isSelected('date')">
-          <a class="btn add-inputs0" id="" [routerLink]="['/print-visite', DateDeb, DateFin ]" href="" target="_blank">طباعة</a>
-        </div>
-        <div class="ml-3" *ngIf="isSelected('employee')">
-          <a class="btn add-inputs0" id="" [routerLink]="['/print-visite' ]" href="" target="_blank">طباعة</a>
+          <a class="btn add-inputs0" id="" [routerLink]="['/print-visite-general', DateDeb, DateFin ]" href="" target="_blank">طباعة</a>
         </div>
 
         <div class="ml-3" *ngIf="isSelected('all')">
-          <a class="btn add-inputs0" id="" [routerLink]="['/print-visite' ]" href="" target="_blank">طباعة</a>
+          <a class="btn add-inputs0" id="" [routerLink]="['/print-visite-general' ]" href="" target="_blank">طباعة</a>
         </div>
 
 
