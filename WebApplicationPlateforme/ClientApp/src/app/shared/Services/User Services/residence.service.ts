@@ -47,6 +47,24 @@ export class ResidenceService {
     return this.http.get<Residence>(this.rootURL + '/Residences/' + Id);
   }
 
+
+  GetRhList(Id) {
+    return this.http.get<Residence[]>(this.rootURL + '/Residences/GetRhList/' + Id);
+  }
+
+
+  GetRhListGeneral() {
+    return this.http.get<Residence[]>(this.rootURL + '/Residences');
+  }
+
+
+  GetUserList(Id, IdUser) {
+    return this.http.get<Residence[]>(this.rootURL + '/Residences/GetUserList/' + Id + '/' + IdUser);
+  }
+
+  GetUserListGeneral(IdUser) {
+    return this.http.get<Residence[]>(this.rootURL + '/Residences/GetUserListGeneral/' + IdUser);
+  }
   //Edit Residence
 
   Edit() {

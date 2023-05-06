@@ -14,6 +14,8 @@ import { UploadDownloadService } from '../../../shared/Services/Taches/upload-do
 import { ProgressStatus } from '../../../shared/Interfaces/progress-status';
 import { ProgressStatusEnum } from '../../../shared/Enum/progress-status-enum.enum';
 import { SignalRService, connection, AutomaticNotification } from '../../../shared/Services/signalR/signal-r.service';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-validate-conge',
@@ -26,13 +28,15 @@ export class ValidateCongeComponent implements OnInit {
   @Input() public fileName: string;
   @Output() public downloadStatus: EventEmitter<ProgressStatus>;
   @ViewChild('htmlData') htmlData: ElementRef;
+  private routeSub: Subscription;
   constructor(private congeService: CongeService,
     private toastr: ToastrService,
     private UserService: UserServiceService,
     private soldeCongeService: SoldeCongeService,
     private notifService: NotifService,
     public serviceupload: UploadDownloadService,
-    private signalService: SignalRService) {
+    private signalService: SignalRService,
+    private route: ActivatedRoute,) {
     this.downloadStatus = new EventEmitter<ProgressStatus>();
   }
   p: Number = 1;
@@ -165,14 +169,7 @@ export class ValidateCongeComponent implements OnInit {
       this.userc = res
       this.UserIdConnected = res.id;
       this.UserNameConnected = res.fullName;
-      this.notif.userTransmitterId = res.id;
-      this.notif.userTransmitterName = res.fullName;
-      this.notif.dateTime = this.date;
-      this.notif.date = this.dateTime.getDate().toString() + '-' + (this.dateTime.getMonth() + 1).toString() + '-' + this.dateTime.getFullYear().toString();
-      this.notif.time = this.dateTime.getHours().toString() + ':' + this.dateTime.getMinutes().toString();
-      this.notif.TextNotification = " تمت الموافقة على طلب الإجازة  من قبل  " + res.fullName
-      this.notif.serviceName = "طلب إجازة"
-      this.notif.readUnread = "0";
+
 
     })
 
@@ -180,14 +177,35 @@ export class ValidateCongeComponent implements OnInit {
 
   congeList: Conge[] = [];
   filtredCongeList: Conge[] = [];
+  Id: number = 0;
+  showrow: boolean = false;
   CongeList() {
-    this.congeService.Get().subscribe(res => {
-      this.congeList = res
-      this.filtredCongeList = this.congeList.filter(item => item.etatd == "موافق" && item.attribut6 == "في الانتظار" && item.transferera == null)
-    })
+    this.routeSub = this.route.params.subscribe(params => {
+      if (params['id'] != undefined) {
+        this.Id = params['id'];
+        this.showrow = true;
+        this.congeService.GetDirFinList(this.Id).subscribe(res => {
+          this.filtredCongeList = res;
+        }, err => {
+          this.getData()
+        })
+      } else {
+
+        this.congeService.GetDirFinListGeneral().subscribe(res1 => {
+          this.filtredCongeList = res1;
+        }, err => {
+          this.getData();
+        })
+      }
+    });
   }
 
-
+  getData() {
+    this.congeService.GetDirFinListGeneral().subscribe(res1 => {
+      this.filtredCongeList = res1;
+      this.showrow = false;
+    })
+  }
   per: Conge = new Conge();
   soldecongel: SoldeConge[] = [];
   soldecongel1: SoldeConge[] = [];
@@ -241,6 +259,7 @@ export class ValidateCongeComponent implements OnInit {
     this.congeService.formData.attribut4 = this.UserNameConnected;
     if (this.etat == "رفض") {
       this.congeService.formData.attribut6 = "رفض"
+      this.update = false;
     } else {
 
 
@@ -261,6 +280,7 @@ export class ValidateCongeComponent implements OnInit {
 
   }
   sc: SoldeConge = new SoldeConge()
+  update: boolean = false;
   updateRecord2(form: NgForm) {
 
 
@@ -272,16 +292,15 @@ export class ValidateCongeComponent implements OnInit {
     this.congeService.formData.attribut4 = this.UserNameConnected;
     this.congeService.Edit().subscribe(res => {
 
-      if (this.per.type == "إجازة سنوية") {
+      if (this.per.type == "إجازة إعتيادية") {
         this.sc.dateenreg = this.date;
 
         let solde = +this.soldeconge.soldenormal - +this.per.duree
         this.sc.soldenormal = solde.toString();
 
         this.soldeCongeService.PutObservable(this.sc).subscribe(res => {
-          this.toastr.success('تم التحديث بنجاح', 'نجاح')
-          this.resetForm();
-          this.CongeList();
+          this.toastr.success('تم التحديث بنجاح', 'نجاح');
+          this.update = true;   
         })
 
       }
@@ -291,9 +310,9 @@ export class ValidateCongeComponent implements OnInit {
         let solde = +this.soldeconge.soldeurgent - +this.per.duree
         this.sc.soldeurgent = solde.toString();
         this.soldeCongeService.PutObservable(this.sc).subscribe(res => {
-          this.toastr.success('تم التحديث بنجاح', 'نجاح')
-          this.resetForm();
-          this.CongeList();
+          this.toastr.success('تم التحديث بنجاح', 'نجاح');
+          this.update = true;
+        
         })
 
       }
@@ -304,9 +323,10 @@ export class ValidateCongeComponent implements OnInit {
         let solde = +this.soldeconge.soldemaladie - +this.per.duree
         this.sc.soldemaladie = solde.toString();
         this.soldeCongeService.PutObservable(this.sc).subscribe(res => {
-          this.toastr.success('تم التحديث بنجاح', 'نجاح')
-          this.resetForm();
-          this.CongeList();
+          this.update = true;
+          this.toastr.success('تم التحديث بنجاح', 'نجاح');
+         
+        
         })
 
       }
@@ -314,6 +334,7 @@ export class ValidateCongeComponent implements OnInit {
     },
       err => {
         this.toastr.error('لم يتم التحديث  ', ' فشل');
+        this.update = false;
       }
 
 
@@ -393,6 +414,8 @@ export class ValidateCongeComponent implements OnInit {
       this.UserService.GetEtabFin().subscribe(resDir => {
         this.notif.userReceiverId = resDir.id;
         this.notif.userReceiverName = resDir.fullName;
+        this.dirId = resDir.id;
+        this.dirName = resDir.fullName;
       })
     }
     if (this.transfererA == "2") {
@@ -400,6 +423,8 @@ export class ValidateCongeComponent implements OnInit {
       this.UserService.GetRhDepartement().subscribe(resDir => {
         this.notif.userReceiverId = resDir.id;
         this.notif.userReceiverName = resDir.fullName;
+        this.dirId = resDir.id;
+        this.dirName = resDir.fullName;
       })
     }
 
@@ -432,7 +457,7 @@ export class ValidateCongeComponent implements OnInit {
             this.autoNotif.receiverId = this.dirId;
             this.autoNotif.transmitterId = this.UserIdConnected;
             this.autoNotif.transmitterName = this.UserNameConnected;
-            this.text = "لقد تم تحويل طلب الإجازة من مدير إدارة المالية إلى قسم المحاسبة";
+            this.autoNotif.text = "لقد تم تحويل طلب الإجازة من مدير إدارة المالية إلى قسم المحاسبة";
             this.autoNotif.vu = "0";
           
 
@@ -441,7 +466,7 @@ export class ValidateCongeComponent implements OnInit {
             })
           })
         })
-        this.notif.serviceId = 5;
+       
         this.UserService.GetEtabFin().subscribe(resDir => {
           this.notif.userReceiverId = resDir.id;
           this.notif.userReceiverName = resDir.fullName;
@@ -449,7 +474,7 @@ export class ValidateCongeComponent implements OnInit {
         })
       }
       if (this.transfererA == "2") {
-        this.notif.serviceId = 6;
+
         this.UserService.GetRhDepartement().subscribe(resDir => {
           this.notif.userReceiverId = resDir.id;
           this.notif.userReceiverName = resDir.fullName;
@@ -468,7 +493,7 @@ export class ValidateCongeComponent implements OnInit {
             this.autoNotif.receiverId = this.dirId;
             this.autoNotif.transmitterId = this.UserIdConnected;
             this.autoNotif.transmitterName = this.UserNameConnected;
-            this.text = "لقد تم تحويل طلب الإجازة من مدير إدارة المالية إلى  شؤون الموظفين ";
+              this.autoNotif.text = "لقد تم تحويل طلب الإجازة من مدير إدارة المالية إلى  شؤون الموظفين ";
             this.autoNotif.vu = "0";
       
 
@@ -479,10 +504,10 @@ export class ValidateCongeComponent implements OnInit {
         })
 
       }
-      this.notifService.Add(this.notif).subscribe(res => {
+      this.showrow = false;
         this.toastr.success("تم  تحويل  الطلب بنجاح", "نجاح");
         this.CongeList();
-      })
+     
     },
       err => {
         this.toastr.warning('لم يتم  تحويل  الطلب بنجاح', ' فشل');

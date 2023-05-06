@@ -113,7 +113,7 @@ namespace WebApplicationPlateforme.Controllers.AutomaticNotificationControllers
             notification = GetLast(idTransmitter, idReceiver);
             if (notification.vu == "0")
             {
-                notifList = _context.AutomaticNotifs.Where(item => item.transmitterId == idTransmitter && item.receiverId == idReceiver && item.vu == "0").ToList();
+                notifList = _context.AutomaticNotifs.Where(item => item.transmitterId == idTransmitter && item.receiverId == idReceiver && item.vu == "0" && item.reponse != "Demander").ToList();
 
                 if (notifList.Count != 0)
                 {
@@ -138,7 +138,7 @@ namespace WebApplicationPlateforme.Controllers.AutomaticNotificationControllers
         {
             List<AutomaticNotif> notifList = new List<AutomaticNotif>();
             AutomaticNotif notif = new AutomaticNotif();
-            notifList = _context.AutomaticNotifs.Where(item => item.transmitterId == idTransmitter && item.receiverId == idReceiver).ToList();
+            notifList = _context.AutomaticNotifs.Where(item => item.transmitterId == idTransmitter && item.receiverId == idReceiver && item.reponse != "Demander").ToList();
             if (notifList.Count != 0) { notif = notifList.Last(); }
             return notif;
         }
@@ -149,7 +149,7 @@ namespace WebApplicationPlateforme.Controllers.AutomaticNotificationControllers
         {
             List<AutomaticNotif> notifList = new List<AutomaticNotif>();
             AutomaticNotif notif = new AutomaticNotif();
-            notifList = _context.AutomaticNotifs.Where(item => item.transmitterId == idTransmitter && item.receiverId == idReceiver).ToList();
+            notifList = _context.AutomaticNotifs.Where(item => item.transmitterId == idTransmitter && item.receiverId == idReceiver && item.reponse != "Demander").ToList();
             if (notifList.Count != 0) { notif = notifList.Last(); 
             }
             return notif;
@@ -161,7 +161,7 @@ namespace WebApplicationPlateforme.Controllers.AutomaticNotificationControllers
         public int GetNotificationsNumber(string idReceiver)
         {
             int count = 0;
-            var list = _context.AutomaticNotifs.Where(item => item.receiverId == idReceiver && item.vu == "0")
+            var list = _context.AutomaticNotifs.Where(item => item.receiverId == idReceiver && item.vu == "0" && item.reponse != "Demander")
                 .ToList();
             if (list.Count != 0) count = list.Count();
             else count = 0;
@@ -173,7 +173,7 @@ namespace WebApplicationPlateforme.Controllers.AutomaticNotificationControllers
         [Route("GetNotificationByUser/{idReceiver}")]
         public List<AutomaticNotif> GetNotificationByUser(string idReceiver)
         {
-            var list = _context.AutomaticNotifs.Where(item => item.receiverId == idReceiver)
+            var list = _context.AutomaticNotifs.Where(item => item.receiverId == idReceiver && item.reponse != "Demander")
                 .OrderByDescending(item => item.dateSend)
                 .ToList();
             return list;
@@ -183,7 +183,7 @@ namespace WebApplicationPlateforme.Controllers.AutomaticNotificationControllers
         [Route("GetUnreadNotificationByUser/{idReceiver}")]
         public List<AutomaticNotif> GetUnreadNotificationByUser(string idReceiver)
         {
-            var list = _context.AutomaticNotifs.Where(item => item.receiverId == idReceiver && item.vu=="0")
+            var list = _context.AutomaticNotifs.Where(item => item.receiverId == idReceiver && item.vu=="0" && item.reponse != "Demander")
                 .OrderByDescending(item => item.dateSend)
                 .ToList();
             return list;
@@ -193,7 +193,17 @@ namespace WebApplicationPlateforme.Controllers.AutomaticNotificationControllers
         [Route("GetUnreadServicesNotificationByUser/{idReceiver}")]
         public List<AutomaticNotif> GetUnreadServicesNotificationByUser(string idReceiver)
         {
-            var list = _context.AutomaticNotifs.Where(item => item.receiverId == idReceiver && item.vu == "0" && item.idService == 0)
+            var list = _context.AutomaticNotifs.Where(item => item.receiverId == idReceiver && item.vu == "0" && item.idService == 0 && item.reponse != "Demander")
+                .OrderByDescending(item => item.dateSend)
+                .ToList();
+            return list;
+        }   
+        
+        [HttpGet]
+        [Route("GetUnreadNotificationForDemander/{idReceiver}")]
+        public List<AutomaticNotif> GetUnreadNotificationForDemander(string idReceiver)
+        {
+            var list = _context.AutomaticNotifs.Where(item => item.receiverId == idReceiver && item.vu == "0" && item.reponse =="Demander")
                 .OrderByDescending(item => item.dateSend)
                 .ToList();
             return list;
@@ -203,7 +213,7 @@ namespace WebApplicationPlateforme.Controllers.AutomaticNotificationControllers
         [Route("GetUnreadDotationsNotificationByUser/{idReceiver}")]
         public List<AutomaticNotif> GetUnreadDotationsNotificationByUser(string idReceiver)
         {
-            var list = _context.AutomaticNotifs.Where(item => item.receiverId == idReceiver && item.vu == "0" && item.idService ==2)
+            var list = _context.AutomaticNotifs.Where(item => item.receiverId == idReceiver && item.vu == "0" && item.idService ==2 && item.reponse != "Demander")
                 .OrderByDescending(item => item.dateSend)
                 .ToList();
             return list;

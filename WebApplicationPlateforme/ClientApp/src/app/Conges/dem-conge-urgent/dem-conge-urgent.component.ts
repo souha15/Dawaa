@@ -305,7 +305,7 @@ export class DemCongeUrgentComponent implements OnInit {
           res => {
             this.notif.serviceId = res.id;
             this.notif.serviceName = "طلب إجازة"
-            this.notifService.Add(this.notif).subscribe(res => {
+
 
             this.soldeconge = this.soldeconge - +this.conge.duree;
             this.diffDays = 0
@@ -335,7 +335,7 @@ export class DemCongeUrgentComponent implements OnInit {
               })
 
 
-            })
+          
           },
           err => {
             this.toastr.error("لم يتم تقديم الطلب", "فشل ")

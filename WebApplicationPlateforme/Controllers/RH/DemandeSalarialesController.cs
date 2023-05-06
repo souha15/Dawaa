@@ -117,5 +117,66 @@ namespace WebApplicationPlateforme.Controllers.RH
         {
             return _context.demandeSalariales.Any(e => e.Id == id);
         }
+
+        [HttpGet]
+        [Route("GetDirList/{Id}/{idUser}")]
+        public List<DemandeSalariale> GetDirList(int id, string idUser)
+        {
+            DemandeSalariale obj = new DemandeSalariale();
+            List<DemandeSalariale> list = new List<DemandeSalariale>();
+            list = _context.demandeSalariales.Where(item => item.etat == "في الانتظار" && item.dirid == idUser).OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.demandeSalariales.Where(item => item.Id == id && item.etat == "في الانتظار" && item.dirid == idUser).FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetDirListGeneral/{idUser}")]
+        public List<DemandeSalariale> GetDirListGeneral(string idUser)
+        {
+            DemandeSalariale obj = new DemandeSalariale();
+            List<DemandeSalariale> list = new List<DemandeSalariale>();
+            list = _context.demandeSalariales.Where(item => item.etat == "في الانتظار" && item.dirid == idUser).OrderBy(item => item.Id).ToList();
+            return list;
+        }
+
+
+        [HttpGet]
+        [Route("GetUserList/{Id}/{IdUser}")]
+        public List<DemandeSalariale> GetUserList(int id, string IdUser)
+        {
+            DemandeSalariale obj = new DemandeSalariale();
+            List<DemandeSalariale> list = new List<DemandeSalariale>();
+            list = _context.demandeSalariales.Where(item => item.idUserCreator == IdUser).OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.demandeSalariales.Where(item => item.Id == id && item.idUserCreator == IdUser).FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetUserListGeneral/{IdUser}")]
+        public List<DemandeSalariale> GetUserListGeneral(string IdUser)
+        {
+            DemandeSalariale obj = new DemandeSalariale();
+            List<DemandeSalariale> list = new List<DemandeSalariale>();
+            list = _context.demandeSalariales.Where(item => item.idUserCreator == IdUser).OrderBy(item => item.Id).ToList();
+            return list;
+        }
     }
 }

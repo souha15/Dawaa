@@ -167,6 +167,8 @@ export class DemCongeHajComponent implements OnInit {
         this.conge.directeurid = res.attribut1;
         this.notif.userReceiverId = res.attribut1;
         this.notif.userReceiverName = res.directeur;
+        this.dirId = res.attribut1;
+        this.dirName = res.directeur
       }
       this.notif.userTransmitterId = res.id;
       this.notif.userTransmitterName = res.fullName;
@@ -305,7 +307,7 @@ export class DemCongeHajComponent implements OnInit {
                 this.bool = false;
               })
             })
-            this.notifService.Add(this.notif).subscribe(res => {
+ 
               this.diffDays = 0
               this.toastr.success(" تم تقديم الطلب بنجاح", "نجاح");
               form.resetForm();
@@ -336,7 +338,7 @@ export class DemCongeHajComponent implements OnInit {
                 })
               })
 
-            })
+           
           },
           err => {
             this.toastr.error("لم يتم تقديم الطلب", "فشل ")

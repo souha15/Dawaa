@@ -13,6 +13,8 @@ import { ProgressStatusEnum } from '../../shared/Enum/progress-status-enum.enum'
 import { HttpEventType } from '@angular/common/http';
 import { FilesChangerRib } from '../../shared/Models/ChangeRib/files-changer-rib.model';
 import { NgForm } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-change-rib-user-list',
@@ -23,11 +25,13 @@ export class ChangeRibUserListComponent implements OnInit {
   @Input() public disabled: boolean;
   @Output() public uploadStatuss: EventEmitter<ProgressStatus>;
   @ViewChild('inputFile') inputFile: ElementRef;
+  private routeSub: Subscription;
   constructor(private demService: ChangerRibService,
     private filesService: FilesChangerRibService,
     private toastr: ToastrService,
     private UserService: UserServiceService,
-    public serviceupload: UploadDownloadService, ) {
+    public serviceupload: UploadDownloadService,
+    private route: ActivatedRoute,) {
     this.uploadStatuss = new EventEmitter<ProgressStatus>();
   }
 
@@ -35,7 +39,7 @@ export class ChangeRibUserListComponent implements OnInit {
   ngOnInit(): void {
     this.getUserConnected();
     this.getFiles();
-    this.GetDemandList();
+    //this.GetDemandList();
   }
   /* Populate Form */
 
@@ -75,12 +79,42 @@ export class ChangeRibUserListComponent implements OnInit {
 
   UserIdConnected: string;
   UserNameConnected: string;
+  Idd: number = 0;
+  showrow: boolean = false;
   getUserConnected() {
     this.UserService.getUserProfileObservable().subscribe(res => {
       this.UserIdConnected = res.id;
       this.UserNameConnected = res.fullName
+
+      this.routeSub = this.route.params.subscribe(params => {
+        if (params['id'] != undefined) {
+          this.Idd = params['id'];
+          this.showrow = true;
+          this.demService.GetUserList(this.Idd, this.UserIdConnected).subscribe(res => {
+            this.DemandList = res;
+          }, err => {
+            this.getData()
+          })
+        } else {
+
+          this.demService.GetUserListGeneral(this.UserIdConnected).subscribe(res1 => {
+            this.DemandList = res1;
+          }, err => {
+            this.getData();
+          })
+        }
+      });
+    })
+   
+  }
+
+  getData() {
+    this.demService.GetUserListGeneral(this.UserIdConnected).subscribe(res1 => {
+      this.DemandList = res1;
+      this.showrow = false;
     })
   }
+
   /* Demand List */
 
   DemandListGlobal: ChangerRib[] = [];
@@ -121,7 +155,7 @@ export class ChangeRibUserListComponent implements OnInit {
         this.fileslist = [];
         this.files1 = [];
         this.TestListFiles = false;
-        this.GetDemandList();
+        this.getUserConnected();
       },
         err => {
           this.toastr.error("لم يتم التسجيل", "فشل في التسجيل")
@@ -137,7 +171,7 @@ export class ChangeRibUserListComponent implements OnInit {
     if (confirm('Are you sure to delete this record ?')) {
       this.demService.Delete(Id)
         .subscribe(res => {
-          this.GetDemandList();
+          this.getUserConnected();
           this.toastr.success("تم الحذف  بنجاح", "نجاح");
         },
 

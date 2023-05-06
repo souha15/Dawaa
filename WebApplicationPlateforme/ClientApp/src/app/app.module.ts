@@ -1899,8 +1899,10 @@ import { PrintVisiteGeneralComponent } from './Rapports/Print/MediaCenter/print-
       { path: 'demande-conge', component: DemandeCongeComponent, canActivate: [AuthGuard] },
 
       { path: 'my-list-conge', component: MyListCongeComponent, canActivate: [AuthGuard] },
+      { path: 'my-list-conge/:id', component: MyListCongeComponent, canActivate: [AuthGuard] },
 
       { path: 'validate-conge', component: ValidateCongeComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'COMPTAPRIV'] } },
+      { path: 'validate-conge/:id', component: ValidateCongeComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'COMPTAPRIV'] } },
 
       { path: 'suivie-conge', component: SuivieCongeComponent, canActivate: [AuthGuard] },
 
@@ -1908,6 +1910,7 @@ import { PrintVisiteGeneralComponent } from './Rapports/Print/MediaCenter/print-
       { path: 'permission-add', component: PermissionAddComponent, canActivate: [AuthGuard] },
 
       { path: 'permission-list', component: PermissionListComponent, canActivate: [AuthGuard] },
+      { path: 'permission-list/:id', component: PermissionListComponent, canActivate: [AuthGuard] },
 
       { path: 'nom-equipement', component: NomEquipementComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR'] } },
 
@@ -1916,18 +1919,24 @@ import { PrintVisiteGeneralComponent } from './Rapports/Print/MediaCenter/print-
       { path: 'equipement-add', component: EquipementAddComponent, canActivate: [AuthGuard] },
 
       { path: 'equipement-list', component: EquipementListComponent, canActivate: [AuthGuard] },
+      { path: 'equipement-list/:id', component: EquipementListComponent, canActivate: [AuthGuard] },
 
       { path: 'recrutement-list', component: RecrutementListComponent, canActivate: [AuthGuard] },
+      { path: 'recrutement-list/:id', component: RecrutementListComponent, canActivate: [AuthGuard] },
 
       { path: 'recrutement-add', component: RecrutementAddComponent, canActivate: [AuthGuard] },
  
       { path: 'equipement-list-dir', component: EquipementListDirComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORADMN', 'DIRECTORETAB', 'DIRECTORGENERAL'] } },
+      { path: 'equipement-list-dir/:id', component: EquipementListDirComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORADMN', 'DIRECTORETAB', 'DIRECTORGENERAL'] } },
 
       { path: 'permission-list-dir', component: PermissionUListDirComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORADMN', 'DIRECTORETAB', 'DIRECTORGENERAL']  } },
       { path: 'permission-list-dir/:id', component: PermissionUListDirComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORADMN', 'DIRECTORETAB', 'DIRECTORGENERAL']  } },
 
       {
         path: 'menurequests', component: MenurequestsComponent,
+        canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORADMN', 'DIRECTORETAB','DIRECTORGENERAL'] }
+      }, {
+        path: 'menurequests/:id', component: MenurequestsComponent,
         canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORADMN', 'DIRECTORETAB','DIRECTORGENERAL'] }
       },
 
@@ -1944,18 +1953,23 @@ import { PrintVisiteGeneralComponent } from './Rapports/Print/MediaCenter/print-
       { path: 'salaiale-add', component: SalaialeAddComponent, canActivate: [AuthGuard] },
 
       { path: 'salaiale-my-lis', component: SalaialeMyLisComponent, canActivate: [AuthGuard] },
+      { path: 'salaiale-my-lis/:id', component: SalaialeMyLisComponent, canActivate: [AuthGuard] },
 
       { path: 'salaiale-dir-lis', component: SalaialeDirLisComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'RHPRIV'] } },
+      { path: 'salaiale-dir-lis/:id', component: SalaialeDirLisComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'RHPRIV'] } },
 
       { path: 'solde-conge', component: SoldeCongeComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR'] } },
 
       { path: 'recrutmenet-dir-list', component: RecrutmenetDirListComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORADMN', 'DIRECTORETAB', 'DIRECTORGENERAL']  }  },
+      { path: 'recrutmenet-dir-list/:id', component: RecrutmenetDirListComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORADMN', 'DIRECTORETAB', 'DIRECTORGENERAL']  }  },
 
       { path: 'my-list-recrutment', component: MyListRecrutmentComponent, canActivate: [AuthGuard] },
 
       { path: 'rh-recrutment-list', component: RhRecrutmentListComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'RHPRIV'] } },
+      { path: 'rh-recrutment-list/:id', component: RhRecrutmentListComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'RHPRIV'] } },
 
       { path: 'rh-conge-list', component: RhCongeListComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'RHPRIV'] }},
+      { path: 'rh-conge-list/:id', component: RhCongeListComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'RHPRIV'] }},
 
       { path: 'news-detail', component: NewsDetailComponent, canActivate: [AuthGuard] },
 
@@ -1970,6 +1984,7 @@ import { PrintVisiteGeneralComponent } from './Rapports/Print/MediaCenter/print-
       { path: 'priv-add', component: PrivAddComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'COMPTAPRIV'] }},
 
       { path: 'my-priv-list', component: MyPrivListComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'COMPTAPRIV'] }},
+      { path: 'my-priv-list/:id', component: MyPrivListComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'COMPTAPRIV'] }},
 
       { path: 'priv-list-dir', component: PrivListDirComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'COMPTAPRIV'] }},
 
@@ -2142,10 +2157,12 @@ import { PrintVisiteGeneralComponent } from './Rapports/Print/MediaCenter/print-
       { path: 'demande-formation-lis', component: DemandeFormationLisComponent, canActivate: [AuthGuard] },
 
       { path: 'demande-formation-list-rh', component: DemandeFormationListRhComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'RHPRIV'] } },
+      { path: 'demande-formation-list-rh/:id', component: DemandeFormationListRhComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'RHPRIV'] } },
 
       { path: 'demande-formation-list-c', component: DemandeFormationListCComponent, canActivate: [AuthGuard] },
 
       { path: 'demande-formation-listdir', component: DemandeFormationListdirComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORADMN', 'DIRECTORETAB', 'DIRECTORGENERAL'] } },
+      { path: 'demande-formation-listdir/:id', component: DemandeFormationListdirComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORADMN', 'DIRECTORETAB', 'DIRECTORGENERAL'] } },
 
       { path: 'new-formation-request-add', component: NewFormationRequestAddComponent, canActivate: [AuthGuard] },
 
@@ -2165,6 +2182,7 @@ import { PrintVisiteGeneralComponent } from './Rapports/Print/MediaCenter/print-
       { path: 'maitenance-request-list', component: MaitenanceRequestListComponent, canActivate: [AuthGuard] },
 
       { path: 'maitenance-request-mecanical-list', component: MaitenanceRequestMecanicalListComponent, canActivate: [AuthGuard] },
+      { path: 'maitenance-request-mecanical-list/:id', component: MaitenanceRequestMecanicalListComponent, canActivate: [AuthGuard] },
 
       { path: 'main-services-page', component: MainServicesPageComponent, canActivate: [AuthGuard] },
 
@@ -2208,8 +2226,10 @@ import { PrintVisiteGeneralComponent } from './Rapports/Print/MediaCenter/print-
       { path: 'attestation-travail-add', component: AttestationTravailAddComponent, canActivate: [AuthGuard] },
 
       { path: 'attestation-travail-lis', component: AttestationTravailLisComponent, canActivate: [AuthGuard] },
+      { path: 'attestation-travail-lis/:id', component: AttestationTravailLisComponent, canActivate: [AuthGuard] },
 
       { path: 'attestation-travail-rh-list', component: AttestationTravailRhListComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'RHPRIV'] }},
+      { path: 'attestation-travail-rh-list/:id', component: AttestationTravailRhListComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'RHPRIV'] }},
 
                 /***************** Transfert Interne *********************/
 
@@ -2357,18 +2377,23 @@ import { PrintVisiteGeneralComponent } from './Rapports/Print/MediaCenter/print-
       { path: 'salaire-report-add', component: SalaireReportAddComponent, canActivate: [AuthGuard] },
 
       { path: 'salaire-report-print', component: SalaireReportPrintComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'COMPTAPRIV'] } },
+      { path: 'salaire-report-print/:id', component: SalaireReportPrintComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'COMPTAPRIV'] } },
 
       { path: 'demissio-list', component: DemissioListComponent, canActivate: [AuthGuard] },
+      { path: 'demissio-list/:id', component: DemissioListComponent, canActivate: [AuthGuard] },
 
       { path: 'demissio-listdir', component: DemissioListdirComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORADMN', 'DIRECTORETAB', 'DIRECTORGENERAL','RESSOURCEHUMAINE'] }  },
+      { path: 'demissio-listdir/:id', component: DemissioListdirComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'DIRECTORADMN', 'DIRECTORETAB', 'DIRECTORGENERAL','RESSOURCEHUMAINE'] }  },
 
     
 
       { path: 'plaint-add', component: PlaintAddComponent, canActivate: [AuthGuard] },
 
       { path: 'plaint-list', component: PlaintListComponent, canActivate: [AuthGuard] },
+      { path: 'plaint-list/:id', component: PlaintListComponent, canActivate: [AuthGuard] },
 
-      { path: 'plaint-listdir', component: PlaintListdirComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'RHPRIV','DOTPRIV'] }  },
+      { path: 'plaint-listdir', component: PlaintListdirComponent, canActivate: [AuthGuard]/*, data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'RHPRIV','DOTPRIV'] } */ },
+      { path: 'plaint-listdir/:id', component: PlaintListdirComponent, canActivate: [AuthGuard]/*, data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'RHPRIV','DOTPRIV'] }*/  },
 
       { path: 'plaint-edit', component: PlaintEditComponent, canActivate: [AuthGuard] },
 
@@ -2385,10 +2410,12 @@ import { PrintVisiteGeneralComponent } from './Rapports/Print/MediaCenter/print-
       { path: 'residence-add', component: ResidenceAddComponent, canActivate: [AuthGuard] },
 
       { path: 'residence-list', component: ResidenceListComponent, canActivate: [AuthGuard] },
+      { path: 'residence-list/:id', component: ResidenceListComponent, canActivate: [AuthGuard] },
       { path: 'residence-edit', component: ResidenceEditComponent, canActivate: [AuthGuard] },
       { path: 'residence-edit/:id', component: ResidenceEditComponent, canActivate: [AuthGuard] },
 
       { path: 'residence-list-dir', component: ResidenceListDirComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'RHPRIV'] } },
+      { path: 'residence-list-dir/:id', component: ResidenceListDirComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'RHPRIV'] } },
 
       { path: 'experience-add', component: ExperienceAddComponent, canActivate: [AuthGuard] },
 
@@ -2482,8 +2509,10 @@ import { PrintVisiteGeneralComponent } from './Rapports/Print/MediaCenter/print-
       { path: 'demands-finance', component: DemandsFinanceComponent, canActivate: [AuthGuard] },
 
       { path: 'permession-list-rh', component: PermessionListRHComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'RHPRIV'] }},
+      { path: 'permession-list-rh/:id', component: PermessionListRHComponent, canActivate: [AuthGuard], data: { permittedRoles: ['ADMINISTRATEUR', 'FINPRIV', 'RHPRIV'] }},
 
       { path: 'equipement-list-rh', component: EquipementListRHComponent , canActivate: [AuthGuard]},
+      { path: 'equipement-list-rh/:id', component: EquipementListRHComponent , canActivate: [AuthGuard]},
 
       { path: 'plaint-list-rh', component: PlaintListRHComponent, canActivate: [AuthGuard] },
 
@@ -3176,8 +3205,10 @@ import { PrintVisiteGeneralComponent } from './Rapports/Print/MediaCenter/print-
       { path: 'change-rib-add', component: ChangeRibAddComponent, canActivate: [AuthGuard] },
 
       { path: 'change-rib-user-list', component: ChangeRibUserListComponent, canActivate: [AuthGuard] },
+      { path: 'change-rib-user-list/:id', component: ChangeRibUserListComponent, canActivate: [AuthGuard] },
 
       { path: 'change-rib-rh-list', component: ChangeRibRhListComponent, canActivate: [AuthGuard] },
+      { path: 'change-rib-rh-list/:id', component: ChangeRibRhListComponent, canActivate: [AuthGuard] },
 
     /**** Rapport ******/
 

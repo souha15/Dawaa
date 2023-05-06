@@ -39,6 +39,7 @@ export class DemissionAddComponent implements OnInit {
     const datePipe = new DatePipe('en-Us');
     this.today = datePipe.transform(new Date(), 'yyyy-MM-dd');
     this.getFiles();
+    this.getDirg()
     this.userOnLis();
     this.userOffLis();
     this.logOutLis();
@@ -179,6 +180,8 @@ export class DemissionAddComponent implements OnInit {
 
   }
 
+
+
   dem: Demissioon = new Demissioon();
   date = new Date().toLocaleDateString();
   dateTime = new Date();
@@ -190,6 +193,8 @@ export class DemissionAddComponent implements OnInit {
     this.dem.etatdir = "في الانتظار";
     this.dem.etatrh = "في الانتظار";
     this.dem.attribut3 = "في الانتظار";
+    this.dem.iddir = this.dirId;
+    this.dem.nomdir = this.dirName;
     this.demService.Add(this.dem).subscribe(
       res => {
         this.pj.serviceId = res.id;
@@ -219,7 +224,7 @@ export class DemissionAddComponent implements OnInit {
             this.autoNotif.receiverId = this.dirId;
             this.autoNotif.transmitterId = this.UserIdConnected;
             this.autoNotif.transmitterName = this.UserNameConnected;
-              this.text = "طلب إستقالة";
+              this.autoNotif.text = "طلب إستقالة";
             this.autoNotif.vu = "0";
             this.signalService.CreateNotif(this.autoNotif).subscribe(res => {
 

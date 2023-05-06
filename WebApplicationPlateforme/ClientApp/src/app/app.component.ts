@@ -65,12 +65,15 @@ export class AppComponent implements OnInit, OnDestroy {
   updateSoldeConges() {
     this.updateCongeSolde.PutAutomatically().subscribe(res => {
       this.ListCongeSolde = res
-      this.ListCongeSolde.forEach(item => {
-        //item.soldemaladie = (+item.numbermaladie + +item.soldemaladie).toString();
-        item.soldenormal = (+item.numbernormal + +item.soldenormal).toString();
-        //item.soldeurgent = (+item.numberurgent + +item.soldeurgent).toString();
-        this.updateCongeSolde.PutObservable(item).subscribe(res => {})
-      })
+      if (this.ListCongeSolde.length > 0) {
+        this.ListCongeSolde.forEach(item => {
+          //item.soldemaladie = (+item.numbermaladie + +item.soldemaladie).toString();
+          item.soldenormal = (+item.numbernormal + +item.soldenormal).toString();
+          //item.soldeurgent = (+item.numberurgent + +item.soldeurgent).toString();
+          this.updateCongeSolde.PutObservable(item).subscribe(res => { })
+        })
+      }
+    
     })
   }
   setTimeout() {

@@ -308,7 +308,7 @@ export class DemCongeDecesComponent implements OnInit {
               })
             })
           
-            this.notifService.Add(this.notif).subscribe(res => {
+
           
             this.diffDays = 0
             this.toastr.success(" تم تقديم الطلب بنجاح", "نجاح");
@@ -344,7 +344,7 @@ export class DemCongeDecesComponent implements OnInit {
 
 
 
-            })
+       
           
           },
           err => {

@@ -63,6 +63,35 @@ export class EquipementService {
   //Delete Type Dotation
 
   Delete(id) {
-    return this.http.delete(this.rootURL + '/Equipement/' + id);
+    return this.http.delete(this.rootURL + '/Equipements/' + id);
+  }
+
+  GetRhList(id) {
+    return this.http.get<Equipement[]>(this.rootURL + '/Equipements/GetDotList/' + id);
+  }
+
+
+  GetDirList(id, idUser) {
+    return this.http.get<Equipement[]>(this.rootURL + '/Equipements/GetDirList/' + id + '/' + idUser);
+  }
+
+  GetDirListGeneral(idUser) {
+    return this.http.get<Equipement[]>(this.rootURL + '/Equipements/GetDirListGeneral/' + idUser);
+  }
+
+  GetRhListGeneral() {
+    return this.http.get<Equipement[]>(this.rootURL + '/Equipements/GetDotListGeneral');
+  }
+
+
+
+
+  GetUserList(id, idUser) {
+    return this.http.get<Equipement[]>(this.rootURL + '/Equipements/GetUserList/' + id + '/' + idUser);
+  }
+
+
+  GetUserListGeneral(idUser) {
+    return this.http.get<Equipement[]>(this.rootURL + '/Equipements/GetUserListGeneral/' + idUser);
   }
 }

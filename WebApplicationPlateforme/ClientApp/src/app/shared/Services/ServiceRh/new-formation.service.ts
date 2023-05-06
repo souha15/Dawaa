@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class NewFormationService {
 
+
   constructor(private pathService: PathSharedService,
     private http: HttpClient) { }
 
@@ -45,6 +46,14 @@ export class NewFormationService {
 
   GetById(Id) {
     return this.http.get<NewFormation>(this.rootURL + '/newFormationRequests/' + Id);
+  }
+
+  GetDirList(Id,IdUser) {
+    return this.http.get<NewFormation[]>(this.rootURL + '/newFormationRequests/GetDirList/' + Id +'/'+IdUser);
+  }
+
+  GetDirListGeneral(IdUser) {
+    return this.http.get<NewFormation[]>(this.rootURL + '/newFormationRequests/GetDirListGeneral/' +IdUser);
   }
 
   //Edit NewFormation

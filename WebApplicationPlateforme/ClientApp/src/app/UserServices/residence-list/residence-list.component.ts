@@ -10,6 +10,8 @@ import { FileServiceService } from '../../shared/Services/ServiceRh/file-service
 import { UploadDownloadService } from '../../shared/Services/Taches/upload-download.service';
 import { ProgressStatusEnum } from '../../shared/Enum/progress-status-enum.enum';
 import { FileService } from '../../shared/Models/ServiceRh/file-service.model';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-residence-list',
@@ -18,18 +20,18 @@ import { FileService } from '../../shared/Models/ServiceRh/file-service.model';
 })
 export class ResidenceListComponent implements OnInit {
   @Output() public downloadStatus: EventEmitter<ProgressStatus>;
-
+  private routeSub: Subscription;
   constructor(private residenceService: ResidenceService,
   private toastr: ToastrService,
     private UserService: UserServiceService,
     public filesService: FileServiceService,
-    public serviceupload: UploadDownloadService, ) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
+    public serviceupload: UploadDownloadService,
+    private route: ActivatedRoute,) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
 
 
 
   ngOnInit(): void {
     this.getUserConnected()
-    this.CongeList();
     this.getFiles();
   }
 
@@ -38,16 +40,42 @@ export class ResidenceListComponent implements OnInit {
   UserIdConnected: string;
   UserNameConnected: string;
   rs: Residence = new Residence();
+  Id: number = 0;
+  showrow: boolean = false;
   getUserConnected() {
 
     this.UserService.getUserProfileObservable().subscribe(res => {
       this.UserIdConnected = res.id;
       this.UserNameConnected = res.fullName;
+
+      this.routeSub = this.route.params.subscribe(params => {
+        if (params['id'] != undefined) {
+          this.Id = params['id'];
+          this.showrow = true;
+          this.residenceService.GetUserList(this.Id, this.UserIdConnected).subscribe(res => {
+            this.filtredCongeList = res;
+          }, err => {
+            this.getData()
+          })
+        } else {
+
+          this.residenceService.GetUserListGeneral(this.UserIdConnected).subscribe(res1 => {
+            this.filtredCongeList = res1;
+          }, err => {
+            this.getData();
+          })
+        }
+      });
     })
 
   }
 
-
+  getData() {
+    this.residenceService.GetUserListGeneral(this.UserIdConnected).subscribe(res1 => {
+      this.filtredCongeList = res1;
+      this.showrow = false;
+    })
+  }
   congeList: Residence[] = [];
   dem: Residence = new Residence();
   filtredCongeList: Residence[] = [];
@@ -78,7 +106,7 @@ export class ResidenceListComponent implements OnInit {
     if (confirm('Are you sure to delete this record ?')) {
       this.residenceService.Delete(Id)
         .subscribe(res => {
-          this.CongeList();
+          this.getUserConnected();
           this.toastr.success("تم الحذف  بنجاح", "نجاح");
         },
 

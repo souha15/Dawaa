@@ -59,4 +59,24 @@ export class DemandeAttestationTravailService {
   Delete(id) {
     return this.http.delete(this.rootURL + '/DemandeAttestationTravails/' + id);
   }
+
+
+  GetRhList(Id) {
+    return this.http.get<DemandeAttestationTravail[]>(this.rootURL + '/DemandeAttestationTravails/GetRhList/' + Id);
+  }
+
+
+  GetRhListGeneral() {
+    return this.http.get<DemandeAttestationTravail[]>(this.rootURL + '/DemandeAttestationTravails/GetRhListGeneral');
+  }
+
+
+  GetUserList(Id, IdUser) {
+    return this.http.get<DemandeAttestationTravail[]>(this.rootURL + '/DemandeAttestationTravails/GetUserList/' + Id +'/'+IdUser);
+  }
+
+
+  GetUserListGeneral(IdUser) {
+    return this.http.get<DemandeAttestationTravail[]>(this.rootURL + '/DemandeAttestationTravails/GetUserListGeneral/' + IdUser);
+  }
 }

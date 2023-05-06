@@ -63,11 +63,45 @@ export class CongeService {
     return this.http.get<Conge>(this.rootURL + '/Conges/' + Id);
   }
 
+
+
   GetUsersDemands(Id) {
     return this.http.get<Conge[]>(this.rootURL + '/CongeByUser/' + Id);
   }
 
+  GetDirList(Id, IdUser) {
+    return this.http.get<Conge[]>(this.rootURL + '/Conges/GetDirList/' + Id + '/' + IdUser);
+  }
 
+  GetUserList(Id, IdUser) {
+    return this.http.get<Conge[]>(this.rootURL + '/Conges/GetUserList/' + Id + '/' + IdUser);
+  }
+
+  GetDirListGeneral(IdUser) {
+    return this.http.get<Conge[]>(this.rootURL + '/Conges/GetDirListGeneral/' + IdUser );
+  }
+
+
+  GetUserListGeneral(IdUser) {
+    return this.http.get<Conge[]>(this.rootURL + '/Conges/GetUserListGeneral/' + IdUser );
+  }
+
+  GetDirFinList(Id) {
+    return this.http.get<Conge[]>(this.rootURL + '/Conges/GetDirFinList/' + Id );
+  }
+
+  GetDirFinListGeneral() {
+    return this.http.get<Conge[]>(this.rootURL + '/Conges/GetDirFinListGeneral');
+  }
+
+
+  GetRhList(Id) {
+    return this.http.get<Conge[]>(this.rootURL + '/Conges/GetRhList/' + Id );
+  }
+
+  GetRhListGeneral() {
+    return this.http.get<Conge[]>(this.rootURL + '/Conges/GetRhListGeneral');
+  }
   //Edit Type Dotation
 
   Edit() {
@@ -76,6 +110,8 @@ export class CongeService {
 
 
   //Delete Type Dotation
+
+
 
   Delete(id) {
     return this.http.delete(this.rootURL + '/Conges/' + id);
@@ -122,7 +158,6 @@ export class CongeService {
   EditCF() {
     return this.http.put(this.rootURL + '/CongeFiles/' + this.formDatafc.id, this.formDatafc, this.headers);
   }
-
 
   //Delete Type Dotation
 

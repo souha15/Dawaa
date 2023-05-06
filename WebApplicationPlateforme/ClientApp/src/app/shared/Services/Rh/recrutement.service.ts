@@ -63,7 +63,37 @@ export class RecrutementService {
   //Delete Type Dotation
 
   Delete(id) {
-    return this.http.delete(this.rootURL + '/Recrutement/' + id);
+    return this.http.delete(this.rootURL + '/Recrutements/' + id);
+  }
+
+  //Get Recrutement By Id
+
+  GetRhList(id) {
+    return this.http.get<Recrutement[]>(this.rootURL + '/Recrutements/GetRhList/' + id);
+  }
+
+
+  GetDirList(id, idUser) {
+    return this.http.get<Recrutement[]>(this.rootURL + '/Recrutements/GetDirList/' + id + '/' + idUser);
+  }
+
+
+  GetRhListGeneral() {
+    return this.http.get<Recrutement[]>(this.rootURL + '/Recrutements/GetRhListGeneral');
+  }
+
+
+  GetDirListGeneral(idUser) {
+    return this.http.get<Recrutement[]>(this.rootURL + '/Recrutements/GetDirListGeneral/' + idUser);
+  }
+
+  GetUserList(id, idUser) {
+    return this.http.get<Recrutement[]>(this.rootURL + '/Recrutements/GetUserList/' + id + '/' + idUser);
+  }
+
+
+  GetUserListGeneral(idUser) {
+    return this.http.get<Recrutement[]>(this.rootURL + '/Recrutements/GetUserListGeneral/' + idUser);
   }
 }
 

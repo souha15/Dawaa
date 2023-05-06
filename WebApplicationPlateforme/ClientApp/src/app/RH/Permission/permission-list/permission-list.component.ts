@@ -14,6 +14,9 @@ import { ProgressStatus } from '../../../shared/Interfaces/progress-status';
 import { ProgressStatusEnum } from '../../../shared/Enum/progress-status-enum.enum';
 import { HttpEventType } from '@angular/common/http';
 import { FileService } from '../../../shared/Models/ServiceRh/file-service.model';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+
 @Component({
   selector: 'app-permission-list',
   templateUrl: './permission-list.component.html',
@@ -22,15 +25,18 @@ import { FileService } from '../../../shared/Models/ServiceRh/file-service.model
 export class PermissionListComponent implements OnInit {
   filter
   @Output() public downloadStatus: EventEmitter<ProgressStatus>;
+  private routeSub: Subscription;
   constructor(private congeService: PermissionUService,
     private toastr: ToastrService,
     private UserService: UserServiceService,
     public filesService: FileServiceService,
-    public serviceupload: UploadDownloadService, ) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
+    public serviceupload: UploadDownloadService,
+    private route: ActivatedRoute,) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
 
 
   ngOnInit(): void {
     this.getUserConnected();
+    this.CongeList();
     this.getFiles();
     this.resetForm();
    
@@ -59,9 +65,6 @@ export class PermissionListComponent implements OnInit {
       this.userc = res
       this.UserIdConnected = res.id;
       this.UserNameConnected = res.fullName;
-      this.congeService.geByUser(this.UserIdConnected).subscribe(res => {
-        this.filtredCongeList = res
-      })
     })
 
   }
@@ -70,9 +73,39 @@ export class PermissionListComponent implements OnInit {
 
   congeList: PermissionU[] = [];
   filtredCongeList: PermissionU[] = [];
+  Id: number = 0;
+  showrow: boolean = false;
   CongeList() {
-    this.congeService.geByUser(this.UserIdConnected).subscribe(res => {
-      this.filtredCongeList = res
+    this.UserService.getUserProfileObservable().subscribe(res => {
+      this.userc = res
+      this.UserIdConnected = res.id;
+      this.UserNameConnected = res.fullName;
+
+    this.routeSub = this.route.params.subscribe(params => {
+      if (params['id'] != undefined) {
+        this.Id = params['id'];
+        this.showrow = true;
+        this.congeService.GetUserList(this.Id, this.UserIdConnected).subscribe(res => {
+          this.filtredCongeList = res;
+        }, err => {
+          this.getData()
+        })
+      } else {
+
+        this.congeService.GetUserListGeneral(this.UserIdConnected).subscribe(res1 => {
+          this.filtredCongeList = res1;
+        }, err => {
+          this.getData();
+        })
+      }
+    });
+    })
+  }
+
+  getData() {
+    this.congeService.GetUserListGeneral(this.UserIdConnected).subscribe(res1 => {
+      this.filtredCongeList = res1;
+      this.showrow = false;
     })
   }
 

@@ -32,13 +32,13 @@
             </thead>
             <tbody>
               <tr *ngFor="let cg of filtredCongeList |  orderBy: key : reverse | filter:filter| paginate : { itemsPerPage: 5, currentPage: p };let i = index">
-                <th (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{(p-1) * count + i + 1}}</th>
-                <th (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.userNameCreator}}</th>
-                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.type}}</td>
-                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.langue}}</td>
-                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.date}}</td>
-                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.dateenreg}}</td>
-                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.organisme}}</td>
+                <th (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{(p-1) * count + i + 1}}</th>
+                <th (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{cg.userNameCreator}}</th>
+                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{cg.type}}</td>
+                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{cg.langue}}</td>
+                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{cg.date}}</td>
+                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{cg.dateenreg}}</td>
+                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{cg.organisme}}</td>
 
                 <td data-toggle="modal" data-target="#myModal2" (click)="populateForm(cg)"
                     [ngClass]="{

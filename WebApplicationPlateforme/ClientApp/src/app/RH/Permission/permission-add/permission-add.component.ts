@@ -140,13 +140,7 @@ export class PermissionAddComponent implements OnInit {
   }
 
 
-  //Dynamic Test of user connected
-  userConnected: boolean = false;
-  DynamicTestConnected() {
-    if (this.users.filter(item => item.userId == this.dirId).length > 0) {
-      this.userConnected = true
-    }
-  }
+
 
   notif: Notif = new Notif();
 

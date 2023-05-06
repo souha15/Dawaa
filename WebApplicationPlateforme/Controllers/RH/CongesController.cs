@@ -126,5 +126,128 @@ namespace WebApplicationPlateforme.Controllers.RH
         {
             return _context.conges.Any(e => e.Id == id);
         }
+
+
+        [HttpGet]
+        [Route("GetDirList/{Id}/{idUser}")]
+        public List<Conge> GetDirList(int id, string idUser)
+        {
+            Conge obj = new Conge();
+            List<Conge> list = new List<Conge>();
+            list = _context.conges.Where(item => item.directeurid == idUser && item.etatd == "في الانتظار").OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.conges.Where(item => item.Id == id &&  item.directeurid == idUser && item.etatd == "في الانتظار").FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetDirFinList/{Id}")]
+        public List<Conge> GetDirFinList(int id)
+        {
+            Conge obj = new Conge();
+            List<Conge> list = new List<Conge>();
+            list = _context.conges.Where(item => item.etatd == "موافق" && item.attribut6 == "في الانتظار" && item.transferera == null).OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.conges.Where(item => item.Id == id && item.etatd == "موافق" && item.attribut6 == "في الانتظار" && item.transferera == null).FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+
+
+        [HttpGet]
+        [Route("GetDirListGeneral/{idUser}")]
+        public List<Conge> GetDirListGeneral(string idUser)
+        {
+            Conge obj = new Conge();
+            List<Conge> list = new List<Conge>();
+            list = _context.conges.Where(item => item.directeurid == idUser && item.etatd == "في الانتظار").OrderBy(item => item.Id).ToList();
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetDirFinListGeneral")]
+        public List<Conge> GetDirFinListGeneral()
+        {
+            Conge obj = new Conge();
+            List<Conge> list = new List<Conge>();
+            list = _context.conges.Where(item => item.etatd == "موافق" && item.attribut6 == "في الانتظار" && item.transferera == null).OrderBy(item => item.Id).ToList();
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetUserList/{Id}/{IdUser}")]
+        public List<Conge> GetUserList(int id, string IdUser)
+        {
+            Conge obj = new Conge();
+            List<Conge> list = new List<Conge>();
+            list = _context.conges.Where(item => item.idUserCreator == IdUser).OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.conges.Where(item => item.Id == id && item.idUserCreator == IdUser).FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetUserListGeneral/{IdUser}")]
+        public List<Conge> GetUserListGeneral(string IdUser)
+        {
+            Conge obj = new Conge();
+            List<Conge> list = new List<Conge>();
+            list = _context.conges.Where(item => item.idUserCreator == IdUser).OrderBy(item => item.Id).ToList();
+            return list;
+        }
+
+
+        [HttpGet]
+        [Route("GetRhList/{Id}")]
+        public List<Conge> GetRhList(int id)
+        {
+            Conge obj = new Conge();
+            List<Conge> list = new List<Conge>();
+            list = _context.conges.Where(item => item.etatrh == "في الانتظار" && (item.transferera == "2" || item.transferera == "3" || item.attribut6 == "إعتماد بخصم" || item.attribut6 == "إعتماد بغير خصم")).OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.conges.Where(item => item.Id == id && item.etatrh == "في الانتظار" && (item.transferera == "2" || item.transferera == "3" || item.attribut6 == "إعتماد بخصم" || item.attribut6 == "إعتماد بغير خصم") ).FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+        [HttpGet]
+        [Route("GetRhListGeneral")]
+        public List<Conge> GetRhListGeneral()
+        {
+            Conge obj = new Conge();
+            List<Conge> list = new List<Conge>();
+            list = _context.conges.Where(item => item.etatrh == "في الانتظار" && (item.transferera == "2" || item.transferera == "3" || item.attribut6 == "إعتماد بخصم" || item.attribut6 == "إعتماد بغير خصم")).OrderBy(item => item.Id).ToList();
+            return list;
+        }
+
     }
 }

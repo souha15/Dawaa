@@ -6,6 +6,9 @@
 #MyTable tr {
   cursor: pointer;
 }
+.firstRow {
+   background-color: #ffa;
+}
 /*-- Electronic Sevices Forms --*/
 .task-form input:focus:not([type="submit"]):not([type="reset"]),
 .task-form select:focus {

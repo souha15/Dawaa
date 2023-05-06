@@ -127,6 +127,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   testroledir: boolean = false;
   allowedRoles = ['ADMINISTRATEUR', 'DIRECTORGENERAL', 'DIRECTORETAB', 'DIRECTORADMN', 'RESSOURCEHUMAINE', 'RESPFINANCE', 'DAWAAPRIV', 'DOTPRIV', 'FINPRIV', 'DIRPRIV'];
   notifList: AutomaticNotification[] = [];
+  notifListDem: AutomaticNotification[] = [];
   notifCount: number = 0;
   async getUserConnected(): Promise<any> {
     this.user = await this.UserService.getUserConnected();
@@ -149,7 +150,9 @@ export class NavMenuComponent implements OnInit, OnDestroy {
 
     // GetNotif Count
 
-    this.CountNotif(this.UserIdConnected)
+    this.CountNotif(this.UserIdConnected);
+    this.GetNotifListForDemander(this.UserIdConnected);
+    this.CountNotifDemander(this.UserIdConnected);
   }
 
   // Count Notif
@@ -169,13 +172,31 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     })
   }
 
+  // Get Notif List
+  GetNotifListForDemander(userId) {
+
+    this.signalrService.GetUnreadNotificationForDemander(userId).subscribe(res => {
+      this.notifListDem = res.slice(0, 3);
+
+    })
+  }
+
+  CountDemander: number = 0;
+  CountNotifDemander(userId) {
+
+    this.signalrService.GetUnreadNotificationForDemander(userId).subscribe(res => {
+      this.notifListDem = res;
+      this.CountDemander = this.notifListDem.length;
+    })
+  }
+
   notif: AutomaticNotification = new AutomaticNotification();
   id: number;
   updateNotif(item: AutomaticNotification) {
     this.notif = Object.assign({}, item);
     this.notif.vu = "1"
     this.signalrService.UpdateNotif(this.notif).subscribe(res => {
-      this.router.navigate(['/' + this.notif.pageUrl])
+      this.router.navigate(['/' + this.notif.pageUrl, this.notif.serviceId])
       this.GetNotifList(this.UserIdConnected);
       this.CountNotif(this.UserIdConnected)
    

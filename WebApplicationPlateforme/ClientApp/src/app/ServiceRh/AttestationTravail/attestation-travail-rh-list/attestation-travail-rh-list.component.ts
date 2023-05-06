@@ -10,6 +10,9 @@ import { FileServiceService } from '../../../shared/Services/ServiceRh/file-serv
 import { HttpEventType } from '@angular/common/http';
 import { ProgressStatusEnum } from '../../../shared/Enum/progress-status-enum.enum';
 import { FileService } from '../../../shared/Models/ServiceRh/file-service.model';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { SignalRService, connection, AutomaticNotification } from '../../../shared/Services/signalR/signal-r.service';
 
 @Component({
   selector: 'app-attestation-travail-rh-list',
@@ -18,12 +21,14 @@ import { FileService } from '../../../shared/Models/ServiceRh/file-service.model
 })
 export class AttestationTravailRhListComponent implements OnInit {
   @Output() public downloadStatus: EventEmitter<ProgressStatus>;
-
+  private routeSub: Subscription;
   constructor(private UserService: UserServiceService,
     private toastr: ToastrService,
     private atService: DemandeAttestationTravailService,
     public filesService: FileServiceService,
-    public serviceupload: UploadDownloadService, ) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
+    public serviceupload: UploadDownloadService,
+    private signalService: SignalRService,
+    private route: ActivatedRoute,) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
 
 
 
@@ -31,6 +36,117 @@ export class AttestationTravailRhListComponent implements OnInit {
     this.getUserConnected();
     this.getCreance();
     this.getFiles();
+    this.userOnLis();
+    this.userOffLis();
+    this.logOutLis();
+    this.getOnlineUsersLis();
+    this.sendMsgLis();
+    if (this.signalService.hubConnection.state == 1) this.getOnlineUsersInv();
+    else {
+      this.signalService.ssSubj.subscribe((obj: any) => {
+        if (obj.type == "HubConnStarted") {
+          this.getOnlineUsersInv();
+        }
+      });
+    }
+  }
+
+
+users: connection[] = [];
+dirId: string;
+dirName: string;
+autoNotif: AutomaticNotification = new AutomaticNotification();
+
+// Hub Configuration
+
+userOnLis(): void {
+  this.signalService.hubConnection.on("userOn", (newUser: connection) => {
+
+    this.users.push(newUser);
+  });
+}
+
+
+// Get Offline Users
+
+userOffLis(): void {
+  this.signalService.hubConnection.on("userOff", (personId: string) => {
+    this.users = this.users.filter(u => u.userId != personId);
+  });
+}
+
+logOutLis(): void {
+  this.signalService.hubConnection.on("logoutResponse", () => {
+    localStorage.removeItem("userId");
+    location.reload();
+  });
+}
+
+//Get Online Users
+
+getOnlineUsersInv(): void {
+  this.signalService.hubConnection.invoke("getOnlineUsers")
+    .catch(err => console.error(err));
+}
+
+
+getOnlineUsersLis(): void {
+  this.signalService.hubConnection.on("getOnlineUsersResponse", (onlineUsers: Array<connection>) => {
+    this.users = [...onlineUsers];
+  });
+}
+
+//Send Msg 
+text: string;
+sendMsgInv(): void {
+
+  this.signalService.GetConnectionByIdUser(this.dirId).subscribe(res => {
+    this.userOnline = res;
+    this.signalService.hubConnection.invoke("sendMsg", this.userOnline.signalrId, this.text)
+      .catch(err => console.error(err));
+  })
+}
+
+
+  private sendMsgLis(): void {
+  this.signalService.hubConnection.on("sendMsgResponse", (connId: string, msg: string, userConSender: string, userConReceiver: string) => {
+    let receiver = this.users.find(u => u.signalrId === connId);
+  })
+}
+
+
+// Get Connected List Users
+getOnlineUsersList(UserIdConnected) {
+  this.signalService.GetConnectionList(UserIdConnected).subscribe(res => {
+    this.users = res;
+    console.log(this.users)
+  })
+}
+
+// Test If User Connected
+userOnline: connection = new connection();
+online: boolean;
+TestIfUserConnected(userId): boolean {
+  this.signalService.TestIfUserConnected(userId).subscribe(res => {
+    this.online = res
+
+  })
+  return this.online
+}
+
+
+//Dynamic Test of user connected
+
+  userConnected: boolean = false;
+
+  DynamicTestConnected() {
+  if (this.users.filter(item => item.userId == this.dirId).length > 0) {
+    this.userConnected = true
+  }
+}
+
+  ngOnDestroy() {
+    this.routeSub.unsubscribe();
   }
 
   UserIdConnected: string;
@@ -48,15 +164,38 @@ export class AttestationTravailRhListComponent implements OnInit {
 
   factList: DemandeAttestationTravail[] = [];
   GfactList: DemandeAttestationTravail[] = [];
-
+  Id: number = 0;
+  showrow: boolean = false;
   getCreance() {
-    this.atService.Get().subscribe(res => {
-      this.GfactList = res;
-      this.factList = this.GfactList.filter(item => item.etat == "في الإنتظار")
+    this.routeSub = this.route.params.subscribe(params => {
+      if (params['id'] != undefined) {
+        this.Id = params['id'];
+        this.showrow = true;
+        this.atService.GetRhList(this.Id).subscribe(res => {
+          this.factList = res;
+        }, err => {
+          this.getData()
+        })
+      } else {
 
-    })
+        this.atService.GetRhListGeneral().subscribe(res1 => {
+          this.factList = res1;
+        }, err => {
+          this.getData();
+        })
+      }
+    });
 
   }
+
+
+  getData() {
+    this.atService.GetRhListGeneral().subscribe(res1 => {
+      this.factList = res1;
+      this.showrow = false;
+    })
+  }
+
 
   //Populate Form 
   factId: number
@@ -82,6 +221,29 @@ export class AttestationTravailRhListComponent implements OnInit {
     this.fact.nomrh = this.UserNameConnected;
     this.atService.PutObservableE(this.fact).subscribe(res => {
       this.getCreance();
+      this.showrow = false;
+      this.autoNotif.serviceId = this.fact.id;
+      this.autoNotif.pageUrl = "attestation-travail-lis"
+      this.autoNotif.userType = "3";
+      this.autoNotif.reponse = "Demander";
+      this.text = "لقد تمت معالجة طلب  شهادة عمل";
+      this.signalService.GetConnectionByIdUser(this.fact.idUserCreator).subscribe(res1 => {
+        this.userOnline = res1;
+        this.signalService.hubConnection.invoke("sendMsg", this.userOnline.signalrId, this.text, this.autoNotif)
+          .catch(err => console.error(err));
+      }, err => {
+        this.autoNotif.receiverName = this.fact.userNameCreator;
+          this.autoNotif.receiverId = this.fact.idUserCreator;
+        this.autoNotif.transmitterId = this.UserIdConnected;
+        this.autoNotif.transmitterName = this.UserNameConnected;
+          this.text = "لقد تمت معالجة طلب  شهادة عمل"
+        this.autoNotif.vu = "0";
+
+
+        this.signalService.CreateNotif(this.autoNotif).subscribe(res => {
+
+        })
+      })
       this.toastr.success("تم  قبول الطلب بنجاح", "نجاح");
     },
       err => {
@@ -99,6 +261,29 @@ export class AttestationTravailRhListComponent implements OnInit {
 
     this.atService.PutObservableE(this.fact).subscribe(res => {
       this.getCreance();
+      this.showrow = false;
+      this.autoNotif.serviceId = this.fact.id;
+      this.autoNotif.pageUrl = "attestation-travail-lis"
+      this.autoNotif.userType = "3";
+      this.autoNotif.reponse = "Demander";
+      this.text = "لقد تمت معالجة طلب  شهادة عمل";
+      this.signalService.GetConnectionByIdUser(this.fact.idUserCreator).subscribe(res1 => {
+        this.userOnline = res1;
+        this.signalService.hubConnection.invoke("sendMsg", this.userOnline.signalrId, this.text, this.autoNotif)
+          .catch(err => console.error(err));
+      }, err => {
+        this.autoNotif.receiverName = this.fact.userNameCreator;
+        this.autoNotif.receiverId = this.fact.idUserCreator;
+        this.autoNotif.transmitterId = this.UserIdConnected;
+        this.autoNotif.transmitterName = this.UserNameConnected;
+        this.text = "لقد تمت معالجة طلب  شهادة عمل"
+        this.autoNotif.vu = "0";
+
+
+        this.signalService.CreateNotif(this.autoNotif).subscribe(res => {
+
+        })
+      })
         this.toastr.success("تم  رفض الطلب بنجاح", "نجاح");
       },
         err => {

@@ -50,6 +50,36 @@ export class PermissionUService {
     return this.http.get<PermissionU>(this.rootURL + '/PermissionUs/' + Id);
   }
 
+  //Get PermissionU By Id
+
+  GetRhList(id) {
+    return this.http.get<PermissionU[]>(this.rootURL + '/PermissionUs/GetRhList/' + id);
+  }
+
+
+  GetDirList(id, idUser) {
+    return this.http.get<PermissionU[]>(this.rootURL + '/PermissionUs/GetDirList/' + id + '/' + idUser);
+  }
+
+
+  GetRhListGeneral() {
+    return this.http.get<PermissionU[]>(this.rootURL + '/PermissionUs/GetRhListGeneral');
+  }
+
+
+  GetDirListGeneral(idUser) {
+    return this.http.get<PermissionU[]>(this.rootURL + '/PermissionUs/GetDirListGeneral/' + idUser);
+  }
+
+  GetUserList(id, idUser) {
+    return this.http.get<PermissionU[]>(this.rootURL + '/PermissionUs/GetUserList/' + id + '/' + idUser);
+  }
+
+
+  GetUserListGeneral(idUser) {
+    return this.http.get<PermissionU[]>(this.rootURL + '/PermissionUs/GetUserListGeneral/' +idUser);
+  }
+
   //Edit PermissionU
 
   Edit() {

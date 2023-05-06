@@ -15,13 +15,15 @@ import { FileService } from '../../../shared/Models/ServiceRh/file-service.model
 import { FileServiceService } from '../../../shared/Services/ServiceRh/file-service.service';
 import { ProgressStatusEnum } from '../../../shared/Enum/progress-status-enum.enum';
 import { HttpEventType } from '@angular/common/http';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-permission-list-dir',
   templateUrl: './permission-list-dir.component.html',
   styleUrls: ['./permission-list-dir.component.css']
 })
 export class PermissionUListDirComponent implements OnInit {
-
+  private routeSub: Subscription;
   filter;
   @Output() public downloadStatus: EventEmitter<ProgressStatus>;
   constructor(private congeService: PermissionUService,
@@ -30,10 +32,12 @@ export class PermissionUListDirComponent implements OnInit {
     private notifService: NotifService,
     private signalService: SignalRService,
     public filesService: FileServiceService,
-    public serviceupload: UploadDownloadService, ) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
+    public serviceupload: UploadDownloadService,
+    private route: ActivatedRoute,) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
 
   ngOnInit(): void {
-    this.getUserConnected();
+    this.GetRhDir(); 
+   this.getUserConnected();
     this.CongeList();
     this.getFiles();
     this.resetForm();
@@ -141,9 +145,10 @@ export class PermissionUListDirComponent implements OnInit {
   ComptaList: UserDetail[] = [];
   dirId: string;
   dirName: string;
-  GetEtabFinList() {
-    this.UserService.GetEtabFinList().subscribe(res => {
-      this.ComptaList = res;
+  GetRhDir() {
+    this.UserService.GetRhDepartement().subscribe(res => {
+      this.dirId = res.id;
+      this.dirName = res.fullName;
     })
   }
 
@@ -183,18 +188,37 @@ export class PermissionUListDirComponent implements OnInit {
 
   congeList: PermissionU[] = [];
   filtredCongeList: PermissionU[] = [];
-  
+  data: PermissionU = new PermissionU();
+  Id: number = 0;
+  showrow: boolean = false;
   CongeList() {
-    this.congeService.Get().subscribe(res => {
-      this.congeList = res
-      this.filtredCongeList = this.congeList.filter(item => item.etatdir == "في الانتظار" && item.iddir == this.UserIdConnected)
-    
+    this.UserService.getUserProfileObservable().subscribe(res => {
+      this.userc = res
+    this.routeSub = this.route.params.subscribe(params => {
+      if (params['id'] != undefined) {
+        this.Id = params['id'];
+        this.showrow = true;
+        this.congeService.GetDirList(this.Id, this.userc.id).subscribe(res1 => {
+          this.filtredCongeList = res1;
+        }, err => { this.getData() })
+      } else {
+        this.congeService.GetDirListGeneral(this.userc.id).subscribe(res1 => {
+          this.filtredCongeList = res1;
+        }, err => { this.getData() })
+      }
+    });
+    });
+  }
+
+  getData() {
+    this.congeService.GetDirListGeneral(this.UserIdConnected).subscribe(res => {
+      this.filtredCongeList = res;
+      this.showrow = false;
     })
   }
+
+
   per: PermissionU = new PermissionU();
-
-
-
   etat: string;
   etattest(event) {
     this.etat = event.target.value;
@@ -219,6 +243,9 @@ export class PermissionUListDirComponent implements OnInit {
     this.congeService.formData.iddir = this.UserIdConnected;
     this.congeService.formData.nomdir = this.UserNameConnected;
     this.congeService.Edit().subscribe(res => {
+      this.toastr.success('تم التحديث بنجاح', 'نجاح')
+      this.resetForm();
+      this.getData();
       if (this.etat == "موافق") {
         this.autoNotif.serviceId = this.per.id;
         this.autoNotif.pageUrl = "rh-conge-list"
@@ -234,7 +261,7 @@ export class PermissionUListDirComponent implements OnInit {
           this.autoNotif.receiverId = this.dirId;
           this.autoNotif.transmitterId = this.UserIdConnected;
           this.autoNotif.transmitterName = this.UserNameConnected;
-            this.text =  " طلب اذن ";
+            this.autoNotif.text =  " طلب اذن ";
           this.autoNotif.vu = "0";
 
 
@@ -244,9 +271,7 @@ export class PermissionUListDirComponent implements OnInit {
         })
       }
       this.notifService.Add(this.notif).subscribe(res => {
-        this.toastr.success('تم التحديث بنجاح', 'نجاح')
-        this.resetForm();
-        this.CongeList();
+    
       })
    
       },
@@ -262,8 +287,8 @@ export class PermissionUListDirComponent implements OnInit {
   onSubmit(form: NgForm) {
 
     this.updateRecord(form)
-  }
 
+    }
 
   resetForm(form?: NgForm) {
     if (form != null)

@@ -58,6 +58,23 @@ export class DemandeSalarialeService {
   //Delete Type Dotation
 
   Delete(id) {
-    return this.http.delete(this.rootURL + '/DemandeSalariale/' + id);
+    return this.http.delete(this.rootURL + '/DemandeSalariales/' + id);
+  }
+
+  GetDirList(id, idUser) {
+    return this.http.get<DemandeSalariale[]>(this.rootURL + '/DemandeSalariales/GetDirList/' + id + '/' + idUser);
+  }
+
+  GetDirListGeneral(idUser) {
+    return this.http.get<DemandeSalariale[]>(this.rootURL + '/DemandeSalariales/GetDirListGeneral/' + idUser);
+  }
+
+  GetUserList(id, idUser) {
+    return this.http.get<DemandeSalariale[]>(this.rootURL + '/DemandeSalariales/GetUserList/' + id + '/' + idUser);
+  }
+
+
+  GetUserListGeneral(idUser) {
+    return this.http.get<DemandeSalariale[]>(this.rootURL + '/DemandeSalariales/GetUserListGeneral/' + idUser);
   }
 }

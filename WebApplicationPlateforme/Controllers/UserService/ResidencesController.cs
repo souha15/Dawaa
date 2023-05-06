@@ -106,5 +106,66 @@ namespace WebApplicationPlateforme.Controllers.UserService
         {
             return _context.residences.Any(e => e.Id == id);
         }
+
+        [HttpGet]
+        [Route("GetRhList/{Id}")]
+        public List<Residence> GetRhList(int id)
+        {
+            Residence obj = new Residence();
+            List<Residence> list = new List<Residence>();
+            list = _context.residences.Where(item => item.etatdir == "في الانتظار").OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.residences.Where(item => item.Id == id && item.etatdir == "في الانتظار").FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetRhListGeneral")]
+        public List<Residence> GetRhListGeneral()
+        {
+
+            List<Residence> list = new List<Residence>();
+            list = _context.residences.Where(item => item.etatdir == "في الانتظار").OrderBy(item => item.Id).ToList();
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetUserList/{Id}/{IdUser}")]
+        public List<Residence> GetUserList(int id, string IdUser)
+        {
+            Residence obj = new Residence();
+            List<Residence> list = new List<Residence>();
+            list = _context.residences.Where(item => item.idUserCreator == IdUser).OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.residences.Where(item => item.Id == id && item.idUserCreator == IdUser).FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetUserListGeneral/{IdUser}")]
+        public List<Residence> GetUserListGeneral(string IdUser)
+        {
+
+            List<Residence> list = new List<Residence>();
+            list = _context.residences.Where(item => item.idUserCreator == IdUser).OrderBy(item => item.Id).ToList();
+            return list;
+        }
+
     }
 }

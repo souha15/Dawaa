@@ -32,10 +32,10 @@
           <tbody>
 
             <tr *ngFor="let cg of DemandList |  orderBy: key : reverse | filter:filter| paginate: { itemsPerPage: count, currentPage: p };let i = index">
-              <th scope="row">{{(p-1) * count + i + 1}}</th>
-              <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal">{{cg.userNameCreator}}</td>
-              <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal">{{cg.nomBanque}}</td>
-              <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal">{{cg.rib}}</td>
+              <th scope="row"  [ngClass]="{'firstRow': i ===0 && showrow === true}">{{(p-1) * count + i + 1}}</th>
+              <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{cg.userNameCreator}}</td>
+              <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{cg.nomBanque}}</td>
+              <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{cg.rib}}</td>
               <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal"
                   [ngClass]="{
 
@@ -46,7 +46,7 @@
                 {{cg.etatrh}}
               </td>
               <td (click)="populateForm(cg)">
-                <a class="btn btn-danger ml-3" data-toggle="modal" data-target="#myModal1">رفض</a>
+                <a class="btn btn-danger ml-3" data-toggle="modal" data-target="#myModal1" >رفض</a>
                 <a class="btn btn-success" data-toggle="modal" data-target="#myModal2">موافقة</a>
               </td>
             </tr>

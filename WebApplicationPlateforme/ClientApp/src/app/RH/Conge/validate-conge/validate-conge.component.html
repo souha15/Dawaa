@@ -23,29 +23,25 @@
                 <th scope="col">المدة</th>
                 <th scope="col">تاريخ بدء الاجازة</th>
                 <th scope="col">تاريخ نهاية الاجازة</th>
-                <th scope="col">تحويل</th>
-                <th scope="col">الحالة</th>
+                <th scope="col">  إعتماد و إحالة</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let cg of filtredCongeList |  orderBy: key : reverse | filter:filter| paginate: { itemsPerPage: count, currentPage: p };let i = index">
-                <th (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{(p-1) * count + i + 1}}</th>
-                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.userNameCreator}}</td>
-                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.type}}</td>
-                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.duree}}</td>
-                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.datedebut}}</td>
-                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.datefin}}</td>
-                <td (click)="populateForm(cg)"><a class="btn btn-primary" data-toggle="modal" data-target="#myModal3">تحويل الى</a></td>
-
-
+                <th (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{(p-1) * count + i + 1}}</th>
+                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{cg.userNameCreator}}</td>
+                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{cg.type}}</td>
+                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{cg.duree}}</td>
+                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{cg.datedebut}}</td>
+                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{cg.datefin}}</td>
                 <td data-toggle="modal" data-target="#myModal2" (click)="populateForm(cg)"
                     [ngClass]="{
 
- 'success': cg.etatd === 'موافق',
-  'denied': cg.etatd === 'رفض',
-  'wait': cg.etatd === 'في الانتظار'
+ 'success': cg.attribut6 === 'موافق',
+  'denied': cg.attribut6 === 'رفض',
+  'wait': cg.attribut6 === 'في الانتظار'
 }">
-                  {{cg.etatd}}
+                  {{cg.attribut6}}
                 </td>
             </tbody>
           </table>
@@ -170,7 +166,7 @@
       <div class="modal-body" style="direction:rtl; text-align:right">
         <form class="task-form form-row" #form="ngForm" autocomplete="off" (submit)="onSubmit(form)">
           <label for="user"><span><i class="fa fa-check"></i></span>حالة الطلب</label>
-          <select id="user" class="" name="attribut6" #attribut6="ngModel" [(ngModel)]="congeService.formData.attribut6" (change)="etattest($event)">
+          <select id="user" class="" name="attribut6" #attribut6="ngModel" [(ngModel)]="congeService.formData.attribut6" (change)="etattest($event)" style="width:31%">
             <option [ngValue]="undefined" selected disabled>-حالة الطلب-</option>
             <option value="إعتماد بخصم">إعتماد بخصم</option>
             <option value="إعتماد بغير خصم">إعتماد بغير خصم</option>
@@ -183,6 +179,23 @@
 
           </div>
         </form>
+
+        <div class="task-form form-row stop-form" *ngIf="update">
+          <div class="col-md-6">
+            <label for="user"><span><i class="fa fa-check"></i></span>تحويل الى </label>
+            <select id="user" class="" name="transfert" (change)="transfertData($event)">
+              <option [ngValue]="undefined" selected disabled>-الى-</option>
+              <option value="1">قسم المحاسبة</option>
+              <option value="2">إدارة شؤون الموظفين</option>
+              <option value="3"> قسم المحاسبة و إدارة شؤون الموظفين</option>
+            </select>
+          </div>
+
+          <div class="save">
+            <button class="btn btn-success" (click)="transferer()"><span class="ml-2"><i class="fa fa-save"></i></span> تحويل</button>
+          </div>
+
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

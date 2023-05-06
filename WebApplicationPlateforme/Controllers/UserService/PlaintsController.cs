@@ -106,5 +106,65 @@ namespace WebApplicationPlateforme.Controllers.UserService
         {
             return _context.plaints.Any(e => e.Id == id);
         }
+
+        [HttpGet]
+        [Route("GetUserList/{Id}/{IdUser}")]
+        public List<Plaint> GetUserList(int id, string IdUser)
+        {
+            Plaint obj = new Plaint();
+            List<Plaint> list = new List<Plaint>();
+            list = _context.plaints.Where(item => item.idUserCreator == IdUser).OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.plaints.Where(item => item.Id == id && item.idUserCreator == IdUser).FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetUserListGeneral/{IdUser}")]
+        public List<Plaint> GetUserListGeneral(string IdUser)
+        {
+            Plaint obj = new Plaint();
+            List<Plaint> list = new List<Plaint>();
+            list = _context.plaints.Where(item => item.idUserCreator == IdUser).OrderBy(item => item.Id).ToList();
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetDirList/{Id}/{idUser}")]
+        public List<Plaint> GetDirList(int id, string idUser)
+        {
+            Plaint obj = new Plaint();
+            List<Plaint> list = new List<Plaint>();
+            list = _context.plaints.Where(item => item.etat == null && item.iddir == idUser).OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.plaints.Where(item => item.Id == id && item.etat == null && item.iddir == idUser).FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetDirListGeneral/{idUser}")]
+        public List<Plaint> GetDirListGeneral(string idUser)
+        {
+            Plaint obj = new Plaint();
+            List<Plaint> list = new List<Plaint>();
+            list = _context.plaints.Where(item => item.etat == null && item.iddir == idUser).OrderBy(item => item.Id).ToList();
+            return list;
+        }
     }
 }

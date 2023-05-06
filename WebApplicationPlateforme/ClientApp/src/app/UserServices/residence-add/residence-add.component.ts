@@ -35,6 +35,7 @@ export class ResidenceAddComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUserConnected();
+    this.getRhDir();
     this.getFiles();
     this.userOnLis();
     this.userOffLis();
@@ -181,6 +182,14 @@ export class ResidenceAddComponent implements OnInit {
     })
 
   }
+
+ 
+  getRhDir() {
+    this.UserService.GetRhDepartement().subscribe(res => {
+      this.dirId = res.id;
+      this.dirName = res.fullName;
+    })
+  }
   autoNotif: AutomaticNotification = new AutomaticNotification();
   date = new Date().toLocaleDateString();
   isValidFormSubmitted = false;
@@ -214,7 +223,7 @@ export class ResidenceAddComponent implements OnInit {
         });
 
 
-        this.notifService.Add(this.notif).subscribe(res => {
+        this.notifService.Add(this.notif).subscribe(resp => {
 
           form.resetForm();
           this.toastr.success("تم التسجيل  بنجاح", " تسجيل ");
@@ -224,7 +233,7 @@ export class ResidenceAddComponent implements OnInit {
           this.autoNotif.userType = "3";
           this.autoNotif.reponse = "6";
           this.text = "طلب تجديد الإقامة";
-          this.signalService.GetConnectionByIdUser(this.notif.userReceiverId).subscribe(res1 => {
+          this.signalService.GetConnectionByIdUser(this.dirId).subscribe(res1 => {
             this.userOnline = res1;
             this.signalService.hubConnection.invoke("sendMsg", this.userOnline.signalrId, this.text, this.autoNotif)
               .catch(err => console.error(err));

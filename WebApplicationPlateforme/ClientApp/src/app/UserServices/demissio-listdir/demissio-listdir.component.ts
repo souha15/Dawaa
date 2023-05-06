@@ -13,6 +13,9 @@ import { UploadDownloadService } from '../../shared/Services/Taches/upload-downl
 import { HttpEventType } from '@angular/common/http';
 import { ProgressStatusEnum } from '../../shared/Enum/progress-status-enum.enum';
 import { FileService } from '../../shared/Models/ServiceRh/file-service.model';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { UserDetail } from '../../shared/Models/User/user-detail.model';
 @Component({
   selector: 'app-demissio-listdir',
   templateUrl: './demissio-listdir.component.html',
@@ -21,14 +24,15 @@ import { FileService } from '../../shared/Models/ServiceRh/file-service.model';
 export class DemissioListdirComponent implements OnInit {
 
   @Output() public downloadStatus: EventEmitter<ProgressStatus>;
-
+  private routeSub: Subscription;
   constructor(private demService: DemissionService,
     private toastr: ToastrService,
     private UserService: UserServiceService,
     private notifService: NotifService,
     private signalService: SignalRService,
     public filesService: FileServiceService,
-    public serviceupload: UploadDownloadService, ) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
+    public serviceupload: UploadDownloadService,
+    private route: ActivatedRoute,) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
 
 
 
@@ -176,13 +180,33 @@ export class DemissioListdirComponent implements OnInit {
   congeList: Demissioon[] = [];
   dem: Demissioon = new Demissioon();
   filtredCongeList: Demissioon[] = [];
+  Id: number = 0;
+  userc: UserDetail = new UserDetail();
+  showrow: boolean = false;
   CongeList() {
-    this.demService.Get().subscribe(res => {
-      this.congeList = res
-      this.filtredCongeList = this.congeList.filter(item => item.etatdir == 'في الانتظار')
+    this.UserService.getUserProfileObservable().subscribe(res => {
+      this.userc = res
+      this.routeSub = this.route.params.subscribe(params => {
+        if (params['id'] != undefined) {
+          this.Id = params['id'];
+          this.showrow = true;
+          this.demService.GetDirList(this.Id, this.userc.id).subscribe(res1 => {
+            this.filtredCongeList = res1;
+          }, err => { this.getData() })
+        } else {
+          this.demService.GetDirListGeneral(this.userc.id).subscribe(res1 => {
+            this.filtredCongeList = res1;
+          }, err => { this.getData() })
+        }
+      });
+    });
+  }
+  getData() {
+    this.demService.GetDirListGeneral(this.userc.id).subscribe(res => {
+      this.filtredCongeList = res;
+      this.showrow = false;
     })
   }
-
   per: Demissioon = new Demissioon();
   populateForm(conge: Demissioon) {
     this.demService.formData = Object.assign({}, conge)
@@ -214,7 +238,7 @@ export class DemissioListdirComponent implements OnInit {
         this.autoNotif.userType = "3";
         this.autoNotif.reponse = "11";
         this.autoNotif.vu = "0";
-        this.text = "طلب إستقالة";
+        this.autoNotif.text = "طلب إستقالة";
         this.autoNotif.receiverName = this.dirName;
         this.autoNotif.receiverId = this.dirId;
         this.signalService.GetConnectionByIdUser(this.dirId).subscribe(res1 => {
@@ -226,7 +250,7 @@ export class DemissioListdirComponent implements OnInit {
           this.autoNotif.receiverId = this.dirId;
           this.autoNotif.transmitterId = this.UserIdConnected;
           this.autoNotif.transmitterName = this.UserNameConnected;
-            this.text = "طلب إستقالة";
+            this.autoNotif.text = "طلب إستقالة";
 
           this.signalService.CreateNotif(this.autoNotif).subscribe(res => {
 

@@ -106,5 +106,36 @@ namespace WebApplicationPlateforme.Controllers.ServiceRh
         {
             return _context.newFormationRequests.Any(e => e.Id == id);
         }
+
+
+        [HttpGet]
+        [Route("GetDirList/{Id}/{idUser}")]
+        public List<newFormationRequest> GetDirList(int id, string idUser)
+        {
+            newFormationRequest obj = new newFormationRequest();
+            List<newFormationRequest> list = new List<newFormationRequest>();
+            list = _context.newFormationRequests.Where(item => item.etatdir == "في الإنتظار" && item.iddir == idUser).OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.newFormationRequests.Where(item => item.Id == id && item.etatdir == "في الإنتظار" && item.iddir == idUser).FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetDirListGeneral/{idUser}")]
+        public List<newFormationRequest> GetDirListGeneral(string idUser)
+        {
+            newFormationRequest obj = new newFormationRequest();
+            List<newFormationRequest> list = new List<newFormationRequest>();
+            list = _context.newFormationRequests.Where(item => item.etatdir == "في الإنتظار" && item.iddir == idUser).OrderBy(item => item.Id).ToList();
+            return list;
+        }
     }
 }

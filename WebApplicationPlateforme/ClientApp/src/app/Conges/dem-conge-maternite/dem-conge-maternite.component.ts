@@ -303,7 +303,7 @@ export class DemCongeMaterniteComponent implements OnInit {
               this.bool = false;
             })
           })
-          this.notifService.Add(this.notif).subscribe(res => {
+
 
 
           this.diffDays = 0
@@ -337,7 +337,6 @@ export class DemCongeMaterniteComponent implements OnInit {
 
 
 
-          })
         },
         err => {
           this.toastr.error("لم يتم تقديم الطلب", "فشل ")

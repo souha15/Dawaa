@@ -117,5 +117,97 @@ namespace WebApplicationPlateforme.Controllers.RH
         {
             return _context.recrutements.Any(e => e.Id == id);
         }
+
+        [HttpGet]
+        [Route("GetRhList/{Id}")]
+        public List<Recrutement> GetRhList(int id)
+        {
+            Recrutement obj = new Recrutement();
+            List<Recrutement> list = new List<Recrutement>();
+            list = _context.recrutements.Where(item => item.etatrh == "في الانتظار" && item.etatdir == "موافق").OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.recrutements.Where(item => item.Id == id && item.etatrh == "في الانتظار" && item.etatdir == "موافق").FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+
+
+        [HttpGet]
+        [Route("GetUserList/{Id}/{IdUser}")]
+        public List<Recrutement> GetUserList(int id, string IdUser)
+        {
+            Recrutement obj = new Recrutement();
+            List<Recrutement> list = new List<Recrutement>();
+            list = _context.recrutements.Where(item => item.idUserCreator == IdUser).OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.recrutements.Where(item => item.Id == id && item.idUserCreator == IdUser).FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetUserListGeneral/{IdUser}")]
+        public List<Recrutement> GetUserListGeneral(string IdUser)
+        {
+            Recrutement obj = new Recrutement();
+            List<Recrutement> list = new List<Recrutement>();
+            list = _context.recrutements.Where(item => item.idUserCreator == IdUser).OrderBy(item => item.Id).ToList();
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetRhListGeneral")]
+        public List<Recrutement> GetRhListGeneral()
+        {
+            Recrutement obj = new Recrutement();
+            List<Recrutement> list = new List<Recrutement>();
+            list = _context.recrutements.Where(item => item.etatrh == "في الانتظار" && item.etatdir == "موافق").OrderBy(item => item.Id).ToList();
+            return list;
+        }
+
+
+        [HttpGet]
+        [Route("GetDirList/{Id}/{idUser}")]
+        public List<Recrutement> GetDirList(int id, string idUser)
+        {
+            Recrutement obj = new Recrutement();
+            List<Recrutement> list = new List<Recrutement>();
+            list = _context.recrutements.Where(item => item.etatdir == "في الانتظار" && item.iddir == idUser).OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.recrutements.Where(item => item.Id == id && item.etatdir == "في الانتظار" && item.iddir == idUser).FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetDirListGeneral/{idUser}")]
+        public List<Recrutement> GetDirListGeneral(string idUser)
+        {
+            Recrutement obj = new Recrutement();
+            List<Recrutement> list = new List<Recrutement>();
+            list = _context.recrutements.Where(item => item.etatdir == "في الانتظار" && item.iddir == idUser).OrderBy(item => item.Id).ToList();
+            return list;
+        }
     }
 }

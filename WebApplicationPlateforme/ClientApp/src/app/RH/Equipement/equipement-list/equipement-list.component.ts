@@ -13,6 +13,8 @@ import { UploadDownloadService } from '../../../shared/Services/Taches/upload-do
 import { ProgressStatusEnum } from '../../../shared/Enum/progress-status-enum.enum';
 import { HttpEventType } from '@angular/common/http';
 import { FileService } from '../../../shared/Models/ServiceRh/file-service.model';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-equipement-list',
@@ -21,13 +23,14 @@ import { FileService } from '../../../shared/Models/ServiceRh/file-service.model
 })
 export class EquipementListComponent implements OnInit {
   @Output() public downloadStatus: EventEmitter<ProgressStatus>;
-
+  private routeSub: Subscription;
   constructor(private congeService: EquipementService,
     private toastr: ToastrService,
     private UserService: UserServiceService,
     private tblService: TbListeningService,
     public filesService: FileServiceService,
-    public serviceupload: UploadDownloadService, ) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
+    public serviceupload: UploadDownloadService,
+    private route: ActivatedRoute,) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
 
   ngOnInit(): void {
     this.getNomEquipementList();
@@ -78,14 +81,39 @@ export class EquipementListComponent implements OnInit {
       this.userc = res
       this.UserIdConnected = res.id;
       this.UserNameConnected = res.fullName;
-      console.log()
-      this.congeService.GetByUser(this.UserIdConnected).subscribe(res => {
-        this.filtredCongeList = res
-      })
+ 
+
+      this.routeSub = this.route.params.subscribe(params => {
+        if (params['id'] != undefined) {
+          this.Id = params['id'];
+          this.showrow = true;
+          this.congeService.GetUserList(this.Id, this.UserIdConnected).subscribe(res => {
+            this.filtredCongeList = res;
+          }, err => {
+            this.getData()
+          })
+        } else {
+
+          this.congeService.GetUserListGeneral(this.UserIdConnected).subscribe(res1 => {
+            this.filtredCongeList = res1;
+          }, err => {
+            this.getData();
+          })
+        }
+      });
     })
 
   }
-
+  p: Number = 1;
+  count: Number = 5;
+  Id: number = 0;
+  showrow: boolean = false;
+  getData() {
+    this.congeService.GetUserListGeneral(this.UserIdConnected).subscribe(res1 => {
+      this.filtredCongeList = res1;
+      this.showrow = false;
+    })
+  }
 
   //Get Conge Demand Lis
 

@@ -5,20 +5,22 @@ import { UserServiceService } from '../../../shared/Services/User/user-service.s
 import { NgForm } from '@angular/forms';
 import { UserDetail } from '../../../shared/Models/User/user-detail.model';
 import { Recrutement } from '../../../shared/Models/RH/recrutement.model';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-recrutement-list',
   templateUrl: './recrutement-list.component.html',
   styleUrls: ['./recrutement-list.component.css']
 })
 export class RecrutementListComponent implements OnInit {
-
+  private routeSub: Subscription;
   constructor(private congeService: RecrutementService,
     private toastr: ToastrService,
-    private UserService: UserServiceService,) { }
+    private UserService: UserServiceService,
+    private route: ActivatedRoute,) { }
 
   ngOnInit(): void {
     this.getUserConnected();
-    this.CongeList();
     this.resetForm();
     this.UserList();
   }
@@ -37,17 +39,43 @@ export class RecrutementListComponent implements OnInit {
   UserNameConnected: string;
   adminisgtrationName: any;
   userc: UserDetail = new UserDetail();
-
+  Id: number = 0;
+  showrow: boolean = false;
   getUserConnected() {
 
     this.UserService.getUserProfileObservable().subscribe(res => {
       this.userc = res
       this.UserIdConnected = res.id;
       this.UserNameConnected = res.fullName;
+
+      this.routeSub = this.route.params.subscribe(params => {
+        if (params['id'] != undefined) {
+          this.Id = params['id'];
+          this.showrow = true;
+          this.congeService.GetUserList(this.Id, this.UserIdConnected).subscribe(res => {
+            this.filtredCongeList = res;
+          }, err => {
+            this.getData()
+          })
+        } else {
+
+          this.congeService.GetUserListGeneral(this.UserIdConnected).subscribe(res1 => {
+            this.filtredCongeList = res1;
+          }, err => {
+            this.getData();
+          })
+        }
+      });
     })
 
   }
 
+  getData() {
+    this.congeService.GetUserListGeneral(this.UserIdConnected).subscribe(res1 => {
+      this.filtredCongeList = res1;
+      this.showrow = false;
+    })
+  }
   congeList: Recrutement[] = [];
   filtredCongeList: Recrutement[] = [];
   CongeList() {
@@ -105,7 +133,7 @@ export class RecrutementListComponent implements OnInit {
       this.congeService.Edit().subscribe(res => {
         this.toastr.success('تم التحديث بنجاح', 'نجاح')
         this.resetForm();
-        this.CongeList();
+        this.getUserConnected();
       },
         err => {
           this.toastr.error('لم يتم التحديث  ', ' فشل');

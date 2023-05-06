@@ -23,6 +23,7 @@ export class DemissionService {
 
   //Create Demissioon
 
+
   Add(Demissioon: Demissioon) {
     return this.http.post<Demissioon>(this.rootURL + '/Demissions', Demissioon, this.headers);
   }
@@ -59,4 +60,36 @@ export class DemissionService {
   Delete(id) {
     return this.http.delete(this.rootURL + '/Demissions/' + id);
   }
+
+
+  //Get PermissionU By Id
+
+  GetRhList(id) {
+    return this.http.get<Demissioon[]>(this.rootURL + '/Demissions/GetRhList/' + id);
+  }
+
+
+  GetDirList(id, idUser) {
+    return this.http.get<Demissioon[]>(this.rootURL + '/Demissions/GetDirList/' + id + '/' + idUser);
+  }
+
+
+  GetRhListGeneral() {
+    return this.http.get<Demissioon[]>(this.rootURL + '/Demissions/GetRhListGeneral');
+  }
+
+
+  GetDirListGeneral(idUser) {
+    return this.http.get<Demissioon[]>(this.rootURL + '/Demissions/GetDirListGeneral/' + idUser);
+  }
+
+  GetUserList(id, idUser) {
+    return this.http.get<Demissioon[]>(this.rootURL + '/Demissions/GetUserList/' + id + '/' + idUser);
+  }
+
+
+  GetUserListGeneral(idUser) {
+    return this.http.get<Demissioon[]>(this.rootURL + '/Demissions/GetUserListGeneral/' + idUser);
+  }
+
 }

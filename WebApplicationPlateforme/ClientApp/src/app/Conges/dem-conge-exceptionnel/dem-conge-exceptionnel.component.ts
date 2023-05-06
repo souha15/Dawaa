@@ -313,7 +313,7 @@ export class DemCongeExceptionnelComponent implements OnInit {
                 this.bool = false;
               })
             })
-            this.notifService.Add(this.notif).subscribe(res => {
+
 
             this.soldeconge = this.soldeconge - +this.conge.duree;
             this.diffDays = 0
@@ -344,7 +344,7 @@ export class DemCongeExceptionnelComponent implements OnInit {
 
                 })
               })
-            })
+         
           
           },
           err => {

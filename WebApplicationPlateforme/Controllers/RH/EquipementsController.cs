@@ -106,5 +106,97 @@ namespace WebApplicationPlateforme.Controllers.RH
         {
             return _context.equipements.Any(e => e.Id == id);
         }
+
+        [HttpGet]
+        [Route("GetDotList/{Id}")]
+        public List<Equipement> GetDotList(int id)
+        {
+            Equipement obj = new Equipement();
+            List<Equipement> list = new List<Equipement>();
+            list = _context.equipements.Where(item => item.attribut4 == "في الانتظار" && item.etatdir == "موافق").OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.equipements.Where(item => item.Id == id && item.attribut4 == "في الانتظار" && item.etatdir == "موافق").FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetDotListGeneral")]
+        public List<Equipement> GetDotListGeneral()
+        {
+          
+            List<Equipement> list = new List<Equipement>();
+            list = _context.equipements.Where(item => item.attribut4 == "في الانتظار" && item.etatdir == "موافق").OrderBy(item => item.Id).ToList();
+            return list;
+        }
+
+
+        [HttpGet]
+        [Route("GetDirList/{Id}/{idUser}")]
+        public List<Equipement> GetDirList(int id, string idUser)
+        {
+            Equipement obj = new Equipement();
+            List<Equipement> list = new List<Equipement>();
+            list = _context.equipements.Where(item => item.etatdir == "في الانتظار" && item.iddir == idUser).OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.equipements.Where(item => item.Id == id && item.etatdir == "في الانتظار" && item.iddir == idUser).FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetDirListGeneral/{idUser}")]
+        public List<Equipement> GetDirListGeneral(string idUser)
+        {
+         
+            List<Equipement> list = new List<Equipement>();
+            list = _context.equipements.Where(item => item.etatdir == "في الانتظار" && item.iddir == idUser).OrderBy(item => item.Id).ToList();
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetUserList/{Id}/{IdUser}")]
+        public List<Equipement> GetUserList(int id, string IdUser)
+        {
+            Equipement obj = new Equipement();
+            List<Equipement> list = new List<Equipement>();
+            list = _context.equipements.Where(item => item.idUserCreator == IdUser).OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.equipements.Where(item => item.Id == id && item.idUserCreator == IdUser).FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetUserListGeneral/{IdUser}")]
+        public List<Equipement> GetUserListGeneral(string IdUser)
+        {
+            
+            List<Equipement> list = new List<Equipement>();
+            list = _context.equipements.Where(item => item.idUserCreator == IdUser).OrderBy(item => item.Id).ToList();
+            return list;
+        }
+
     }
 }

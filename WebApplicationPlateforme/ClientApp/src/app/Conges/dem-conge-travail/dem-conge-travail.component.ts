@@ -301,7 +301,7 @@ export class DemCongeTravailComponent implements OnInit {
               this.bool = false;
             })
           })
-          this.notifService.Add(this.notif).subscribe(res => {
+
           this.diffDays = 0
           this.toastr.success(" تم تقديم الطلب بنجاح", "نجاح");
             form.resetForm();
@@ -332,7 +332,7 @@ export class DemCongeTravailComponent implements OnInit {
             })
 
 
-          })
+        
         },
         err => {
           this.toastr.error("لم يتم تقديم الطلب", "فشل ")

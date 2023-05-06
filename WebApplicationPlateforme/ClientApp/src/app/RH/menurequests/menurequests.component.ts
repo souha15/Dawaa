@@ -15,6 +15,8 @@ import { UploadDownloadService } from '../../shared/Services/Taches/upload-downl
 import { ProgressStatusEnum } from '../../shared/Enum/progress-status-enum.enum';
 import { HttpEventType } from '@angular/common/http';
 import { SignalRService, connection, AutomaticNotification } from '../../shared/Services/signalR/signal-r.service';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-menurequests',
@@ -26,19 +28,22 @@ export class MenurequestsComponent implements OnInit {
   @Input() public fileName: string;
   @Output() public downloadStatus: EventEmitter<ProgressStatus>;
   @ViewChild('htmlData') htmlData: ElementRef;
+  private routeSub: Subscription;
   constructor(private congeService: CongeService,
     private toastr: ToastrService,
     private UserService: UserServiceService,
     private soldeCongeService: SoldeCongeService,
     private notifService: NotifService,
     public serviceupload: UploadDownloadService,
-    private signalService: SignalRService, ) {
+    private signalService: SignalRService,
+    private route: ActivatedRoute,) {
     this.downloadStatus = new EventEmitter<ProgressStatus>();
   }
   p: Number = 1;
   count: Number = 5;
   ngOnInit(): void {
     this.getUserConnected();
+    this.CongeList();
     this.resetForm();
     this.GetDirFin();
     this.userOnLis();
@@ -168,26 +173,6 @@ export class MenurequestsComponent implements OnInit {
       this.userc = res
       this.UserIdConnected = res.id;
       this.UserNameConnected = res.fullName;
-      this.notif.userTransmitterId = res.id;
-      this.notif.userTransmitterName = res.fullName;
-      this.notif.dateTime = this.date;
-      this.notif.date = this.dateTime.getDate().toString() + '-' + (this.dateTime.getMonth() + 1).toString() + '-' + this.dateTime.getFullYear().toString();
-      this.notif.time = this.dateTime.getHours().toString() + ':' + this.dateTime.getMinutes().toString();
-      this.notif.TextNotification = " تمت الموافقة على طلب الإجازة  من قبل" + ' ' +res.fullName
-      this.notif.serviceName = "طلب إجازة"
-      this.notif.readUnread = "0";
-      this.notif.serviceId = 3;
-      this.UserService.getAdminFinDir().subscribe(resDir => {
-        this.notif.userReceiverId = resDir.id;
-        this.notif.userReceiverName = resDir.fullName;
-        this.dirId = resDir.id
-        this.dirName = resDir.fullName
-      })
-      this.congeService.GetUsersDemands(this.UserIdConnected).subscribe(res => {
-        this.filtredCongeList = res
-        console.log(this.filtredCongeList)
-      })
-
     })
 
   }
@@ -195,12 +180,31 @@ export class MenurequestsComponent implements OnInit {
   congeList: Conge[] = [];
   filtredCongeList: Conge[] = [];
   CongeList() {
-    this.congeService.GetUsersDemands(this.UserIdConnected).subscribe(res => {
-      this.filtredCongeList = res
-      console.log(this.filtredCongeList)
+    this.UserService.getUserProfileObservable().subscribe(res => {
+      this.userc = res
+      this.routeSub = this.route.params.subscribe(params => {
+        if (params['id'] != undefined) {
+          this.Id = params['id'];
+          this.showrow = true;
+          this.congeService.GetDirList(this.Id, this.userc.id).subscribe(res1 => {
+            this.filtredCongeList = res1;
+          }, err => { this.getData() })
+        } else {
+          this.congeService.GetDirListGeneral(this.userc.id).subscribe(res1 => {
+            this.filtredCongeList = res1;
+          }, err => { this.getData() })
+        }
+      });
+    });
+  }
+  Id: number = 0;
+  showrow: boolean = false;
+  getData() {
+    this.congeService.GetDirListGeneral(this.UserIdConnected).subscribe(res => {
+      this.filtredCongeList = res;
+      this.showrow = false;
     })
   }
-
 
   per: Conge = new Conge();
   soldecongel: SoldeConge[] = [];
@@ -235,107 +239,38 @@ export class MenurequestsComponent implements OnInit {
     if (this.etat == "رفض") {
       this.congeService.formData.attribut2 = "رفض"
     } else {   
-          this.per.transferera = "2"
-          this.per.attribut6 = "إعتماد بخصم"
-          this.per.etat = "25%"
-          this.soldeCongeService.Get().subscribe(res => {
-            this.soldecongel1 = res
-            this.soldeconge1 = this.soldecongel1.filter(item => item.idUserCreator == this.per.idUserCreator);
-            if (this.soldecongel1.length > 0) {
-
-              this.solde2 = this.soldecongel1[this.soldecongel1.length - 1];
-            }
-
-            this.soldeCongeService.Get().subscribe(res => {
-              this.soldecongel = res
-              this.soldecongel.filter(item => item.idUserCreator == this.per.idUserCreator);
-              this.soldeconge = this.soldecongel[this.soldecongel.length - 1];
-              this.sc = this.soldecongel[this.soldecongel.length - 1]
-
-              if (this.per.type == "إجازة إعتيادية") {
-                this.sc.dateenreg = this.date;
-
-                let solde = +this.soldeconge.soldenormal - +this.per.duree
-                this.sc.soldenormal = solde.toString();
-
-                this.soldeCongeService.PutObservable(this.sc).subscribe(res => {
-                  this.toastr.success('تم التحديث بنجاح', 'نجاح')
-                  this.congeService.Edit().subscribe(res => {
-                    this.notifService.Add(this.notif).subscribe(res => {
-
-                   
-                    this.toastr.success('تم التحديث بنجاح', 'نجاح')
-                    this.resetForm();
-                      this.getUserConnected();
-                    })
-                  },
-                    err => {
-                      this.toastr.error('لم يتم التحديث  ', ' فشل');
-                    }
-
-
-                  )
-                })
-
-              }
-             else if (this.per.type == "إجازة إضطرارية") {
-
-                this.sc.dateenreg = this.date;
-                let solde = +this.soldeconge.soldeurgent - +this.per.duree
-                this.sc.soldeurgent = solde.toString();
-                this.soldeCongeService.PutObservable(this.sc).subscribe(res => {
-                  this.toastr.success('تم التحديث بنجاح', 'نجاح')
-
-                  this.congeService.Edit().subscribe(res => {
-
-                    this.notifService.Add(this.notif).subscribe(res => {
-                      this.toastr.success('تم التحديث بنجاح', 'نجاح')
-                      this.resetForm();
-                      this.getUserConnected();
-                    })
-         
-                  },
-                    err => {
-                      this.toastr.error('لم يتم التحديث  ', ' فشل');
-                    }
-
-
-                  )
-                })
-
-              }
-
-              else if (this.per.type == "إجازة إستثنائية") {
-
-                this.sc.dateenreg = this.date;
-                let solde = +this.soldeconge.soldemaladie - +this.per.duree
-                this.sc.soldemaladie = solde.toString();
-                this.soldeCongeService.PutObservable(this.sc).subscribe(res => {
-                  this.toastr.success('تم التحديث بنجاح', 'نجاح')
-                  this.congeService.Edit().subscribe(res => {
-                    this.notifService.Add(this.notif).subscribe(res => {
-                      this.toastr.success('تم التحديث بنجاح', 'نجاح')
-                      this.resetForm();
-                      this.getUserConnected();
-                    })
-                  },
-                    err => {
-                      this.toastr.error('لم يتم التحديث  ', ' فشل');
-                    }
-
-
-                  )
-                })
-
-              } else {
-
-                this.congeService.formData.etat = "50%";
+   
+                this.congeService.formData.etat = "25%";
                 this.congeService.Edit().subscribe(res => {
-                  this.notifService.Add(this.notif).subscribe(res => {
+        
                     this.toastr.success('تم التحديث بنجاح', 'نجاح')
                     this.resetForm();
-                    this.getUserConnected();
-                  })
+                    this.CongeList();
+                    this.showrow = false;
+                    //Send Notification
+                    this.text = "طلب  " + this.per.type;
+                    this.autoNotif.serviceId = this.per.id;
+                    this.autoNotif.pageUrl = "validate-conge"
+                    this.autoNotif.userType = "2";
+                    this.autoNotif.reponse = "1";
+                    this.signalService.GetConnectionByIdUser(this.dirId).subscribe(res1 => {
+                      this.userOnline = res1;
+                      this.signalService.hubConnection.invoke("sendMsg", this.userOnline.signalrId, this.text, this.autoNotif)
+                        .catch(err => console.error(err));
+                    }, err => {
+                      this.autoNotif.receiverName = this.dirName;
+                      this.autoNotif.receiverId = this.dirId;
+                      this.autoNotif.transmitterId = this.UserIdConnected;
+                      this.autoNotif.transmitterName = this.UserNameConnected;
+                      this.autoNotif.text = "طلب  " + this.per.type;
+                      this.autoNotif.vu = "0";
+                      this.autoNotif.reponse = "1";
+
+                      this.signalService.CreateNotif(this.autoNotif).subscribe(res => {
+
+                      })
+                    })
+                  
                 },
                   err => {
                     this.toastr.error('لم يتم التحديث  ', ' فشل');
@@ -343,34 +278,11 @@ export class MenurequestsComponent implements OnInit {
 
 
                 )
-              }
+              
 
-            })
-          })
+            //})
+         
 
-      //Send Notification
-      this.text = "طلب  "+this.per.type;
-      this.autoNotif.serviceId = this.per.id;
-      this.autoNotif.pageUrl = "validate-conge"
-      this.autoNotif.userType = "2";
-      this.autoNotif.reponse = "1";
-      this.signalService.GetConnectionByIdUser(this.dirId).subscribe(res1 => {
-        this.userOnline = res1;
-        this.signalService.hubConnection.invoke("sendMsg", this.userOnline.signalrId, this.text, this.autoNotif)
-          .catch(err => console.error(err));
-      }, err => {
-        this.autoNotif.receiverName = this.dirName;
-        this.autoNotif.receiverId = this.dirId;
-        this.autoNotif.transmitterId = this.UserIdConnected;
-        this.autoNotif.transmitterName = this.UserNameConnected;
-        this.autoNotif.text = "طلب  " + this.per.type;
-        this.autoNotif.vu = "0";
-        this.autoNotif.reponse = "1";
-
-        this.signalService.CreateNotif(this.autoNotif).subscribe(res => {
-
-        })
-      })
 
         }
   }
@@ -464,3 +376,93 @@ export class MenurequestsComponent implements OnInit {
     );
   }
 }
+          //this.soldeCongeService.Get().subscribe(res => {
+          //  this.soldecongel1 = res
+          //  this.soldeconge1 = this.soldecongel1.filter(item => item.idUserCreator == this.per.idUserCreator);
+          //  if (this.soldecongel1.length > 0) {
+
+          //    this.solde2 = this.soldecongel1[this.soldecongel1.length - 1];
+          //  }
+
+            //this.soldeCongeService.Get().subscribe(res => {
+            //  this.soldecongel = res
+            //  this.soldecongel.filter(item => item.idUserCreator == this.per.idUserCreator);
+            //  this.soldeconge = this.soldecongel[this.soldecongel.length - 1];
+            //  this.sc = this.soldecongel[this.soldecongel.length - 1]
+
+              //if (this.per.type == "إجازة إعتيادية") {
+              //  this.sc.dateenreg = this.date;
+
+              //  let solde = +this.soldeconge.soldenormal - +this.per.duree
+              //  this.sc.soldenormal = solde.toString();
+
+              //  this.soldeCongeService.PutObservable(this.sc).subscribe(res => {
+              //    this.toastr.success('تم التحديث بنجاح', 'نجاح')
+              //    this.congeService.Edit().subscribe(res => {
+              //      this.notifService.Add(this.notif).subscribe(res => {
+
+
+              //      this.toastr.success('تم التحديث بنجاح', 'نجاح')
+              //      this.resetForm();
+              //        this.getUserConnected();
+              //      })
+              //    },
+              //      err => {
+              //        this.toastr.error('لم يتم التحديث  ', ' فشل');
+              //      }
+
+
+              //    )
+              //  })
+
+              //}
+             //else if (this.per.type == "إجازة إضطرارية") {
+
+             //   this.sc.dateenreg = this.date;
+             //   let solde = +this.soldeconge.soldeurgent - +this.per.duree
+             //   this.sc.soldeurgent = solde.toString();
+             //   this.soldeCongeService.PutObservable(this.sc).subscribe(res => {
+             //     this.toastr.success('تم التحديث بنجاح', 'نجاح')
+
+             //     this.congeService.Edit().subscribe(res => {
+
+             //       this.notifService.Add(this.notif).subscribe(res => {
+             //         this.toastr.success('تم التحديث بنجاح', 'نجاح')
+             //         this.resetForm();
+             //         this.getUserConnected();
+             //       })
+
+             //     },
+             //       err => {
+             //         this.toastr.error('لم يتم التحديث  ', ' فشل');
+             //       }
+
+
+             //     )
+             //   })
+
+             // }
+
+              //else if (this.per.type == "إجازة إستثنائية") {
+
+              //  this.sc.dateenreg = this.date;
+              //  let solde = +this.soldeconge.soldemaladie - +this.per.duree
+              //  this.sc.soldemaladie = solde.toString();
+              //  this.soldeCongeService.PutObservable(this.sc).subscribe(res => {
+              //    this.toastr.success('تم التحديث بنجاح', 'نجاح')
+              //    this.congeService.Edit().subscribe(res => {
+              //      this.notifService.Add(this.notif).subscribe(res => {
+              //        this.toastr.success('تم التحديث بنجاح', 'نجاح')
+              //        this.resetForm();
+              //        this.getUserConnected();
+              //      })
+              //    },
+              //      err => {
+              //        this.toastr.error('لم يتم التحديث  ', ' فشل');
+              //      }
+
+
+              //    )
+              //  })
+
+              //}

@@ -117,5 +117,97 @@ namespace WebApplicationPlateforme.Controllers.UserService
         {
             return _context.demissions.Any(e => e.Id == id);
         }
+
+        [HttpGet]
+        [Route("GetRhList/{Id}")]
+        public List<Demission> GetRhList(int id)
+        {
+            Demission obj = new Demission();
+            List<Demission> list = new List<Demission>();
+            list = _context.demissions.Where(item => item.etatrh == "في الانتظار" && item.etatdir == "موافق").OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.demissions.Where(item => item.Id == id && item.etatrh == "في الانتظار" && item.etatdir == "موافق").FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+
+
+        [HttpGet]
+        [Route("GetUserList/{Id}/{IdUser}")]
+        public List<Demission> GetUserList(int id, string IdUser)
+        {
+            Demission obj = new Demission();
+            List<Demission> list = new List<Demission>();
+            list = _context.demissions.Where(item => item.idUserCreator == IdUser).OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.demissions.Where(item => item.Id == id && item.idUserCreator == IdUser).FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetUserListGeneral/{IdUser}")]
+        public List<Demission> GetUserListGeneral(string IdUser)
+        {
+            Demission obj = new Demission();
+            List<Demission> list = new List<Demission>();
+            list = _context.demissions.Where(item => item.idUserCreator == IdUser).OrderBy(item => item.Id).ToList();
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetRhListGeneral")]
+        public List<Demission> GetRhListGeneral()
+        {
+            Demission obj = new Demission();
+            List<Demission> list = new List<Demission>();
+            list = _context.demissions.Where(item => item.etatrh == "في الانتظار" && item.etatdir == "موافق").OrderBy(item => item.Id).ToList();
+            return list;
+        }
+
+
+        [HttpGet]
+        [Route("GetDirList/{Id}/{idUser}")]
+        public List<Demission> GetDirList(int id, string idUser)
+        {
+            Demission obj = new Demission();
+            List<Demission> list = new List<Demission>();
+            list = _context.demissions.Where(item => item.etatdir == "في الانتظار" && item.iddir == idUser).OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.demissions.Where(item => item.Id == id && item.etatdir == "في الانتظار" && item.iddir == idUser).FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetDirListGeneral/{idUser}")]
+        public List<Demission> GetDirListGeneral(string idUser)
+        {
+            Demission obj = new Demission();
+            List<Demission> list = new List<Demission>();
+            list = _context.demissions.Where(item => item.etatdir == "في الانتظار" && item.iddir == idUser).OrderBy(item => item.Id).ToList();
+            return list;
+        }
     }
 }

@@ -296,8 +296,6 @@ export class DemCongeDevoirComponent implements OnInit {
               this.bool = false;
             })
           })
-          this.notifService.Add(this.notif).subscribe(res => {
-
 
           this.diffDays = 0
           this.toastr.success(" تم تقديم الطلب بنجاح", "نجاح");
@@ -327,7 +325,7 @@ export class DemCongeDevoirComponent implements OnInit {
               })
             })
      
-          })
+        
         },
         err => {
           this.toastr.error("لم يتم تقديم الطلب", "فشل ")

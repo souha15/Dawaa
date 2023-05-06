@@ -235,6 +235,7 @@ export class EquipementAddComponent implements OnInit {
       this.equipementService.Add(this.equ).subscribe(
         res => {
           this.pj.serviceId = res.id;
+          this.autoNotif.serviceId = res.id;
           this.pj.serviceName = "Equipement";
           this.fileslist.forEach(item => {
             this.pj.path = item;
@@ -251,7 +252,7 @@ export class EquipementAddComponent implements OnInit {
 
 
             this.text = "طلب عهدة";
-            this.autoNotif.serviceId = res.id;
+            
             this.autoNotif.pageUrl = "equipement-list-dir"
             this.autoNotif.userType = "1";
             this.autoNotif.reponse = "3";

@@ -10,6 +10,8 @@ import { UploadDownloadService } from '../../../shared/Services/Taches/upload-do
 import { FileService } from '../../../shared/Models/ServiceRh/file-service.model';
 import { ProgressStatusEnum } from '../../../shared/Enum/progress-status-enum.enum';
 import { HttpEventType } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-salaiale-my-lis',
   templateUrl: './salaiale-my-lis.component.html',
@@ -18,18 +20,19 @@ import { HttpEventType } from '@angular/common/http';
 export class SalaialeMyLisComponent implements OnInit {
 
   @Output() public downloadStatus: EventEmitter<ProgressStatus>;
-
+  private routeSub: Subscription;
   constructor(private congeService: DemandeSalarialeService,
     private toastr: ToastrService,
     private UserService: UserServiceService,
     public filesService: FileServiceService,
-    public serviceupload: UploadDownloadService, ) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
+    public serviceupload: UploadDownloadService,
+    private route: ActivatedRoute,) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
 
 
 
   ngOnInit(): void {
     this.getUserConnected();
-    this.CongeList();
+
     this.resetForm();
     this.getFiles();
   }
@@ -41,15 +44,40 @@ export class SalaialeMyLisComponent implements OnInit {
 
   UserIdConnected: string;
   UserNameConnected: string;
-
+  Id: number = 0;
+  showrow: boolean = false;
 
   getUserConnected() {
 
     this.UserService.getUserProfileObservable().subscribe(res => {
       this.UserIdConnected = res.id;
       this.UserNameConnected = res.fullName;
+      this.routeSub = this.route.params.subscribe(params => {
+        if (params['id'] != undefined) {
+          this.Id = params['id'];
+          this.showrow = true;
+          this.congeService.GetUserList(this.Id, this.UserIdConnected).subscribe(res => {
+            this.filtredCongeList = res;
+          }, err => {
+            this.getData()
+          })
+        } else {
+
+          this.congeService.GetUserListGeneral(this.UserIdConnected).subscribe(res1 => {
+            this.filtredCongeList = res1;
+          }, err => {
+            this.getData();
+          })
+        }
+      });
     })
 
+  }
+  getData() {
+    this.congeService.GetUserListGeneral(this.UserIdConnected).subscribe(res1 => {
+      this.filtredCongeList = res1;
+      this.showrow = false;
+    })
   }
 
   //Get Conge Demand Lis
@@ -81,7 +109,7 @@ export class SalaialeMyLisComponent implements OnInit {
       this.congeService.Edit().subscribe(res => {
         this.toastr.success('تم التحديث بنجاح', 'نجاح')
         this.resetForm();
-        this.CongeList();
+        this.getUserConnected();
       },
         err => {
           this.toastr.error('لم يتم التحديث  ', ' فشل');
@@ -133,7 +161,7 @@ export class SalaialeMyLisComponent implements OnInit {
     if (confirm('Are you sure to delete this record ?')) {
       this.congeService.Delete(Id)
         .subscribe(res => {
-          this.CongeList();
+          this.getUserConnected();
           this.toastr.success("تم الحذف  بنجاح", "نجاح");
         },
 

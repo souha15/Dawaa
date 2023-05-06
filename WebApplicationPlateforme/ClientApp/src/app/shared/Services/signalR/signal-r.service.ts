@@ -142,6 +142,10 @@ export class SignalRService {
     return this.http.get<AutomaticNotification[]>(this.rootURL + '/AutomaticNotifs/GetUnreadServicesNotificationByUser/' + idReceiver);
   }
 
+  GetUnreadNotificationForDemander(idReceiver) {
+    return this.http.get<AutomaticNotification[]>(this.rootURL + '/AutomaticNotifs/GetUnreadNotificationForDemander/' + idReceiver);
+  }
+
   GetUnreadDotationsNotificationByUser(idReceiver) {
     return this.http.get<AutomaticNotification[]>(this.rootURL + '/AutomaticNotifs/GetUnreadDotationsNotificationByUser/' + idReceiver);
   }

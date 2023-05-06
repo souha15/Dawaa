@@ -307,7 +307,7 @@ export class DemCongeForgeronComponent implements OnInit {
                 this.bool = false;
               })
             })
-            this.notifService.Add(this.notif).subscribe(res => {
+
       
             this.diffDays = 0
             this.toastr.success(" تم تقديم الطلب بنجاح", "نجاح");
@@ -339,7 +339,7 @@ export class DemCongeForgeronComponent implements OnInit {
                 })
               })
 
-            })
+           
           
           
           },

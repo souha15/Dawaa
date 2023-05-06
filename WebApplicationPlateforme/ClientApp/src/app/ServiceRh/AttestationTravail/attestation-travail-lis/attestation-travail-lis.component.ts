@@ -10,6 +10,8 @@ import { FileServiceService } from '../../../shared/Services/ServiceRh/file-serv
 import { HttpEventType } from '@angular/common/http';
 import { ProgressStatusEnum } from '../../../shared/Enum/progress-status-enum.enum';
 import { FileService } from '../../../shared/Models/ServiceRh/file-service.model';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-attestation-travail-lis',
@@ -18,18 +20,18 @@ import { FileService } from '../../../shared/Models/ServiceRh/file-service.model
 })
 export class AttestationTravailLisComponent implements OnInit {
   @Output() public downloadStatus: EventEmitter<ProgressStatus>;
-
+  private routeSub: Subscription;
   constructor(private UserService: UserServiceService,
     private toastr: ToastrService,
     private atService: DemandeAttestationTravailService,
     public filesService: FileServiceService,
-    public serviceupload: UploadDownloadService, ) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
+    public serviceupload: UploadDownloadService,
+    private route: ActivatedRoute,) { this.downloadStatus = new EventEmitter<ProgressStatus>(); }
 
 
 
   ngOnInit(): void {
     this.getUserConnected();
-    this.getCreance();
     this.getFiles();
     this.resetForm();
   }
@@ -40,15 +42,41 @@ export class AttestationTravailLisComponent implements OnInit {
 
   UserIdConnected: string;
   UserNameConnected: string;
-
+  Id: number = 0;
+  showrow: boolean = false;
   getUserConnected() {
 
     this.UserService.getUserProfileObservable().subscribe(res => {
       this.UserIdConnected = res.id;
       this.UserNameConnected = res.fullName;
 
+      this.routeSub = this.route.params.subscribe(params => {
+        if (params['id'] != undefined) {
+          this.Id = params['id'];
+          this.showrow = true;
+          this.atService.GetUserList(this.Id, this.UserIdConnected).subscribe(res => {
+            this.factList = res;
+          }, err => {
+            this.getData()
+          })
+        } else {
+
+          this.atService.GetUserListGeneral(this.UserIdConnected).subscribe(res1 => {
+            this.factList = res1;
+          }, err => {
+            this.getData();
+          })
+        }
+      });
     })
 
+  }
+
+  getData() {
+    this.atService.GetUserListGeneral(this.UserIdConnected).subscribe(res1 => {
+      this.factList = res1;
+      this.showrow = false;
+    })
   }
 
   factList: DemandeAttestationTravail[] = [];
@@ -87,7 +115,7 @@ export class AttestationTravailLisComponent implements OnInit {
     this.atService.Edit().subscribe(res => {
       this.toastr.success('تم التحديث بنجاح', 'نجاح')
       this.resetForm();
-      this.getCreance();
+      this.getUserConnected();
     },
       err => {
         this.toastr.error(' لم يتم التحديث  ', ' فشل');
@@ -143,12 +171,12 @@ export class AttestationTravailLisComponent implements OnInit {
     if (confirm('Are you sure to delete this record ?')) {
       this.atService.Delete(Id)
         .subscribe(res => {
-          this.getCreance();
+          this.getUserConnected();
           this.toastr.success("تم الحذف  بنجاح", "نجاح");
         },
 
           err => {
-            console.log(err);
+
             this.toastr.warning('لم يتم الحذف  ', ' فشل');
 
           }

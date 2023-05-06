@@ -106,5 +106,66 @@ namespace WebApplicationPlateforme.Controllers.ServiceRh
         {
             return _context.demandeAttestationTravails.Any(e => e.Id == id);
         }
+
+
+        [HttpGet]
+        [Route("GetRhList/{Id}")]
+        public List<DemandeAttestationTravail> GetRhList(int id)
+        {
+            DemandeAttestationTravail obj = new DemandeAttestationTravail();
+            List<DemandeAttestationTravail> list = new List<DemandeAttestationTravail>();
+            list = _context.demandeAttestationTravails.Where(item => item.etat == "في الإنتظار").OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.demandeAttestationTravails.Where(item => item.Id == id && item.etat == "في الإنتظار").FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetRhListGeneral")]
+        public List<DemandeAttestationTravail> GetRhListGeneral()
+        {
+
+            List<DemandeAttestationTravail> list = new List<DemandeAttestationTravail>();
+            list = _context.demandeAttestationTravails.Where(item => item.etat == "في الإنتظار").OrderBy(item => item.Id).ToList();
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetUserList/{Id}/{IdUser}")]
+        public List<DemandeAttestationTravail> GetUserList(int id, string IdUser)
+        {
+            DemandeAttestationTravail obj = new DemandeAttestationTravail();
+            List<DemandeAttestationTravail> list = new List<DemandeAttestationTravail>();
+            list = _context.demandeAttestationTravails.Where(item => item.idUserCreator == IdUser).OrderBy(item => item.Id).ToList();
+
+            if (id != 0)
+            {
+                obj = _context.demandeAttestationTravails.Where(item => item.Id == id && item.idUserCreator == IdUser).FirstOrDefault();
+                var item = list.Find(x => x.Id == obj.Id);
+                list.Remove(item);
+                list.Insert(list.Count(), obj);
+
+            }
+
+            return list;
+        }
+
+        [HttpGet]
+        [Route("GetUserListGeneral/{IdUser}")]
+        public List<DemandeAttestationTravail> GetUserListGeneral(string IdUser)
+        {
+
+            List<DemandeAttestationTravail> list = new List<DemandeAttestationTravail>();
+            list = _context.demandeAttestationTravails.Where(item => item.idUserCreator == IdUser).OrderBy(item => item.Id).ToList();
+            return list;
+        }
     }
 }

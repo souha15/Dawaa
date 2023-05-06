@@ -61,4 +61,20 @@ export class PlaintService {
   Delete(id) {
     return this.http.delete(this.rootURL + '/Plaints/' + id);
   }
+
+
+  GetDirList(id, idUser) {
+    return this.http.get<Plaint[]>(this.rootURL + '/Plaints/GetDirList/' + id + '/' + idUser);
+  }
+  GetDirListGeneral(idUser) {
+    return this.http.get<Plaint[]>(this.rootURL + '/Plaints/GetDirListGeneral/' + idUser);
+  }
+  GetUserList(id, idUser) {
+    return this.http.get<Plaint[]>(this.rootURL + '/Plaints/GetUserList/' + id + '/' + idUser);
+  }
+
+
+  GetUserListGeneral(idUser) {
+    return this.http.get<Plaint[]>(this.rootURL + '/Plaints/GetUserListGeneral/' + idUser);
+  }
 }

@@ -61,4 +61,18 @@ export class ChangerRibService {
   GetById(Id) {
     return this.http.get<ChangerRib>(this.rootURL + '/DemChangeRibs/' + Id);
   }
+
+
+  GetRhList(Id) {
+    return this.http.get<ChangerRib[]>(this.rootURL + '/DemChangeRibs/GetRhList/' + Id);
+  }
+  GetRhListGeneral() {
+    return this.http.get<ChangerRib[]>(this.rootURL + '/DemChangeRibs/GetRhListGeneral' );
+  }
+  GetUserList(Id,IdUser) {
+    return this.http.get<ChangerRib[]>(this.rootURL + '/DemChangeRibs/GetUserList/' + Id +'/'+IdUser);
+  }
+  GetUserListGeneral(IdUser) {
+    return this.http.get<ChangerRib[]>(this.rootURL + '/DemChangeRibs/GetUserListGeneral/' + IdUser);
+  } 
 }

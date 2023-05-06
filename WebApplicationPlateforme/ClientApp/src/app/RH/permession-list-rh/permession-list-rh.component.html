@@ -27,13 +27,31 @@
               </tr>
             </thead>
             <tbody>
+              <!--<tr *ngIf="showrow">
+                <th (click)="populateForm(data)" data-toggle="modal" data-target="#myModal1" class="firstRow">0</th>
+                <th (click)="populateForm(data)" data-toggle="modal" data-target="#myModal1" class="firstRow">{{data.creatorName}}</th>
+                <td (click)="populateForm(data)" data-toggle="modal" data-target="#myModal1" class="firstRow">{{data.date}}</td>
+                <td (click)="populateForm(data)" data-toggle="modal" data-target="#myModal1" class="firstRow">{{data.type}}</td>
+                <td (click)="populateForm(data)" data-toggle="modal" data-target="#myModal1" class="firstRow">{{data.heuredeb}}</td>
+                <td (click)="populateForm(data)" data-toggle="modal" data-target="#myModal1" class="firstRow">{{data.heurefin}}</td>
+
+                <td data-toggle="modal" data-target="#myModal2" (click)="populateForm(data)"
+                    [ngClass]="{
+
+  'ok': data.etatrh === 'موافق',
+  'refused': data.etatrh === 'رفض',
+  'wait': data.etatrh === 'في الانتظار'
+}">
+                  {{data.etatrh}}
+                </td>
+              </tr>-->
               <tr *ngFor="let cg of filtredCongeList |  orderBy: key : reverse | filter:filter| paginate: { itemsPerPage: count, currentPage: p }; let i = index; ">
-                <th (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{(p-1) * count + i + 1}}</th>
-                <th (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.creatorName}}</th>
-                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.date}}</td>
-                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.type}}</td>
-                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.heuredeb}}</td>
-                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1">{{cg.heurefin}}</td>
+                <th (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{(p-1) * count + i + 1}}</th>
+                <th (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{cg.creatorName}}</th>
+                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{cg.date}}</td>
+                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{cg.type}}</td>
+                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{cg.heuredeb}}</td>
+                <td (click)="populateForm(cg)" data-toggle="modal" data-target="#myModal1" [ngClass]="{'firstRow': i ===0 && showrow === true}">{{cg.heurefin}}</td>
 
                 <td data-toggle="modal" data-target="#myModal2" (click)="populateForm(cg)"
                     [ngClass]="{
